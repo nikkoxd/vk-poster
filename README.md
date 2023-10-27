@@ -1,4 +1,5 @@
 # 💫 Stella
+[![](https://dcbadge.vercel.app/api/server/starrysky?style=flat)](https://discord.gg/starrysky)
 General purpose bot built for https://discord.gg/starrysky
 ## Running the bot
 Clone this repository, copy `.env.example` to `.env` and fill in the empty configurations
