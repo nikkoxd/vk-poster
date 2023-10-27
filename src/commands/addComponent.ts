@@ -12,7 +12,7 @@ export class AddComponentCommand extends Command {
       builder
         .setName('addcomponent')
         .setDescription('Добавить компонент к сообщению.')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .addStringOption((option) =>
           option
             .setName('id')

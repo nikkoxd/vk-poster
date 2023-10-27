@@ -12,7 +12,7 @@ export class SendMessageCommand extends Command {
       builder
         .setName('sendmsg')
         .setDescription('Отправить сообщение в чат')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .addStringOption((option) => 
           option
             .setName('id')

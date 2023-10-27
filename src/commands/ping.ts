@@ -12,7 +12,7 @@ export class PingCommand extends Command {
       builder
         .setName('ping')
         .setDescription('Понг!')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     , { idHints: ['1167528849798602825'] });
   }
 
