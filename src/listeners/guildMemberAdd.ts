@@ -5,7 +5,7 @@ export class GuildMemberAvailableListener extends Listener {
   public constructor(context: Listener.Context, options: Listener.Options) {
     super(context, {
       ...options,
-      event: 'guildMemberAvailable'
+      event: 'guildMemberAdd'
     });
   }
 
