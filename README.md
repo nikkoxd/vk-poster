@@ -1,2 +1,2 @@
-# vk-poster
- VK image posting bot for Discord
+# 💫 Stella
+General purpose bot built for https://discord.gg/starrysky
