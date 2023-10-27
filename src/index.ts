@@ -1,6 +1,6 @@
 import '@sapphire/plugin-logger/register';
 import { SapphireClient } from "@sapphire/framework";
-import { GatewayIntentBits } from "discord.js";
+import { ActivityType, GatewayIntentBits } from "discord.js";
 
 import 'dotenv/config';
 
@@ -14,3 +14,4 @@ const client = new SapphireClient({
 
 client.logger.info("Running on", process.env.NODE_ENV);
 client.login(process.env.TOKEN);
+client.user?.setActivity('https://discord.gg/starrysky', { type: ActivityType.Watching });
