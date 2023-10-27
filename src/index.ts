@@ -11,4 +11,5 @@ const client = new SapphireClient({
   ] 
 });
 
+client.logger.info("Running on", process.env.NODE_ENV);
 client.login(process.env.TOKEN);
