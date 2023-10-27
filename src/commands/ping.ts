@@ -13,7 +13,7 @@ export class PingCommand extends Command {
         .setName('ping')
         .setDescription('Понг!')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
-    );
+    , { idHints: ['1167528849798602825'] });
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
