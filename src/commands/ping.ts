@@ -1,14 +1,18 @@
 import { Command } from "@sapphire/framework";
 import { isMessageInstance } from "@sapphire/discord.js-utilities";
+import { PermissionFlagsBits } from "discord.js";
 
 export class PingCommand extends Command {
-  public constructor(context: Command.Context, options: Command.Options) {
-    super(context, { ...options });
+  public constructor(ctx: Command.Context, options: Command.Options) {
+    super(ctx, { ...options });
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
     registry.registerChatInputCommand((builder) =>
-      builder.setName('ping').setDescription('Понг!')
+      builder
+        .setName('ping')
+        .setDescription('Понг!')
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
     );
   }
 

@@ -26,7 +26,7 @@ RUN yarn install --production=false --frozen-lockfile
 
 # Copy application code
 COPY --link . .
-RUN yarn run build
+RUN yarn build
 
 
 # Final stage for app image

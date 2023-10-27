@@ -1,0 +1,20 @@
+{
+  "content": "",
+  "embeds": [
+    {
+      "title": "<a:st_bunnycoffee:1159207223818473543> Starry Sky Café",
+      "description": "Добро пожаловать к нам в кафе!\nНиже ты найдешь всю нужную тебе информацию о нашем сервере.",
+      "color": 13926866
+    }
+  ],
+  "attachments": [
+    "banner-info.png"
+  ],
+  "buttons": [
+    {
+      "custom_id": "send-info",
+      "label": "Отправить сообщение",
+      "style": "secondary"
+    }
+  ]
+}

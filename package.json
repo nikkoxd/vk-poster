@@ -1,5 +1,5 @@
 {
-  "name": "vk-poster",
+  "name": "hoshizora-bot",
   "version": "1.0.0",
   "description": "VK image posting for Discord",
   "main": "dist/index.js",
@@ -9,16 +9,21 @@
   "private": false,
   "dependencies": {
     "@sapphire/framework": "^4.6.0",
+    "@sapphire/plugin-logger": "^3.0.6",
     "discord.js": "14.x",
     "vk-io": "^4.8.3"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.4.10",
+    "copyfiles": "^2.4.1",
     "dotenv": "^16.3.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "clean": "rimraf dist/",
+    "copy-files": "copyfiles -u 1 src/messages/*.json src/attachments/* dist/",
+    "build": "yarn clean && tsc && yarn copy-files",
+    "start": "yarn build && node dist/index.js"
   }
 }

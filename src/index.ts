@@ -1,3 +1,4 @@
+import '@sapphire/plugin-logger/register';
 import { SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
 
