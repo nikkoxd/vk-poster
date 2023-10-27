@@ -7,7 +7,8 @@ import 'dotenv/config';
 const client = new SapphireClient({ 
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers
   ] 
 });
 
