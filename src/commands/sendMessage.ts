@@ -12,7 +12,7 @@ export class SendMessageCommand extends Command {
       builder
         .setName('sendmsg')
         .setDescription('Отправить сообщение в чат')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .addStringOption((option) => 
           option
             .setName('id')
@@ -26,7 +26,7 @@ export class SendMessageCommand extends Command {
             .setRequired(false)
             .addChannelTypes(ChannelType.GuildText)
         )
-    );
+    , { idHints: ['1167528847961497610'] });
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
