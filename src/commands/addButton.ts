@@ -95,7 +95,8 @@ export class AddButtonCommand extends Command {
         button
           .setCustomId("sendmsg" + "-" + action)
           .setLabel(label)
-          .setStyle(style as ButtonStyle);
+          .setStyle(style as ButtonStyle)
+          .setURL(action);
 
         row.addComponents(button);
 
