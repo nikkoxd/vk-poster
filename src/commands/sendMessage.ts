@@ -35,7 +35,7 @@ export class SendMessageCommand extends Command {
 
     const logError = (err: any) => {
       interaction.reply({ content: `При выполнении команды произошла ошибка:\n\`\`\`${err}\`\`\``, ephemeral: true });
-      this.container.logger.error('Error reading attachment: ', err);
+      this.container.logger.error('Error reading message:', err);
     }
 
     readFile(filePath, 'utf-8', (err: NodeJS.ErrnoException | null, data: string) => {
