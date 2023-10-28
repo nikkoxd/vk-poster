@@ -52,10 +52,15 @@ export class AddButtonCommand extends Command {
     const label = interaction.options.getString('label', true);
     const styleValue = interaction.options.getString('style', true);
     const action = interaction.options.getString('action', true);
-    let style;
+    let style: ButtonStyle = ButtonStyle.Primary;
 
-    const button = new ButtonBuilder()
-    const row = new ActionRowBuilder<ButtonBuilder>()
+    const button = new ButtonBuilder();
+    const row = new ActionRowBuilder<ButtonBuilder>();
+
+    const logError = (err: any) => {
+      interaction.reply({ content: `При выполнении команды произошла ошибка:\n\`\`\`${err}\`\`\``, ephemeral: true });
+      this.container.logger.error('Error reading message:', err);
+    }
 
     switch(styleValue) {
       case 'primary':
@@ -79,28 +84,48 @@ export class AddButtonCommand extends Command {
       case 'primary' || 'secondary' || 'success' || 'danger':
         this.container.logger.info('Message sending button being added');
 
-        button
-          .setCustomId("sendmsg" + "-" + action)
-          .setLabel(label)
-          .setStyle(style as ButtonStyle);
+        const fileName = action;
+        const filePath = `./dist/messages/${fileName}.json`;
 
-        row.addComponents(button);
+        readFile(filePath, 'utf-8', async (err: NodeJS.ErrnoException | null, data: string) => {
+          if (err) {
+            logError(err);
+          } else {
+              try {
+                button
+                  .setCustomId("sendmsg" + "-" + action)
+                  .setLabel(label)
+                  .setStyle(style as ButtonStyle);
 
-        (await message)?.edit({ components: [row] })
+                row.addComponents(button);
 
+                (await message)?.edit({ components: [row] });
+              } catch (err) {
+                logError(err);
+              } finally {
+                interaction.reply({ content: 'Кнопка добавлена', ephemeral: true });
+              }
+          }
+        })
+        
         break;
       case 'link':
         this.container.logger.info('URL sending button being added');
 
-        button
-          .setCustomId("sendmsg" + "-" + action)
-          .setLabel(label)
-          .setStyle(style as ButtonStyle)
-          .setURL(action);
+        try {
+          button
+            .setLabel(label)
+            .setStyle(style as ButtonStyle)
+            .setURL(action);
 
-        row.addComponents(button);
+          row.addComponents(button);
 
-        (await message)?.edit({ components: [row] })
+          (await message)?.edit({ components: [row] })
+        } catch (err) {
+          logError(err);
+        } finally {
+          interaction.reply({ content: 'Кнопка добавлена', ephemeral: true });
+        }
 
         break;
     }
