@@ -49,7 +49,7 @@ export class SendMessageCommand extends Command {
 
           for (let index = 0; index < jsonData.attachments.length; index++) {
             const fileName = jsonData.attachments[index];
-            const path = `./dist/attachments/${fileName}`;
+            const path = `./dist/messages/attachments/${fileName}`;
             const file = new AttachmentBuilder(path);
             try {
               attachments.push(file);
