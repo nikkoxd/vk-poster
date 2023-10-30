@@ -21,7 +21,7 @@
   },
   "scripts": {
     "clean": "rimraf dist/",
-    "copy-files": "copyfiles -u 1 src/messages/*.json src/attachments/* dist/",
+    "copy-files": "copyfiles -u 1 src/messages/*.json src/messages/attachments/* dist/",
     "build": "yarn clean && tsc && yarn copy-files",
     "dev": "NODE_ENV=development yarn start",
     "start": "yarn build && node dist/index.js"
