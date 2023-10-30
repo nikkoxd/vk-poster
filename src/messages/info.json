@@ -1,5 +1,6 @@
 {
   "content": "",
+  "tts": false,
   "embeds": [
     {
       "title": "<a:st_bunnycoffee:1159207223818473543> Starry Sky Café",
@@ -9,12 +10,5 @@
   ],
   "attachments": [
     "banner-info.png"
-  ],
-  "buttons": [
-    {
-      "custom_id": "send-info",
-      "label": "Отправить сообщение",
-      "style": "secondary"
-    }
   ]
 }
