@@ -4,7 +4,7 @@ import { REST, PermissionFlagsBits, Routes } from "discord.js";
 const rest = new REST().setToken(process.env.TOKEN as string);
 
 export class cleanUpCmdsCommand extends Command {
-  public constructor(ctx: Command.Context, options: Command.Options) {
+  public constructor(ctx: Command.LoaderContext, options: Command.Options) {
     super(ctx, { ...options });
   }
 

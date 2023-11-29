@@ -2,7 +2,10 @@ import { Listener } from "@sapphire/framework";
 import { GuildMember, TextChannel } from "discord.js";
 
 export class GuildMemberAvailableListener extends Listener {
-  public constructor(context: Listener.Context, options: Listener.Options) {
+  public constructor(
+    context: Listener.LoaderContext,
+    options: Listener.Options,
+  ) {
     super(context, {
       ...options,
       event: "guildMemberAdd",

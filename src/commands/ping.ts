@@ -3,7 +3,7 @@ import { isMessageInstance } from "@sapphire/discord.js-utilities";
 import { PermissionFlagsBits } from "discord.js";
 
 export class PingCommand extends Command {
-  public constructor(ctx: Command.Context, options: Command.Options) {
+  public constructor(ctx: Command.LoaderContext, options: Command.Options) {
     super(ctx, { ...options });
   }
 

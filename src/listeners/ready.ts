@@ -2,7 +2,10 @@ import { Listener } from "@sapphire/framework";
 import { ActivityType, Client } from "discord.js";
 
 export class readyListener extends Listener {
-  public constructor(context: Listener.Context, options: Listener.Options) {
+  public constructor(
+    context: Listener.LoaderContext,
+    options: Listener.Options,
+  ) {
     super(context, {
       ...options,
       event: "ready",
@@ -17,7 +20,7 @@ export class readyListener extends Listener {
           type: ActivityType.Custom,
         });
       } else {
-        this.container.client.user?.setActivity("discord.gg/starrysky", {
+        this.container.client.user?.setActivity("✨ discord.gg/starrysky", {
           type: ActivityType.Custom,
         });
       }

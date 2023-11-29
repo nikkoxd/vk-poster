@@ -8,7 +8,7 @@ import {
 import { readFile } from "fs";
 
 export class AddButtonCommand extends Command {
-  public constructor(ctx: Command.Context, options: Command.Options) {
+  public constructor(ctx: Command.LoaderContext, options: Command.Options) {
     super(ctx, { ...options });
   }
 
