@@ -20,7 +20,7 @@ export class readyListener extends Listener {
           type: ActivityType.Custom,
         });
       } else {
-        this.container.client.user?.setActivity("✨ discord.gg/starrysky", {
+        this.container.client.user?.setActivity("💫 discord.gg/starrysky", {
           type: ActivityType.Custom,
         });
       }
