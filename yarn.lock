@@ -142,7 +142,7 @@
   resolved "https://registry.npmjs.org/@sapphire/duration/-/duration-1.1.0.tgz"
   integrity sha512-ATb2pWPLcSgG7bzvT6MglUcDexFSufr2FLXUmhipWGFtZbvDhkopGBIuHyzoGy7LZvL8UY5T6pRLNdFv5pl/Lg==
 
-"@sapphire/framework@^4.8.x":
+"@sapphire/framework@^4.8.1":
   version "4.8.2"
   resolved "https://registry.yarnpkg.com/@sapphire/framework/-/framework-4.8.2.tgz#1e031fccc7aacfdfdb2e03ef038d7a59d581e31e"
   integrity sha512-MJH6NkdZtZ9DgcPD3ExQnjO7UYdZm2WQBC29jb9A6kmYzd/y+8/unSjURgDQQhw6+60QWN7tPJXCVQJmmlPVCw==
