@@ -10,6 +10,7 @@ const client = new SapphireClient({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildMessageReactions,
   ],
 });
 
