@@ -175,7 +175,7 @@ export class pollCommand extends Subcommand {
         (await message)?.edit(
           `**🎉 Голосование окончено**\n> ${text}\nЗа - ${
             (reactionsYes as number) - 1
-          }   Против - ${(reactionsYes as number) - 1}`,
+          }   Против - ${(reactionsNo as number) - 1}`,
         );
         // Remove all reactions
         (await message)?.reactions.removeAll();
