@@ -1,5 +1,5 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { ChannelType, Message } from "discord.js";
+import { ChannelType, Message, PermissionFlagsBits } from "discord.js";
 
 export class pollCommand extends Subcommand {
   constructor(context: Subcommand.LoaderContext, options: Subcommand.Options) {
@@ -29,6 +29,7 @@ export class pollCommand extends Subcommand {
         builder
           .setName("poll")
           .setDescription("Создать/редактировать/завершить голосование")
+          .setDefaultMemberPermissions(PermissionFlagsBits.ManageEvents)
           .addSubcommand((command) =>
             command
               .setName("start")
