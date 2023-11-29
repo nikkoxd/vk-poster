@@ -12,9 +12,15 @@ export class readyListener extends Listener {
 
   public override async run(client: Client) {
     try {
-      this.container.client.user?.setActivity(".gg/starrysky", {
-        type: ActivityType.Watching,
-      });
+      if (process.env.CUSTOM_STATUS) {
+        this.container.client.user?.setActivity(process.env.CUSTOM_STATUS, {
+          type: ActivityType.Custom,
+        });
+      } else {
+        this.container.client.user?.setActivity("discord.gg/starrysky", {
+          type: ActivityType.Custom,
+        });
+      }
     } catch (err) {
       this.container.logger.error(
         "Error while trying to set the bot's status:",
