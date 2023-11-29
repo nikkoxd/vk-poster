@@ -32,7 +32,7 @@ export class SendMessageCommand extends Command {
               .setRequired(false)
               .addChannelTypes(ChannelType.GuildText),
           ),
-      { idHints: ["1167528847961497610"] },
+      { idHints: [process.env.SENDMSG_ID as string] },
     );
   }
 

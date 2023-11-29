@@ -14,7 +14,7 @@ export class PingCommand extends Command {
           .setName("ping")
           .setDescription("Понг!")
           .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-      { idHints: ["1167528849798602825"] },
+      { idHints: [process.env.PING_ID as string] },
     );
   }
 

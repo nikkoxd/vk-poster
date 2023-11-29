@@ -15,7 +15,7 @@ export class cleanUpCmdsCommand extends Command {
           .setName("cleanupcmds")
           .setDescription("Удалить все команды")
           .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-      { idHints: ["1167528851560202240"] },
+      { idHints: [process.env.CLEANUPCMDS_ID as string] },
     );
   }
 

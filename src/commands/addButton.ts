@@ -50,7 +50,7 @@ export class AddButtonCommand extends Command {
               .setDescription("ID сообщения для отправки/URL для открытия")
               .setRequired(true),
           ),
-      { idHints: ["1167543873745199106"] },
+      { idHints: [process.env.ADDCOMPONENT_ID as string] },
     );
   }
 
