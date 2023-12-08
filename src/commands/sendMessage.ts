@@ -59,10 +59,9 @@ export class SendMessageCommand extends Command {
             const jsonData = JSON.parse(data);
             const channel: TextChannel | null =
               interaction.options.getChannel("channel");
+            let attachments = [];
 
             if (jsonData.attachments) {
-              let attachments = [];
-
               for (
                 let index = 0;
                 index < jsonData.attachments.length;
