@@ -59,16 +59,23 @@ export class SendMessageCommand extends Command {
             const jsonData = JSON.parse(data);
             const channel: TextChannel | null =
               interaction.options.getChannel("channel");
-            let attachments = [];
 
-            for (let index = 0; index < jsonData.attachments.length; index++) {
-              const fileName = jsonData.attachments[index];
-              const path = `./dist/messages/attachments/${fileName}`;
-              const file = new AttachmentBuilder(path);
-              try {
-                attachments.push(file);
-              } catch (err) {
-                logError(err);
+            if (jsonData.attachments) {
+              let attachments = [];
+
+              for (
+                let index = 0;
+                index < jsonData.attachments.length;
+                index++
+              ) {
+                const fileName = jsonData.attachments[index];
+                const path = `./dist/messages/attachments/${fileName}`;
+                const file = new AttachmentBuilder(path);
+                try {
+                  attachments.push(file);
+                } catch (err) {
+                  logError(err);
+                }
               }
             }
 
