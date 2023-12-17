@@ -16,6 +16,34 @@ npm run start
 yarn start
 ```
 
+## Translating the bot
+
+To add new translations, go to `/locales`,
+make a folder there with your language's code
+and make a JSON file named `translation.json`, then
+preload your translation in `/src/index.ts`:
+
+```ts
+...
+i18next.use(I18NexFsBackend).init<FsBackendOptions>(
+  {
+    lng: process.env.LANGUAGE,
+    fallbackLng: "en",
+    preload: ["en", "ru"], // add the language code here
+    ns: ["translation"],
+    defaultNS: "translation",
+    backend: {
+      loadPath: "./locales/{{lng}}/{{ns}}.json",
+    },
+  },
+  (err, t) => {
+    if (err) return client.logger.error(err);
+    client.logger.info("i18next is ready...");
+  },
+);
+...
+```
+
 ## TODO
 
 - Connect things to MongoDB
