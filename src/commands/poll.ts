@@ -1,5 +1,6 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import { ChannelType, Message, PermissionFlagsBits } from "discord.js";
+import { t } from "i18next";
 
 export class pollCommand extends Subcommand {
   constructor(context: Subcommand.LoaderContext, options: Subcommand.Options) {
@@ -28,50 +29,58 @@ export class pollCommand extends Subcommand {
       (builder) =>
         builder
           .setName("poll")
-          .setDescription("Создать/редактировать/завершить голосование")
+          .setDescription(t("commands.poll.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageEvents)
           .addSubcommand((command) =>
             command
               .setName("start")
-              .setDescription("Начать голосование")
+              .setDescription(t("commands.poll.start.description"))
               .addStringOption((option) =>
                 option
-                  .setName("text")
-                  .setDescription("Текст")
+                  .setName(t("commands.poll.start.options.text.name"))
+                  .setDescription(
+                    t("commands.poll.start.options.text.description"),
+                  )
                   .setRequired(true),
               )
               .addChannelOption((option) =>
                 option
-                  .setName("channel")
-                  .setDescription("Канал для отправки")
+                  .setName(t("commands.poll.start.options.channel.name"))
+                  .setDescription(
+                    t("commands.poll.start.options.channel.description"),
+                  )
                   .setRequired(false),
               ),
           )
           .addSubcommand((command) =>
             command
               .setName("edit")
-              .setDescription("Редактировать голосование")
+              .setDescription(t("commands.poll.edit.description"))
               .addStringOption((option) =>
                 option
-                  .setName("id")
-                  .setDescription("Идентификатор сообщения")
+                  .setName(t("commands.poll.edit.options.id.name"))
+                  .setDescription(
+                    t("commands.poll.edit.options.id.description"),
+                  )
                   .setRequired(true),
               )
               .addStringOption((option) =>
                 option
-                  .setName("text")
-                  .setDescription("Новый текст")
+                  .setName(t("commands.poll.edit.options.text.name"))
+                  .setDescription(
+                    t("commands.poll.edit.options.text.description"),
+                  )
                   .setRequired(true),
               ),
           )
           .addSubcommand((command) =>
             command
               .setName("end")
-              .setDescription("Закончить голосование")
+              .setDescription(t("commands.poll.end.description"))
               .addStringOption((option) =>
                 option
-                  .setName("id")
-                  .setDescription("Идентификатор сообщения")
+                  .setName(t("commands.poll.end.options.id.name"))
+                  .setDescription(t("commands.poll.end.options.id.description"))
                   .setRequired(true),
               ),
           ),
@@ -84,7 +93,7 @@ export class pollCommand extends Subcommand {
     err: any,
   ) {
     interaction.reply({
-      content: `При выполнении команды произошла ошибка:\n\`\`\`${err}\`\`\``,
+      content: `${t("logError")}\n\`\`\`${err}\`\`\``,
       ephemeral: true,
     });
     this.container.logger.error("Error reading message:", err);
@@ -93,10 +102,15 @@ export class pollCommand extends Subcommand {
   public async chatInputStart(
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
-    const text = interaction.options.getString("text", true);
-    const channel = interaction.options.getChannel("channel", false, [
-      ChannelType.GuildText,
-    ]);
+    const text = interaction.options.getString(
+      t("commands.poll.start.options.text.name"),
+      true,
+    );
+    const channel = interaction.options.getChannel(
+      t("commands.poll.start.options.channel.name"),
+      false,
+      [ChannelType.GuildText],
+    );
 
     try {
       if (channel) {
@@ -109,8 +123,9 @@ export class pollCommand extends Subcommand {
           msg.react("👎");
         }
 
+        // prettier-ignore
         interaction.reply({
-          content: `Голосование создано! 🎉\nПосмотреть: <#${channel.id}>`,
+          content: `${t("commands.poll.success")}\n${t("commands.poll.link",)} <#${channel.id}>`,
           ephemeral: true,
         });
       } else {
@@ -124,7 +139,7 @@ export class pollCommand extends Subcommand {
         }
 
         interaction.reply({
-          content: "Голосование создано! 🎉",
+          content: t("commands.poll.success"),
           ephemeral: true,
         });
       }
@@ -136,14 +151,20 @@ export class pollCommand extends Subcommand {
   public async chatInputEdit(
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
-    const messageID = interaction.options.getString("id", true);
+    const messageID = interaction.options.getString(
+      t("commands.poll.edit.options.id.name"),
+      true,
+    );
     const message = interaction.channel?.messages.fetch(messageID);
-    const text = interaction.options.getString("text", true);
+    const text = interaction.options.getString(
+      t("commands.poll.edit.options.text.name"),
+      true,
+    );
 
     try {
       (await message)?.edit(text);
       interaction.reply({
-        content: "Голосование изменено",
+        content: t("commands.poll.edited"),
         ephemeral: true,
       });
     } catch (err) {
@@ -154,7 +175,10 @@ export class pollCommand extends Subcommand {
   public async chatInputEnd(
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
-    const messageID = interaction.options.getString("id", true);
+    const messageID = interaction.options.getString(
+      t("commands.poll.end.options.id.name"),
+      true,
+    );
     const message = interaction.channel?.messages.fetch(messageID);
 
     try {
@@ -173,14 +197,14 @@ export class pollCommand extends Subcommand {
         }
         // Edit the message
         (await message)?.edit(
-          `**🎉 Голосование окончено**\n> ${text}\nЗа - ${
+          `**🎉 ${t("commands.poll.ended")}**\n> ${text}\n${t("poll.for")} - ${
             (reactionsYes as number) - 1
-          }   Против - ${(reactionsNo as number) - 1}`,
+          }   ${t("poll.against")} - ${(reactionsNo as number) - 1}`,
         );
         // Remove all reactions
         (await message)?.reactions.removeAll();
         interaction.reply({
-          content: "Голосование окончено",
+          content: t("commands.poll.ended"),
           ephemeral: true,
         });
       } else {

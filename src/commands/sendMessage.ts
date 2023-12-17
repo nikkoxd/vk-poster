@@ -6,6 +6,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { readFile } from "fs";
+import { t } from "i18next";
 
 export class SendMessageCommand extends Command {
   public constructor(ctx: Command.LoaderContext, options: Command.Options) {
@@ -17,18 +18,20 @@ export class SendMessageCommand extends Command {
       (builder) =>
         builder
           .setName("sendmsg")
-          .setDescription("Отправить сообщение в чат")
+          .setDescription(t("commands.sendMessage.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addStringOption((option) =>
             option
-              .setName("id")
-              .setDescription("Идентификатор сообщения для отправки")
+              .setName(t("commands.sendMessage.options.id.name"))
+              .setDescription(t("commands.sendMessage.options.id.description"))
               .setRequired(true),
           )
           .addChannelOption((option) =>
             option
-              .setName("channel")
-              .setDescription("Канал для отправки")
+              .setName(t("commands.sendMessage.options.channel.name"))
+              .setDescription(
+                t("commands.sendMessage.options.channel.description"),
+              )
               .setRequired(false)
               .addChannelTypes(ChannelType.GuildText),
           ),
@@ -37,12 +40,15 @@ export class SendMessageCommand extends Command {
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-    const fileName = interaction.options.getString("id", true);
+    const fileName = interaction.options.getString(
+      t("commands.sendMessage.options.id.name"),
+      true,
+    );
     const filePath = `./dist/messages/${fileName}.json`;
 
     const logError = (err: any) => {
       interaction.reply({
-        content: `При выполнении команды произошла ошибка:\n\`\`\`${err}\`\`\``,
+        content: `${t("logError")}\n\`\`\`${err}\`\`\``,
         ephemeral: true,
       });
       this.container.logger.error("Error reading message:", err);
@@ -57,8 +63,9 @@ export class SendMessageCommand extends Command {
         } else {
           try {
             const jsonData = JSON.parse(data);
-            const channel: TextChannel | null =
-              interaction.options.getChannel("channel");
+            const channel: TextChannel | null = interaction.options.getChannel(
+              t("commands.sendMessage.options.channel.name"),
+            );
             let attachments = [];
 
             if (jsonData.attachments) {
@@ -93,7 +100,7 @@ export class SendMessageCommand extends Command {
             }
 
             interaction.reply({
-              content: "Cообщение отправлено.",
+              content: t("commands.sendMessage.success"),
               ephemeral: true,
             });
           } catch (jsonErr: any) {

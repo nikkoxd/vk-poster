@@ -1,6 +1,7 @@
 import { Command } from "@sapphire/framework";
 import { isMessageInstance } from "@sapphire/discord.js-utilities";
 import { PermissionFlagsBits } from "discord.js";
+import { t } from "i18next";
 
 export class PingCommand extends Command {
   public constructor(ctx: Command.LoaderContext, options: Command.Options) {
@@ -12,7 +13,7 @@ export class PingCommand extends Command {
       (builder) =>
         builder
           .setName("ping")
-          .setDescription("Понг!")
+          .setDescription(t("commands.ping.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
       { idHints: [process.env.PING_ID as string] },
     );
@@ -20,7 +21,7 @@ export class PingCommand extends Command {
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const msg = await interaction.reply({
-      content: `Ping?`,
+      content: t("commands.ping.waiting"),
       ephemeral: true,
       fetchReply: true,
     });
@@ -28,11 +29,12 @@ export class PingCommand extends Command {
     if (isMessageInstance(msg)) {
       const diff = msg.createdTimestamp - interaction.createdTimestamp;
       const ping = Math.round(this.container.client.ws.ping);
+      // prettier-ignore
       return interaction.editReply(
-        `Pong 🏓! (Round trip took: ${diff}ms. Heartbeat: ${ping}ms.)`,
+        `${t("ping.success")} (Round trip took: {{diff}}ms. Heartbeat: {{ping}}ms.)`,
       );
     }
 
-    return interaction.editReply("Failed to retrieve ping :(");
+    return interaction.editReply(t("commands.ping.failure"));
   }
 }

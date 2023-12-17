@@ -1,5 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { GuildMember, TextChannel } from "discord.js";
+import { t } from "i18next";
 
 export class GuildMemberAvailableListener extends Listener {
   public constructor(
@@ -27,11 +28,15 @@ export class GuildMemberAvailableListener extends Listener {
 
         if (roleID) {
           channel.send(
-            `<@&${roleID}> Приветик, <@${member.id}>, приветствуем тебя в нашем кафе!`,
+            `<@&${roleID}> ${t("listeners.guildMemberAdd.welcome_message", {
+              member: member.id,
+            })}`,
           );
         } else {
           channel.send(
-            `Приветик, <@${member.id}>, приветствуем тебя в нашем кафе!`,
+            t("listeners.guildMemberAdd.welcome_message", {
+              member: member.id,
+            }),
           );
         }
       }

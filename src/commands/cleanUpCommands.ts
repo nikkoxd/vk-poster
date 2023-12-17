@@ -1,5 +1,6 @@
 import { Command } from "@sapphire/framework";
 import { REST, PermissionFlagsBits, Routes } from "discord.js";
+import { t } from "i18next";
 
 const rest = new REST().setToken(process.env.TOKEN as string);
 
@@ -13,7 +14,7 @@ export class cleanUpCmdsCommand extends Command {
       (builder) =>
         builder
           .setName("cleanupcmds")
-          .setDescription("Удалить все команды")
+          .setDescription(t("commands.cleanUpCmds.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
       { idHints: [process.env.CLEANUPCMDS_ID as string] },
     );
@@ -27,15 +28,14 @@ export class cleanUpCmdsCommand extends Command {
         })
         .then(() =>
           interaction.reply({
-            content:
-              "Все команды были удалены. Перезапустите бота чтобы обновить команды.",
+            content: t("commands.cleanUpCmds.success"),
             ephemeral: true,
           }),
         )
         .catch(this.container.logger.error);
     } else {
       interaction.reply({
-        content: "Для выполнения этой команды требуется среда `development`",
+        content: t("commands.cleanUpCmds.failure"),
         ephemeral: true,
       });
     }

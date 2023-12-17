@@ -6,6 +6,7 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 import { readFile } from "fs";
+import { t } from "i18next";
 
 export class AddButtonCommand extends Command {
   public constructor(ctx: Command.LoaderContext, options: Command.Options) {
@@ -17,37 +18,54 @@ export class AddButtonCommand extends Command {
       (builder) =>
         builder
           .setName("addcomponent")
-          .setDescription("Добавить кнопку к сообщению.")
+          .setDescription(t("commands.addButton.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addStringOption((option) =>
             option
-              .setName("id")
-              .setDescription("Идентификатор сообщения")
+              .setName(t("commands.addButton.options.id.name"))
+              .setDescription(t("commands.addButton.options.id.description"))
               .setRequired(true),
           )
           .addStringOption((option) =>
             option
-              .setName("label")
-              .setDescription("Текст на кнопке")
+              .setName(t("commands.addButton.options.label.name"))
+              .setDescription(t("commands.addButton.options.label.description"))
               .setRequired(true),
           )
           .addStringOption((option) =>
             option
-              .setName("style")
-              .setDescription("Тип кнопки")
+              .setName(t("commands.addButton.options.style.name"))
+              .setDescription(t("commands.addButton.options.style.description"))
               .addChoices(
-                { name: "Основная", value: "primary" },
-                { name: "Вторичная", value: "secondary" },
-                { name: "Успех", value: "success" },
-                { name: "Внимание", value: "danger" },
-                { name: "Ссылка", value: "link" },
+                {
+                  name: t("commands.addButton.options.style.choices.primary"),
+                  value: "primary",
+                },
+                {
+                  name: t("commands.addButton.options.style.choices.secondary"),
+                  value: "secondary",
+                },
+                {
+                  name: t("commands.addButton.options.style.choices.success"),
+                  value: "success",
+                },
+                {
+                  name: t("commands.addButton.options.style.choices.danger"),
+                  value: "danger",
+                },
+                {
+                  name: t("commands.addButton.options.style.choices.link"),
+                  value: "link",
+                },
               )
               .setRequired(true),
           )
           .addStringOption((option) =>
             option
-              .setName("action")
-              .setDescription("ID сообщения для отправки/URL для открытия")
+              .setName(t("commands.addButton.options.action.name"))
+              .setDescription(
+                t("commands.addButton.options.action.description"),
+              )
               .setRequired(true),
           ),
       { idHints: [process.env.ADDCOMPONENT_ID as string] },
@@ -56,11 +74,23 @@ export class AddButtonCommand extends Command {
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const message = interaction.channel?.messages.fetch(
-      interaction.options.getString("id", true),
+      interaction.options.getString(
+        t("commands.addButton.options.id.name"),
+        true,
+      ),
     );
-    const label = interaction.options.getString("label", true);
-    const styleValue = interaction.options.getString("style", true);
-    const action = interaction.options.getString("action", true);
+    const label = interaction.options.getString(
+      t("commands.addButton.options.label.name"),
+      true,
+    );
+    const styleValue = interaction.options.getString(
+      t("commands.addButton.options.style.name"),
+      true,
+    );
+    const action = interaction.options.getString(
+      t("commands.addButton.options.action.name"),
+      true,
+    );
     let style: ButtonStyle = ButtonStyle.Primary;
 
     const button = new ButtonBuilder();
@@ -68,7 +98,7 @@ export class AddButtonCommand extends Command {
 
     const logError = (err: any) => {
       interaction.reply({
-        content: `При выполнении команды произошла ошибка:\n\`\`\`${err}\`\`\``,
+        content: `${t("logError")}\n\`\`\`${err}\`\`\``,
         ephemeral: true,
       });
       this.container.logger.error("Error reading message:", err);
@@ -119,7 +149,7 @@ export class AddButtonCommand extends Command {
                 logError(err);
               } finally {
                 interaction.reply({
-                  content: "Кнопка добавлена",
+                  content: t("commands.addButton.success"),
                   ephemeral: true,
                 });
               }
@@ -143,7 +173,10 @@ export class AddButtonCommand extends Command {
         } catch (err) {
           logError(err);
         } finally {
-          interaction.reply({ content: "Кнопка добавлена", ephemeral: true });
+          interaction.reply({
+            content: t("commands.addButton.success"),
+            ephemeral: true,
+          });
         }
 
         break;

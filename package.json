@@ -11,7 +11,9 @@
     "@sapphire/framework": "^4.8.1",
     "@sapphire/plugin-logger": "^3.0.6",
     "@sapphire/plugin-subcommands": "^5.1.0",
-    "discord.js": "14.x"
+    "discord.js": "14.x",
+    "i18next": "^23.7.11",
+    "i18next-fs-backend": "^2.3.1"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.4.10",

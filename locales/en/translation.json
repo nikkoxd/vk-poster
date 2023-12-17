@@ -1,0 +1,113 @@
+{
+  "logError": "An error occurred while executing the command:",
+  "commands": {
+    "addButton": {
+      "description": "Add a button to a message.",
+      "options": {
+        "id": {
+          "name": "id",
+          "description": "Message ID"
+        },
+        "label": {
+          "name": "text",
+          "description": "Button text"
+        },
+        "style": {
+          "name": "type",
+          "description": "Button type",
+          "choices": {
+            "primary": "Main",
+            "secondary": "Secondary",
+            "success": "Success",
+            "danger": "Danger",
+            "link": "Link"
+          }
+        },
+        "action": {
+          "name": "action",
+          "description": "Message ID to send/URL to open"
+        }
+      },
+      "success": "Button added"
+    },
+    "cleanUpCmds": {
+      "description": "Remove all commands",
+      "success": "All commands have been removed. ",
+      "failure": "The `development` environment is required to run this command"
+    },
+    "ping": {
+      "description": "Pong!",
+      "waiting": "Ping?",
+      "success": "Pong 🏓!",
+      "failure": ""
+    },
+    "poll": {
+      "description": "Create/edit/end poll",
+      "start": {
+        "description": "Create a poll",
+        "options": {
+          "text": {
+            "name": "text",
+            "description": "Text"
+          },
+          "channel": {
+            "name": "channel",
+            "description": "Channel to send"
+          }
+        }
+      },
+      "edit": {
+        "description": "Edit a poll",
+        "options": {
+          "id": {
+            "name": "id",
+            "description": "Message ID"
+          },
+          "text": {
+            "name": "text",
+            "description": "New text"
+          }
+        }
+      },
+      "end": {
+        "description": "End a poll",
+        "options": {
+          "id": {
+            "name": "id",
+            "description": "Message ID"
+          }
+        }
+      },
+      "success": "Poll has been created! ",
+      "link": "Take a look:",
+      "edited": "Poll edited",
+      "ended": "Poll has ended"
+    },
+    "sendMessage": {
+      "description": "Send a message to chat",
+      "options": {
+        "id": {
+          "name": "id",
+          "description": "Message ID to send"
+        },
+        "channel": {
+          "name": "channel",
+          "description": "Channel to send"
+        }
+      },
+      "success": "The message has been sent."
+    }
+  },
+  "listeners": {
+    "guildMemberAdd": {
+      "welcome_message": "Hi, <@{{member}}>, welcome to our cafe!"
+    },
+    "guildMemberUpdate": {
+      "welcome_message": "Hi, <@{{member}}>, welcome to our cafe!"
+    }
+  },
+  "poll": {
+    "for": "For",
+    "against": "Against"
+  }
+}

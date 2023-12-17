@@ -1,5 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { GuildMember, TextChannel } from "discord.js";
+import { t } from "i18next";
 
 export class guildMemberUpdateListener extends Listener {
   public constructor(
@@ -33,13 +34,18 @@ export class guildMemberUpdateListener extends Listener {
             channelID,
           ) as TextChannel;
 
+          // prettier-ignore
           if (roleID) {
             channel.send(
-              `<@&${roleID}> Приветик, <@${newMember.id}>, приветствуем тебя в нашем кафе!`,
+              `<@&${roleID}> ${t("listeners.guildMemberUpdate.welcome_message",
+                { member: newMember.id },
+              )}`,
             );
           } else {
             channel.send(
-              `Приветик, <@${newMember.id}>, приветствуем тебя в нашем кафе!`,
+              t("listeners.guildMemberUpdate.welcome_message", {
+                member: newMember.id,
+              }),
             );
           }
         }
