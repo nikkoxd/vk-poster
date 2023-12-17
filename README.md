@@ -16,7 +16,7 @@ npm run start
 yarn start
 ```
 
-## Translating the bot
+## Custom translations
 
 To add new translations, go to `/locales`,
 make a folder there with your language's code
