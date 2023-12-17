@@ -14,7 +14,7 @@ export class messageCreateListener extends Listener {
   }
 
   public override async run(message: Message) {
-    if (message.content.includes("@everyone")) {
+    if (message.content.includes("@everyone" || "@here")) {
       if (!message.member?.permissions.has(PermissionFlagsBits.MentionEveryone))
         message.react("🤡");
     }
