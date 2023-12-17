@@ -54,7 +54,7 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
 ...
 ```
 
-## License
+## Лицензия
 
 Этот проект распространяется под лицензией [GNU General Public License v3.0][license]
 
