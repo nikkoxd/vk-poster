@@ -2,9 +2,20 @@
 
 General purpose bot built for https://discord.gg/starrysky
 
+This README is also available in: [RU](README_ru.md) | [EN](README.md)
+
 ## Running the bot
 
-Clone this repository, copy `.env.example` to `.env` and fill in the empty configurations
+Clone this repository, copy `.env.example` to `.env`, fill in the empty configurations
+and run the commands:
+
+```
+# npm
+npm install
+
+# yarn
+yarn install
+```
 
 To run, use the following commands:
 
