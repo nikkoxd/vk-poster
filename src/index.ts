@@ -2,24 +2,15 @@ import "@sapphire/plugin-logger/register";
 import { SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
 
-import { MongoClient, ServerApiVersion } from "mongodb";
+import * as mongoDB from "mongodb";
 
 import i18next from "i18next";
 import I18NexFsBackend, { FsBackendOptions } from "i18next-fs-backend";
 
 import "dotenv/config";
 
-// Creating a new instance of the MongoDB client
-const mongoClient = new MongoClient(process.env.MONGODB_URI as string, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
 // Creating a new instance of the Discord bot client
-const discordClient = new SapphireClient({
+const client = new SapphireClient({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -43,28 +34,24 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
     },
   },
   (err, t) => {
-    if (err) return discordClient.logger.error(err);
-    discordClient.logger.info("i18next is ready...");
+    if (err) return client.logger.error(err);
+    client.logger.info("i18next is ready...");
   },
 );
 
-async function run() {
-  try {
-    discordClient.logger.info("Running on", process.env.NODE_ENV);
-    // MONGODB CONNECTION
-    // Connect the client to the server
-    await mongoClient.connect();
-    // Send a ping to confirm a successful connection
-    await mongoClient.db("admin").command({ ping: 1 });
-    discordClient.logger.info("Successfuly connected to MongoDB");
-    // DISCORD API CONNECTION
-    // Connect the client to Discord API
-    discordClient.login(process.env.TOKEN);
-    discordClient.logger.info("Successfuly connected to Discord API");
-  } finally {
-    // Ensures that the client will close when the program finishes/errors
-    await mongoClient.close();
-  }
+export async function connectToDatabase() {
+  const dbclient: mongoDB.MongoClient = new mongoDB.MongoClient(
+    process.env.DB_URI as string,
+  );
+
+  await dbclient.connect();
+
+  const database: mongoDB.Db = dbclient.db(process.env.DB_NAME);
+
+  client.logger.info(`Successfully connected to database: ${db.databaseName}`);
 }
 
-run().catch(discordClient.logger.error);
+client.logger.info("Running on", process.env.NODE_ENV);
+
+client.login(process.env.TOKEN);
+client.logger.info("Successfuly connected to Discord API");
