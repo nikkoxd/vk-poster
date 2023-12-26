@@ -1,5 +1,5 @@
 import "@sapphire/plugin-logger/register";
-import { SapphireClient } from "@sapphire/framework";
+import { Command, SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
 
 import * as mongoDB from "mongodb";
@@ -8,6 +8,7 @@ import i18next from "i18next";
 import I18NexFsBackend, { FsBackendOptions } from "i18next-fs-backend";
 
 import "dotenv/config";
+import { Subcommand } from "@sapphire/plugin-subcommands";
 
 // Creating a new instance of the Discord bot client
 const client = new SapphireClient({
@@ -38,6 +39,19 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
     client.logger.info("i18next is ready...");
   },
 );
+
+export async function logError(
+  interaction:
+    | Command.ChatInputCommandInteraction
+    | Subcommand.ChatInputCommandInteraction,
+  err: any,
+) {
+  interaction.reply({
+    content: `${i18next.t("logError")}\n\`\`\`${err}\`\`\``,
+    ephemeral: true,
+  });
+  client.logger.error("Error reading message:", err);
+}
 
 export async function connectToDatabase() {
   const dbclient: mongoDB.MongoClient = new mongoDB.MongoClient(
