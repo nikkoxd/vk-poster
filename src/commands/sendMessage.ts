@@ -5,6 +5,7 @@ import {
   PermissionFlagsBits,
   TextChannel,
 } from "discord.js";
+import { logError } from "..";
 import { readFile } from "fs";
 import { t } from "i18next";
 
@@ -46,20 +47,12 @@ export class SendMessageCommand extends Command {
     );
     const filePath = `./dist/messages/${fileName}.json`;
 
-    const logError = (err: any) => {
-      interaction.reply({
-        content: `${t("logError")}\n\`\`\`${err}\`\`\``,
-        ephemeral: true,
-      });
-      this.container.logger.error("Error reading message:", err);
-    };
-
     readFile(
       filePath,
       "utf-8",
       (err: NodeJS.ErrnoException | null, data: string) => {
         if (err) {
-          logError(err);
+          logError(interaction, err);
         } else {
           try {
             const jsonData = JSON.parse(data);
@@ -80,7 +73,7 @@ export class SendMessageCommand extends Command {
                 try {
                   attachments.push(file);
                 } catch (err) {
-                  logError(err);
+                  logError(interaction, err);
                 }
               }
             }
@@ -104,7 +97,7 @@ export class SendMessageCommand extends Command {
               ephemeral: true,
             });
           } catch (jsonErr: any) {
-            this.container.logger.error(jsonErr);
+            logError(interaction, jsonErr);
           }
         }
       },
