@@ -106,6 +106,10 @@
     },
     "guildMemberUpdate": {
       "welcome_message": "Приветик, <@{{member}}>, приветствуем тебя в нашем кафе!"
+    },
+    "messageCreate": {
+      "cantSendGifs": "Чтобы отправлять гифки заработай 1 уровень!",
+      "cantAttachFiles": "Чтобы отправлять картинки/файлы заработай 1 уровень!"
     }
   },
   "poll": {

@@ -104,6 +104,10 @@
     },
     "guildMemberUpdate": {
       "welcome_message": "Hi, <@{{member}}>, welcome to our cafe!"
+    },
+    "messageCreate": {
+      "cantSendGifs": "To send GIFs you first need to get level 1!",
+      "cantAttachFiles": "To send images or files you first need to get level 1!"
     }
   },
   "poll": {
