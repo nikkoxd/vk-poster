@@ -105,7 +105,10 @@
       "welcome_message": "Приветик, <@{{member}}>, приветствуем тебя в нашем кафе!"
     },
     "guildMemberUpdate": {
-      "welcome_message": "Приветик, <@{{member}}>, приветствуем тебя в нашем кафе!"
+      "welcome_message": "Приветик, <@{{member}}>, приветствуем тебя в нашем кафе!",
+      "member_role": {
+        "reason": "Участник принял правила"
+      }
     },
     "messageCreate": {
       "cantSendGifs": "Чтобы отправлять гифки заработай 1 уровень!",

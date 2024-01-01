@@ -24,20 +24,19 @@ export class guildMemberUpdateListener extends Listener {
     // after member accepts rules
     if (newMember.guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED")) {
       if (oldMember.pending && !newMember.pending) {
-        this.container.logger.info("Member is no longer pending");
-
+        // Ping member and the welcoming role in a text channel
         const channelID = process.env.WELCOME_CHANNEL_ID;
-        const roleID = process.env.WELCOME_ROLE_ID;
+        const welcomeRoleID = process.env.WELCOME_ROLE_ID;
 
         if (channelID) {
-          const channel = this.container.client.channels.cache.get(
+          const channel = newMember.guild.channels.cache.get(
             channelID,
           ) as TextChannel;
 
           // prettier-ignore
-          if (roleID) {
+          if (welcomeRoleID) {
             channel.send(
-              `<@&${roleID}> ${t("listeners.guildMemberUpdate.welcome_message",
+              `<@&${welcomeRoleID}> ${t("listeners.guildMemberUpdate.welcome_message",
                 { member: newMember.id },
               )}`,
             );
@@ -47,6 +46,21 @@ export class guildMemberUpdateListener extends Listener {
                 member: newMember.id,
               }),
             );
+          }
+        }
+        // Give a role to the member
+        const memberRoleID = process.env.MEMBER_ROLE_ID;
+
+        if (memberRoleID) {
+          const role = newMember.guild.roles.cache.get(memberRoleID);
+
+          if (role) {
+            newMember.roles.add(
+              role,
+              t("listeners.guildMemberUpdate.member_role.reason"),
+            );
+          } else {
+            this.container.logger.error("Specified member role doesn't exist");
           }
         }
       }

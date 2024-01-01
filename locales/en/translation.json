@@ -103,7 +103,10 @@
       "welcome_message": "Hi, <@{{member}}>, welcome to our cafe!"
     },
     "guildMemberUpdate": {
-      "welcome_message": "Hi, <@{{member}}>, welcome to our cafe!"
+      "welcome_message": "Hi, <@{{member}}>, welcome to our cafe!",
+      "member_role": {
+        "reason": "Member passed rules screening"
+      }
     },
     "messageCreate": {
       "cantSendGifs": "To send GIFs you first need to get level 1!",

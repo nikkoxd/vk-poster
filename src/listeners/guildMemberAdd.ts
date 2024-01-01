@@ -40,6 +40,21 @@ export class GuildMemberAvailableListener extends Listener {
           );
         }
       }
+
+      const memberRoleID = process.env.MEMBER_ROLE_ID;
+
+      if (memberRoleID) {
+        const role = member.guild.roles.cache.get(memberRoleID);
+
+        if (role) {
+          member.roles.add(
+            role,
+            t("listeners.guildMemberUpdate.member_role.reason"),
+          );
+        } else {
+          this.container.logger.error("Specified member role doesn't exist");
+        }
+      }
     }
   }
 }
