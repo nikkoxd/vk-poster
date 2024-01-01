@@ -35,14 +35,14 @@ export class messageCreateListener extends Listener {
     }
     // REPLY TO FAILED ATTACHMENTS
     // =============
-    if (
-      message.attachments &&
-      !message.content.startsWith("https://tenor.com") &&
-      !message.member
-        ?.permissionsIn(message.channel as TextChannel)
-        .has("AttachFiles")
-    ) {
-      message.reply(t("listeners.messageCreate.cantAttachFiles"));
-    }
+    // if (
+    //   message.attachments &&
+    //   !message.content.startsWith("https://tenor.com") &&
+    //   !message.member
+    //     ?.permissionsIn(message.channel as TextChannel)
+    //     .has("AttachFiles")
+    // ) {
+    //   message.reply(t("listeners.messageCreate.cantAttachFiles"));
+    // }
   }
 }
