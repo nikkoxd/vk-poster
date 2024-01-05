@@ -2,7 +2,7 @@ import { Listener } from "@sapphire/framework";
 import { GuildMember, TextChannel } from "discord.js";
 import { t } from "i18next";
 
-export class guildMemberUpdateListener extends Listener {
+export class GuildMemberUpdateListener extends Listener {
   public constructor(
     context: Listener.LoaderContext,
     options: Listener.Options,
@@ -15,53 +15,46 @@ export class guildMemberUpdateListener extends Listener {
   }
 
   public override async run(oldMember: GuildMember, newMember: GuildMember) {
-    this.container.logger.info("MEMBER UPDATED\n=========\n");
-    this.container.logger.info("OLD MEMBER: \n=========\n", oldMember);
-    this.container.logger.info("NEW MEMBER: \n=========\n", newMember);
+    const guild = newMember.guild;
 
-    // MEMBER WELCOMING
-    // Ran when server has verification gate enabled
-    // after member accepts rules
-    if (newMember.guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED")) {
-      if (oldMember.pending && !newMember.pending) {
-        // Ping member and the welcoming role in a text channel
-        const channelID = process.env.WELCOME_CHANNEL_ID;
-        const welcomeRoleID = process.env.WELCOME_ROLE_ID;
+    if (
+      guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED") &&
+      oldMember.pending &&
+      !newMember.pending
+    ) {
+      const channelID = process.env.WELCOME_CHANNEL_ID;
+      const welcomeRoleID = process.env.WELCOME_ROLE_ID;
+      const memberRoleID = process.env.MEMBER_ROLE_ID;
 
-        if (channelID) {
-          const channel = newMember.guild.channels.cache.get(
-            channelID,
-          ) as TextChannel;
+      if (channelID) {
+        const channel = guild.channels.cache.get(channelID) as TextChannel;
 
-          // prettier-ignore
-          if (welcomeRoleID) {
-            channel.send(
-              `<@&${welcomeRoleID}> ${t("listeners.guildMemberUpdate.welcome_message",
-                { member: newMember.id },
-              )}`,
-            );
-          } else {
-            channel.send(
-              t("listeners.guildMemberUpdate.welcome_message", {
-                member: newMember.id,
-              }),
-            );
-          }
-        }
-        // Give a role to the member
-        const memberRoleID = process.env.MEMBER_ROLE_ID;
+        const welcomeMessage = welcomeRoleID
+          ? `<@&${welcomeRoleID}> ${t(
+              "listeners.guildMemberUpdate.welcome_message",
+              { member: newMember.id },
+            )}`
+          : t("listeners.guildMemberUpdate.welcome_message", {
+              member: newMember.id,
+            });
 
-        if (memberRoleID) {
-          const role = newMember.guild.roles.cache.get(memberRoleID);
+        channel.send(welcomeMessage);
+      }
 
-          if (role) {
-            newMember.roles.add(
+      if (memberRoleID) {
+        const role = guild.roles.cache.get(memberRoleID);
+
+        if (role) {
+          try {
+            await newMember.roles.add(
               role,
               t("listeners.guildMemberUpdate.member_role.reason"),
             );
-          } else {
-            this.container.logger.error("Specified member role doesn't exist");
+          } catch (error) {
+            console.error("Error adding role to the member:", error);
           }
+        } else {
+          console.error("Specified member role doesn't exist");
         }
       }
     }

@@ -17,6 +17,8 @@ export class GuildMemberAvailableListener extends Listener {
   public override async run(member: GuildMember) {
     this.container.logger.info("User", member.id, "joined the guild!");
 
+    const guild = member.guild;
+
     if (!member.guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED")) {
       const channelID = process.env.WELCOME_CHANNEL_ID;
       const roleID = process.env.WELCOME_ROLE_ID;
