@@ -114,7 +114,7 @@ export class pollCommand extends Subcommand {
 
     try {
       if (channel) {
-        const msg = await channel.send(text);
+        const msg = await channel.send(`📊 **${text}**`);
         if (process.env.REACT_YES && process.env.REACT_NO) {
           msg.react(process.env.REACT_YES);
           msg.react(process.env.REACT_NO);
@@ -129,7 +129,7 @@ export class pollCommand extends Subcommand {
           ephemeral: true,
         });
       } else {
-        const msg = await interaction.channel?.send(text);
+        const msg = await interaction.channel?.send(`📊 **${text}**`);
         if (process.env.REACT_YES && process.env.REACT_NO) {
           (msg as Message).react(process.env.REACT_YES);
           (msg as Message).react(process.env.REACT_NO);
@@ -162,7 +162,7 @@ export class pollCommand extends Subcommand {
     );
 
     try {
-      (await message)?.edit(text);
+      (await message)?.edit(`📊 **${text}**`);
       interaction.reply({
         content: t("commands.poll.edited"),
         ephemeral: true,
@@ -197,7 +197,7 @@ export class pollCommand extends Subcommand {
         }
         // Edit the message
         (await message)?.edit(
-          `**🎉 ${t("commands.poll.ended")}**\n> ${text}\n${t("poll.for")} - ${
+          `${text?.replace("📊", "🔒")}\n${t("poll.for")} - ${
             (reactionsYes as number) - 1
           }   ${t("poll.against")} - ${(reactionsNo as number) - 1}`,
         );
