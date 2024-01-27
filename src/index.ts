@@ -41,15 +41,17 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
 );
 
 export async function logError(
-  interaction:
+  err: any,
+  interaction?:
     | Command.ChatInputCommandInteraction
     | Subcommand.ChatInputCommandInteraction,
-  err: any,
 ) {
-  interaction.reply({
-    content: `${i18next.t("logError")}\n\`\`\`${err}\`\`\``,
-    ephemeral: true,
-  });
+  if (interaction) {
+    interaction.reply({
+      content: `${i18next.t("logError")}\n\`\`\`${err}\`\`\``,
+      ephemeral: true,
+    });
+  }
   client.logger.error("Error reading message:", err);
 }
 
