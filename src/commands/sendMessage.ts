@@ -8,6 +8,7 @@ import {
 import { logError } from "..";
 import { readFile } from "fs";
 import { t } from "i18next";
+import Message from "../schemas/Message";
 
 export class SendMessageCommand extends Command {
   public constructor(ctx: Command.LoaderContext, options: Command.Options) {
@@ -41,66 +42,55 @@ export class SendMessageCommand extends Command {
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-    const fileName = interaction.options.getString(
+    const name = interaction.options.getString(
       t("commands.sendMessage.options.id.name"),
       true,
     );
-    const filePath = `./dist/messages/${fileName}.json`;
+    const message = await Message.findOne({ name: name });
 
-    readFile(
-      filePath,
-      "utf-8",
-      (err: NodeJS.ErrnoException | null, data: string) => {
-        if (err) {
-          logError(err, interaction);
-        } else {
-          try {
-            const jsonData = JSON.parse(data);
-            const channel: TextChannel | null = interaction.options.getChannel(
-              t("commands.sendMessage.options.channel.name"),
-            );
-            let attachments = [];
+    if (message) {
+      try {
+        const channel: TextChannel | null = interaction.options.getChannel(
+          t("commands.sendMessage.options.channel.name"),
+        );
+        let attachments = [];
 
-            if (jsonData.attachments) {
-              for (
-                let index = 0;
-                index < jsonData.attachments.length;
-                index++
-              ) {
-                const fileName = jsonData.attachments[index];
-                const path = `./dist/messages/attachments/${fileName}`;
-                const file = new AttachmentBuilder(path);
-                try {
-                  attachments.push(file);
-                } catch (err) {
-                  logError(err, interaction);
-                }
-              }
+        if (message.attachments) {
+          for (let index = 0; index < message.attachments.length; index++) {
+            const fileName = message.attachments[index];
+            const path = `./dist/messages/attachments/${fileName}`;
+            const file = new AttachmentBuilder(path);
+            try {
+              attachments.push(file);
+            } catch (err) {
+              logError(err, interaction);
             }
-
-            if (channel) {
-              channel.send({
-                content: jsonData.content,
-                embeds: jsonData.embeds,
-                files: attachments,
-              });
-            } else {
-              interaction.channel?.send({
-                content: jsonData.content,
-                embeds: jsonData.embeds,
-                files: attachments,
-              });
-            }
-
-            interaction.reply({
-              content: t("commands.sendMessage.success"),
-              ephemeral: true,
-            });
-          } catch (jsonErr: any) {
-            logError(interaction, jsonErr);
           }
         }
-      },
-    );
+
+        if (channel) {
+          channel.send({
+            content: message.content,
+            embeds: message.embeds,
+            files: attachments,
+          });
+        } else {
+          interaction.channel?.send({
+            content: message.content,
+            embeds: message.embeds,
+            files: attachments,
+          });
+        }
+
+        interaction.reply({
+          content: t("commands.sendMessage.success"),
+          ephemeral: true,
+        });
+      } catch (err: any) {
+        logError(interaction, err);
+      }
+    } else {
+      logError("Message " + name + " not found");
+    }
   }
 }
