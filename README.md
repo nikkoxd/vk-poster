@@ -27,6 +27,12 @@ npm run start
 yarn start
 ```
 
+## Custom messages
+
+No good solution has been implemented for this yet.
+Right now, to make your own messages, insert a document
+following the schema located at `src/schemas/Message.ts`
+
 ## Custom translations
 
 To add new translations, go to `/locales`,
