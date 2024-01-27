@@ -1,13 +1,14 @@
 import "@sapphire/plugin-logger/register";
 import { Command, SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
-
-import { connectToDatabase } from "./services/mongo.service";
+import { Subcommand } from "@sapphire/plugin-subcommands";
 
 import i18next from "i18next";
 import I18NexFsBackend, { FsBackendOptions } from "i18next-fs-backend";
 
-import { Subcommand } from "@sapphire/plugin-subcommands";
+import mongoose from "mongoose";
+
+import "dotenv/config";
 
 // Creating a new instance of the Discord bot client
 export const client = new SapphireClient({
@@ -54,6 +55,7 @@ export async function logError(
 
 client.logger.info("Running on", process.env.NODE_ENV);
 
-connectToDatabase();
+mongoose.connect(process.env.DB_URI as string);
+
 client.login(process.env.TOKEN);
 client.logger.info("Successfuly connected to Discord API");
