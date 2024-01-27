@@ -8,7 +8,7 @@ interface IMessage {
   attachments: string[];
 }
 
-export interface IEmbed {
+interface IEmbed {
   id: number;
   title: string;
   description: string;
@@ -16,7 +16,7 @@ export interface IEmbed {
   field: IEmbedField[];
 }
 
-export interface IEmbedField {
+interface IEmbedField {
   id: number;
   name: string;
   value: string;
