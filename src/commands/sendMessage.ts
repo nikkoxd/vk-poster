@@ -52,7 +52,7 @@ export class SendMessageCommand extends Command {
       "utf-8",
       (err: NodeJS.ErrnoException | null, data: string) => {
         if (err) {
-          logError(interaction, err);
+          logError(err, interaction);
         } else {
           try {
             const jsonData = JSON.parse(data);
@@ -73,7 +73,7 @@ export class SendMessageCommand extends Command {
                 try {
                   attachments.push(file);
                 } catch (err) {
-                  logError(interaction, err);
+                  logError(err, interaction);
                 }
               }
             }
