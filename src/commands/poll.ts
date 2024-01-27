@@ -134,7 +134,7 @@ export class pollCommand extends Subcommand {
         });
       }
     } catch (err) {
-      logError(interaction, err);
+      logError(err, interaction);
     }
   }
 
@@ -158,7 +158,7 @@ export class pollCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err) {
-      logError(interaction, err);
+      logError(err, interaction);
     }
   }
 
@@ -203,7 +203,7 @@ export class pollCommand extends Subcommand {
         );
       }
     } catch (err) {
-      logError(interaction, err);
+      logError(err, interaction);
     }
   }
 }

@@ -127,7 +127,7 @@ export class AddButtonCommand extends Command {
           "utf-8",
           async (err: NodeJS.ErrnoException | null, data: string) => {
             if (err) {
-              logError(interaction, err);
+              logError(err, interaction);
             } else {
               try {
                 button
@@ -139,7 +139,7 @@ export class AddButtonCommand extends Command {
 
                 (await message)?.edit({ components: [row] });
               } catch (err) {
-                logError(interaction, err);
+                logError(err, interaction);
               } finally {
                 interaction.reply({
                   content: t("commands.addButton.success"),
@@ -164,7 +164,7 @@ export class AddButtonCommand extends Command {
 
           (await message)?.edit({ components: [row] });
         } catch (err) {
-          logError(interaction, err);
+          logError(err, interaction);
         } finally {
           interaction.reply({
             content: t("commands.addButton.success"),
