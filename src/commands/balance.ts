@@ -11,7 +11,7 @@ export class balanceCommand extends Command {
   public override registerApplicationCommands(registry: Command.Registry) {
     registry.registerChatInputCommand(
       (builder) => builder.setName("balance").setDescription("Get balance"),
-      { idHints: ["1200898668363001856"] },
+      { idHints: [process.env.BALANCE_ID as string] },
     );
   }
 
