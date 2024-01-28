@@ -2,6 +2,7 @@ import { Listener } from "@sapphire/framework";
 import { Message, PermissionFlagsBits } from "discord.js";
 import Member from "../schemas/Member";
 import { logError } from "..";
+import { cooldowns } from "..";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -32,7 +33,21 @@ export class messageCreateListener extends Listener {
     const memberId = message.author.id;
     const member = await Member.findOne({ memberId: memberId });
 
+    if (!cooldowns.has(message.author)) {
+      cooldowns.set(message.author, 0);
+    }
+    const now = Date.now();
+    const delay = Number(process.env.COINS_COOLDOWN);
+
+    if (message.content.includes("@everyone" || "@here")) {
+      if (!message.member?.permissions.has(PermissionFlagsBits.MentionEveryone))
+        message.react("🤡");
+    }
+
     if (!message.author.bot) {
+      if ((cooldowns.get(message.author) as number) >= now - delay) return;
+      cooldowns.set(message.author, now);
+
       const addedCoins = await this.getRandomCoins();
       if (member) {
         await Member.updateOne(
@@ -42,11 +57,6 @@ export class messageCreateListener extends Listener {
       } else {
         await Member.create({ memberId: memberId, coins: addedCoins });
       }
-    }
-
-    if (message.content.includes("@everyone" || "@here")) {
-      if (!message.member?.permissions.has(PermissionFlagsBits.MentionEveryone))
-        message.react("🤡");
     }
   }
 }

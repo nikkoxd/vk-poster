@@ -1,6 +1,6 @@
 import "@sapphire/plugin-logger/register";
 import { Command, SapphireClient } from "@sapphire/framework";
-import { GatewayIntentBits } from "discord.js";
+import { Collection, GatewayIntentBits, User } from "discord.js";
 import { Subcommand } from "@sapphire/plugin-subcommands";
 
 import i18next from "i18next";
@@ -54,6 +54,8 @@ export async function logError(
   }
   client.logger.error("Error reading message:", err);
 }
+
+export let cooldowns = new Collection<User, number>();
 
 client.logger.info("Running on", process.env.NODE_ENV);
 
