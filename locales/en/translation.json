@@ -96,6 +96,23 @@
         }
       },
       "success": "The message has been sent."
+    },
+    "balance-top": {
+      "embed": {
+        "title": "Top 10 server members"
+      },
+      "description": "Server's top members"
+    },
+    "set-balance": {
+      "description": "Set member's balance",
+      "member": {
+        "name": "member",
+        "description": "Member to set balance to"
+      },
+      "amount": {
+        "name": "amount"
+      },
+      "amount-description": "Amount of coins to set balance to"
     }
   },
   "listeners": {
