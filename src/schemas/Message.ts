@@ -9,7 +9,6 @@ interface IMessage {
 }
 
 interface IEmbed {
-  id: number;
   title: string;
   description: string;
   color: number;
@@ -17,7 +16,6 @@ interface IEmbed {
 }
 
 interface IEmbedField {
-  id: number;
   name: string;
   value: string;
 }
