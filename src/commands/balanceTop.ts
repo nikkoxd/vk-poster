@@ -21,7 +21,7 @@ export class balanceTop extends Command {
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const members = await Member.find().limit(10).sort({ coins: -1 });
-    const embed = new EmbedBuilder().setColor("#D381D2");
+    const embed = new EmbedBuilder().setColor(`#${process.env.EMBED_COLOR}`);
     if (interaction.guild) {
       embed.setTitle(t("commands.balance-top.embed.title"));
       let description = "";
