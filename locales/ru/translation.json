@@ -116,6 +116,32 @@
       },
       "description": "Установить баланс участнику",
       "amount-description": "Количество монет, которые необходимо выставить"
+    },
+    "shop": {
+      "description": "Редактировать магазин",
+      "add": {
+        "description": "Добавить роль в магазин",
+        "role": {
+          "description": "Роль, которую необходимо добавить"
+        },
+        "price": {
+          "description": "Цена роли",
+          "name": "цена"
+        }
+      },
+      "role": {
+        "name": "роль"
+      },
+      "remove": {
+        "description": "Убрать роль из магазина",
+        "role": {
+          "description": "Роль, которую необходимо убрать"
+        }
+      },
+      "roleAlreadyExists": "Роль уже есть в магазине!",
+      "roleAdded": "Роль добавлена в магазин!",
+      "roleDeleted": "Роль удалена",
+      "roleDoesNotExist": "Такой роли нет в магазине"
     }
   },
   "listeners": {
@@ -129,5 +155,8 @@
   "poll": {
     "for": "За",
     "against": "Против"
+  },
+  "shop": {
+    "selectRole": "Выбери роль"
   }
 }
