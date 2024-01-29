@@ -2,6 +2,7 @@ import { Command } from "@sapphire/framework";
 import { logError } from "..";
 import { t } from "i18next";
 import Member from "../schemas/Member";
+import { PermissionFlagsBits } from "discord.js";
 
 export class balanceSetCommand extends Command {
   public constructor(ctx: Command.LoaderContext, options: Command.Options) {
@@ -14,6 +15,7 @@ export class balanceSetCommand extends Command {
         builder
           .setName("balance-set")
           .setDescription(t("commands.set-balance.description"))
+          .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addUserOption((option) =>
             option
               .setName(t("commands.set-balance.member.name"))
@@ -31,13 +33,21 @@ export class balanceSetCommand extends Command {
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-    const member = interaction.options.getUser("member", true);
-    const amount = interaction.options.getInteger("amount", true);
+    const member = interaction.options.getUser(
+      t("commands.set-balance.member.name"),
+      true,
+    );
+    const amount = interaction.options.getInteger(
+      t("commands.set-balance.amount.name"),
+      true,
+    );
+
+    this.container.logger.info(member.displayName);
 
     try {
       const dbMember = await Member.findOne({ memberId: member.id });
       if (dbMember) {
-        await Member.updateOne({ coins: amount });
+        await dbMember.updateOne({ coins: amount });
       } else {
         await Member.create({ memberId: member.id, coins: amount });
       }
