@@ -108,11 +108,11 @@ export class ShopButtonHandler extends InteractionHandler {
           .setPlaceholder(t("shop.selectRole"))
           .addOptions(roleOptions);
 
-        const buttonRow = new ActionRowBuilder<ButtonBuilder>();
         const selectRow =
           new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(menu);
 
         if (totalPages > 1) {
+          const buttonRow = new ActionRowBuilder<ButtonBuilder>();
           buttonRow.addComponents(
             new ButtonBuilder()
               .setCustomId("prev-page")
@@ -123,13 +123,19 @@ export class ShopButtonHandler extends InteractionHandler {
               .setLabel("Следующая страница")
               .setStyle(1), // ButtonStyle.PRIMARY
           );
-        }
 
-        await interaction.reply({
-          embeds: [embed],
-          components: [selectRow, buttonRow],
-          ephemeral: true,
-        });
+          await interaction.reply({
+            embeds: [embed],
+            components: [selectRow, buttonRow],
+            ephemeral: true,
+          });
+        } else {
+          await interaction.reply({
+            embeds: [embed],
+            components: [selectRow],
+            ephemeral: true,
+          });
+        }
       } catch (error) {
         this.container.logger.error("Error fetching shop roles:", error);
       }
