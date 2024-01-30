@@ -63,7 +63,8 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
 
 ## TODO
 
-- Connect things to MongoDB
+- Give coins when using /bump type commands
+- Create private channels for coins
 
 ## License
 
