@@ -15,15 +15,16 @@ export class GuildMemberUpdateListener extends Listener {
   }
 
   public override async run(oldMember: GuildMember, newMember: GuildMember) {
-    // MEMBER WELCOMING
-    // Ran when server has verification gate enabled
-    // after member accepts rules
-    if (newMember.guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED")) {
-      if (oldMember.pending && !newMember.pending) {
-        this.container.logger.info("Member is no longer pending");
+    const guild = newMember.guild;
 
-        const channelID = process.env.WELCOME_CHANNEL_ID;
-        const roleID = process.env.WELCOME_ROLE_ID;
+    if (
+      guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED") &&
+      oldMember.pending &&
+      !newMember.pending
+    ) {
+      const channelID = process.env.WELCOME_CHANNEL_ID;
+      const welcomeRoleID = process.env.WELCOME_ROLE_ID;
+      const memberRoleID = process.env.MEMBER_ROLE_ID;
 
       if (channelID) {
         const channel = guild.channels.cache.get(channelID) as TextChannel;
