@@ -98,7 +98,9 @@ schedule(timing, async () => {
 client.logger.info("Running on", process.env.NODE_ENV);
 
 mongoose
-  .connect(process.env.DB_URI as string)
+  .connect(
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@database.9jp4vnl.mongodb.net/${process.env.GUILD_ID}?retryWrites=true&w=majority`,
+  )
   .then(() => client.logger.info("Connected to MongoDB"))
   .catch((error) => client.logger.error("Error connecting to MongoDB:", error));
 

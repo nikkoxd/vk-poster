@@ -9,6 +9,7 @@ import {
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   Role,
+  ButtonBuilder,
 } from "discord.js";
 import { t } from "i18next";
 import ShopItem, { IShopItem } from "../schemas/ShopItem";
@@ -26,7 +27,9 @@ export class ShopButtonHandler extends InteractionHandler {
   }
 
   public override parse(interaction: ButtonInteraction) {
-    return interaction.customId === "shop" ? this.some() : this.none();
+    return interaction.customId === ("shop" || "next-page" || "prev-page")
+      ? this.some()
+      : this.none();
   }
 
   private createEmbedFields(role: Role, roleItem: IShopItem) {
@@ -74,8 +77,20 @@ export class ShopButtonHandler extends InteractionHandler {
 
       try {
         const roleData = await this.fetchShopRoles(interaction);
+        const itemsPerPage = 9;
+        const totalPages = Math.ceil(roleData.length / itemsPerPage);
 
-        roleData.forEach(({ role, roleItem }) => {
+        let page = 1;
+
+        interaction.customId ? page++ : null;
+        interaction.customId ? page-- : null;
+
+        const startIdx = (page - 1) * itemsPerPage;
+        const endIdx = startIdx + itemsPerPage;
+
+        const paginatedRoles = roleData.slice(startIdx, endIdx);
+
+        paginatedRoles.forEach(({ role, roleItem }) => {
           if (role) {
             embed.addFields(this.createEmbedFields(role, roleItem));
 
@@ -93,12 +108,26 @@ export class ShopButtonHandler extends InteractionHandler {
           .setPlaceholder(t("shop.selectRole"))
           .addOptions(roleOptions);
 
-        const row =
+        const buttonRow = new ActionRowBuilder<ButtonBuilder>();
+        const selectRow =
           new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(menu);
+
+        if (totalPages > 1) {
+          buttonRow.addComponents(
+            new ButtonBuilder()
+              .setCustomId("prev-page")
+              .setLabel("Предыдущая страница")
+              .setStyle(1), // ButtonStyle.PRIMARY
+            new ButtonBuilder()
+              .setCustomId("next-page")
+              .setLabel("Следующая страница")
+              .setStyle(1), // ButtonStyle.PRIMARY
+          );
+        }
 
         await interaction.reply({
           embeds: [embed],
-          components: [row],
+          components: [selectRow, buttonRow],
           ephemeral: true,
         });
       } catch (error) {
