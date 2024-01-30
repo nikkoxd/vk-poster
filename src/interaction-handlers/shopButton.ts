@@ -14,6 +14,7 @@ import {
 import { t } from "i18next";
 import ShopItem, { IShopItem } from "../schemas/ShopItem";
 import Member from "../schemas/Member";
+import { logError } from "..";
 
 export class ShopButtonHandler extends InteractionHandler {
   public constructor(
@@ -33,9 +34,9 @@ export class ShopButtonHandler extends InteractionHandler {
   }
 
   private createEmbedFields(role: Role, roleItem: IShopItem) {
-    let value = `**Цена:** ${roleItem.price} монеток`;
+    let value = `**${t("shop.price")}** ${roleItem.price} ${t("shop.coins")}`;
     if (roleItem.duration)
-      value = `${value}\n**Длительность:** ${roleItem.duration}`;
+      value = `${value}\n**${t("shop.duration")}** ${roleItem.duration}`;
     return {
       name: role ? role.name : "Unknown Role",
       value,
@@ -70,8 +71,8 @@ export class ShopButtonHandler extends InteractionHandler {
         await Member.create({ memberId: interaction.user.id, coins: 0 });
       }
       const embed = new EmbedBuilder()
-        .setTitle("Магазин")
-        .setDescription(`Твой баланс: ${memberItem!.coins}`)
+        .setTitle(t("shop.title"))
+        .setDescription(`${t("shop.balance")} ${memberItem!.coins}`)
         .setColor(`#${process.env.EMBED_COLOR}`);
       const roleOptions: StringSelectMenuOptionBuilder[] = [];
 
@@ -98,7 +99,9 @@ export class ShopButtonHandler extends InteractionHandler {
               new StringSelectMenuOptionBuilder()
                 .setLabel(role.name)
                 .setValue(role.id)
-                .setDescription(`Цена: ${roleItem.price}`),
+                .setDescription(
+                  `${t("shop.price")} ${roleItem.price} ${t("shop.coins")}`,
+                ),
             );
           }
         });
@@ -137,7 +140,7 @@ export class ShopButtonHandler extends InteractionHandler {
           });
         }
       } catch (error) {
-        this.container.logger.error("Error fetching shop roles:", error);
+        logError(error, interaction);
       }
     }
   }
