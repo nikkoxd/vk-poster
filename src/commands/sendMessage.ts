@@ -1,8 +1,11 @@
 import { Command } from "@sapphire/framework";
 import {
+  ActionRowBuilder,
   AttachmentBuilder,
+  ButtonBuilder,
   ChannelType,
   PermissionFlagsBits,
+  StringSelectMenuBuilder,
   TextChannel,
 } from "discord.js";
 import { logError } from "..";
@@ -55,6 +58,8 @@ export class SendMessageCommand extends Command {
         );
         let attachments = [];
 
+        // ATTACHMENTS
+
         if (message.attachments) {
           for (let index = 0; index < message.attachments.length; index++) {
             const fileName = message.attachments[index];
@@ -68,16 +73,52 @@ export class SendMessageCommand extends Command {
           }
         }
 
+        // ROWS
+
+        let rows = [];
+
+        if (message.rows) {
+          for (let i = 0; i < message.rows.length; i++) {
+            const row = message.rows[i];
+            let rowComponent;
+            if (row.buttons.length != 0) {
+              rowComponent = new ActionRowBuilder<ButtonBuilder>();
+              let buttons: ButtonBuilder[] = [];
+              for (let j = 0; j < row.buttons.length; j++) {
+                const button = row.buttons[j];
+                const buttonComponent = new ButtonBuilder(button);
+                buttons.push(buttonComponent);
+              }
+              rowComponent.addComponents(buttons);
+              rows.push(rowComponent);
+            } else if (row.buttons.length != 0) {
+              rowComponent = new ActionRowBuilder<StringSelectMenuBuilder>();
+              let selectMenus: StringSelectMenuBuilder[] = [];
+              for (let j = 0; j < row.selectMenus.length; j++) {
+                const selectMenu = row.selectMenus[j];
+                const selectMenuComponent = new StringSelectMenuBuilder(
+                  selectMenu,
+                );
+                selectMenus.push(selectMenuComponent);
+              }
+              rowComponent.addComponents(selectMenus);
+              rows.push(rowComponent);
+            }
+          }
+        }
+
         if (channel) {
           channel.send({
             content: message.content,
             embeds: message.embeds,
+            components: rows,
             files: attachments,
           });
         } else {
           interaction.channel?.send({
             content: message.content,
             embeds: message.embeds,
+            components: rows,
             files: attachments,
           });
         }
@@ -90,7 +131,7 @@ export class SendMessageCommand extends Command {
         logError(interaction, err);
       }
     } else {
-      logError("Message " + name + " not found");
+      this.container.logger.error(`Message ${name} not found`);
     }
   }
 }

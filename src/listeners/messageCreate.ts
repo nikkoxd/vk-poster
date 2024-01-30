@@ -4,6 +4,7 @@ import { t } from "i18next";
 import Member from "../schemas/Member";
 import { logError } from "..";
 import { cooldowns } from "..";
+import ms from "ms";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -23,7 +24,7 @@ export class messageCreateListener extends Listener {
     if (min && max) {
       return Math.floor(Math.random() * (max - min) + min);
     } else {
-      logError(
+      this.container.logger.error(
         "MIN and MAX values for coins not found, giving predefined amount",
       );
       return Math.floor(Math.random() * (85 - 50) + 50);
@@ -38,7 +39,9 @@ export class messageCreateListener extends Listener {
       cooldowns.set(message.author, 0);
     }
     const now = Date.now();
-    const delay = Number(process.env.COINS_COOLDOWN);
+    let delay;
+    if (process.env.COINS_COOLDOWN) delay = ms(process.env.COINS_COOLDOWN);
+    else delay = 0;
 
     if (message.content.includes("@everyone" || "@here")) {
       if (!message.member?.permissions.has(PermissionFlagsBits.MentionEveryone))

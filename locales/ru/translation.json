@@ -127,6 +127,10 @@
         "price": {
           "description": "Цена роли",
           "name": "цена"
+        },
+        "duration": {
+          "name": "длительность",
+          "description": "Длительность выдачи роли"
         }
       },
       "role": {

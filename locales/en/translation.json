@@ -124,6 +124,10 @@
         "price": {
           "description": "Price of the role",
           "name": "price"
+        },
+        "duration": {
+          "name": "duration",
+          "description": "How long to give role for"
         }
       },
       "role": {

@@ -5,6 +5,7 @@ interface IMessage {
   content: string;
   tts: boolean;
   embeds: IEmbed[];
+  rows: IRow[];
   attachments: string[];
 }
 
@@ -20,11 +21,42 @@ interface IEmbedField {
   value: string;
 }
 
+interface IRow {
+  buttons: IButton[];
+  selectMenus: ISelect[];
+}
+
+interface IButton {
+  customId: string;
+  label: string;
+  style: number;
+  emoji: string;
+  url: string;
+  disabled: boolean;
+}
+
+interface ISelect {
+  customId: string;
+  placeholder: string;
+  min: number;
+  max: number;
+  options: IOption[];
+}
+
+interface IOption {
+  label: string;
+  value: string;
+  description: string;
+  emoji: string;
+  default: boolean;
+}
+
 const messageSchema = new Schema<IMessage>({
   name: { type: String, required: true },
   content: String,
   tts: Boolean,
   embeds: Array<IEmbed>,
+  rows: Array<IRow>,
   attachments: Array<String>,
 });
 
