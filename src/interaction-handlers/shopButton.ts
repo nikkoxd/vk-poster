@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import { t } from "i18next";
 import ShopItem, { IShopItem } from "../schemas/ShopItem";
+import Member from "../schemas/Member";
 
 export class ShopButtonHandler extends InteractionHandler {
   public constructor(
@@ -59,8 +60,15 @@ export class ShopButtonHandler extends InteractionHandler {
 
   public async run(interaction: ButtonInteraction) {
     if (interaction.guild) {
+      const memberItem = await Member.findOne({
+        memberId: interaction.user.id,
+      });
+      if (!memberItem) {
+        await Member.create({ memberId: interaction.user.id, coins: 0 });
+      }
       const embed = new EmbedBuilder()
         .setTitle("Магазин")
+        .setDescription(`Твой баланс: ${memberItem!.coins}`)
         .setColor(`#${process.env.EMBED_COLOR}`);
       const roleOptions: StringSelectMenuOptionBuilder[] = [];
 
