@@ -82,7 +82,8 @@ export class ShopButtonHandler extends InteractionHandler {
             roleOptions.push(
               new StringSelectMenuOptionBuilder()
                 .setLabel(role.name)
-                .setValue(role.id),
+                .setValue(role.id)
+                .setDescription(`Цена: ${roleItem.price}`),
             );
           }
         });
