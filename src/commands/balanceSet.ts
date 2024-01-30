@@ -51,13 +51,10 @@ export class balanceSetCommand extends Command {
       } else {
         await Member.create({ memberId: member.id, coins: amount });
       }
-      interaction.reply(
-        "Баланс " +
-          member.displayName +
-          " теперь составляет " +
-          amount +
-          " монеток",
-      );
+      interaction.reply({
+        content: `Баланс ${member.displayName} теперь составляет ${amount} монеток`,
+        ephemeral: true,
+      });
     } catch (err: any) {
       logError(err, interaction);
     }
