@@ -5,6 +5,7 @@ import {
   ButtonStyle,
   PermissionFlagsBits,
 } from "discord.js";
+import { logError } from "..";
 import { readFile } from "fs";
 import { t } from "i18next";
 
@@ -96,14 +97,6 @@ export class AddButtonCommand extends Command {
     const button = new ButtonBuilder();
     const row = new ActionRowBuilder<ButtonBuilder>();
 
-    const logError = (err: any) => {
-      interaction.reply({
-        content: `${t("logError")}\n\`\`\`${err}\`\`\``,
-        ephemeral: true,
-      });
-      this.container.logger.error("Error reading message:", err);
-    };
-
     switch (styleValue) {
       case "primary":
         style = ButtonStyle.Primary;
@@ -134,7 +127,7 @@ export class AddButtonCommand extends Command {
           "utf-8",
           async (err: NodeJS.ErrnoException | null, data: string) => {
             if (err) {
-              logError(err);
+              logError(err, interaction);
             } else {
               try {
                 button
@@ -146,7 +139,7 @@ export class AddButtonCommand extends Command {
 
                 (await message)?.edit({ components: [row] });
               } catch (err) {
-                logError(err);
+                logError(err, interaction);
               } finally {
                 interaction.reply({
                   content: t("commands.addButton.success"),
@@ -171,7 +164,7 @@ export class AddButtonCommand extends Command {
 
           (await message)?.edit({ components: [row] });
         } catch (err) {
-          logError(err);
+          logError(err, interaction);
         } finally {
           interaction.reply({
             content: t("commands.addButton.success"),

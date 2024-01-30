@@ -1,5 +1,6 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import { ChannelType, Message, PermissionFlagsBits } from "discord.js";
+import { logError } from "..";
 import { t } from "i18next";
 
 export class pollCommand extends Subcommand {
@@ -88,17 +89,6 @@ export class pollCommand extends Subcommand {
     );
   }
 
-  private logError(
-    interaction: Subcommand.ChatInputCommandInteraction,
-    err: any,
-  ) {
-    interaction.reply({
-      content: `${t("logError")}\n\`\`\`${err}\`\`\``,
-      ephemeral: true,
-    });
-    this.container.logger.error("Error reading message:", err);
-  }
-
   public async chatInputStart(
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
@@ -144,7 +134,7 @@ export class pollCommand extends Subcommand {
         });
       }
     } catch (err) {
-      this.logError(interaction, err);
+      logError(err, interaction);
     }
   }
 
@@ -168,7 +158,7 @@ export class pollCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err) {
-      this.logError(interaction, err);
+      logError(err, interaction);
     }
   }
 
@@ -213,7 +203,7 @@ export class pollCommand extends Subcommand {
         );
       }
     } catch (err) {
-      this.logError(interaction, err);
+      logError(err, interaction);
     }
   }
 }

@@ -96,6 +96,53 @@
         }
       },
       "success": "The message has been sent."
+    },
+    "balance-top": {
+      "embed": {
+        "title": "Top 10 server members"
+      },
+      "description": "Server's top members"
+    },
+    "set-balance": {
+      "description": "Set member's balance",
+      "member": {
+        "name": "member",
+        "description": "Member to set balance to"
+      },
+      "amount": {
+        "name": "amount"
+      },
+      "amount-description": "Amount of coins to set balance to"
+    },
+    "shop": {
+      "description": "Manage shop",
+      "add": {
+        "description": "Add a role to the shop",
+        "role": {
+          "description": "The role to add"
+        },
+        "price": {
+          "description": "Price of the role",
+          "name": "price"
+        },
+        "duration": {
+          "name": "duration",
+          "description": "How long to give role for"
+        }
+      },
+      "role": {
+        "name": "role"
+      },
+      "remove": {
+        "description": "Remove a role from the shop",
+        "role": {
+          "description": "The role to remove"
+        }
+      },
+      "roleAlreadyExists": "Role is already in the shop!",
+      "roleAdded": "Role added to the shop!",
+      "roleDeleted": "Role deleted",
+      "roleDoesNotExist": "There is no such role in the shop"
     }
   },
   "listeners": {
@@ -116,5 +163,8 @@
   "poll": {
     "for": "For",
     "against": "Against"
+  },
+  "shop": {
+    "selectRole": "Select a role"
   }
 }
