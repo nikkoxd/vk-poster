@@ -1,6 +1,13 @@
 import "@sapphire/plugin-logger/register";
 import { Command, SapphireClient } from "@sapphire/framework";
-import { Collection, GatewayIntentBits, TextChannel, User } from "discord.js";
+import {
+  ButtonInteraction,
+  Collection,
+  GatewayIntentBits,
+  StringSelectMenuInteraction,
+  TextChannel,
+  User,
+} from "discord.js";
 import { Subcommand } from "@sapphire/plugin-subcommands";
 
 import i18next from "i18next";
@@ -48,7 +55,9 @@ export async function logError(
   err: any,
   interaction:
     | Command.ChatInputCommandInteraction
-    | Subcommand.ChatInputCommandInteraction,
+    | Subcommand.ChatInputCommandInteraction
+    | ButtonInteraction
+    | StringSelectMenuInteraction,
 ) {
   interaction.reply({
     content: `${i18next.t("logError")}\n\`\`\`${err}\`\`\``,
