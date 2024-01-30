@@ -15,10 +15,6 @@ export class guildMemberUpdateListener extends Listener {
   }
 
   public override async run(oldMember: GuildMember, newMember: GuildMember) {
-    this.container.logger.info("MEMBER UPDATED\n=========\n");
-    this.container.logger.info("OLD MEMBER: \n=========\n", oldMember);
-    this.container.logger.info("NEW MEMBER: \n=========\n", newMember);
-
     // MEMBER WELCOMING
     // Ran when server has verification gate enabled
     // after member accepts rules
