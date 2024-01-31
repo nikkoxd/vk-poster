@@ -28,9 +28,8 @@ export class ShopButtonHandler extends InteractionHandler {
   }
 
   public override parse(interaction: ButtonInteraction) {
-    return interaction.customId === ("shop" || "next-page" || "prev-page")
-      ? this.some()
-      : this.none();
+    const validIds = ["shop", "next-page", "prev-page"];
+    return validIds.includes(interaction.customId) ? this.some() : this.none();
   }
 
   private createEmbedFields(role: Role, roleItem: IShopItem) {
@@ -62,6 +61,8 @@ export class ShopButtonHandler extends InteractionHandler {
     );
   }
 
+  page = 1;
+
   public async run(interaction: ButtonInteraction) {
     if (interaction.guild) {
       const memberItem = await Member.findOne({
@@ -78,20 +79,18 @@ export class ShopButtonHandler extends InteractionHandler {
 
       try {
         const roleData = await this.fetchShopRoles(interaction);
-        const itemsPerPage = 9;
-        const totalPages = Math.ceil(roleData.length / itemsPerPage);
+        // const itemsPerPage = 9;
+        // const totalPages = Math.ceil(roleData.length / itemsPerPage);
 
-        let page = 1;
+        // interaction.customId === "next-page" ? this.page++ : null;
+        // interaction.customId === "prev-page" ? this.page-- : null;
 
-        interaction.customId ? page++ : null;
-        interaction.customId ? page-- : null;
+        // const startIdx = (this.page - 1) * itemsPerPage;
+        // const endIdx = startIdx + itemsPerPage;
 
-        const startIdx = (page - 1) * itemsPerPage;
-        const endIdx = startIdx + itemsPerPage;
-
-        const paginatedRoles = roleData.slice(startIdx, endIdx);
-
-        paginatedRoles.forEach(({ role, roleItem }) => {
+        // const paginatedRoles = roleData.slice(startIdx, endIdx);
+        //paginatedRoles.forEach(({ role, roleItem }) => {
+        roleData.forEach(({ role, roleItem }) => {
           if (role) {
             embed.addFields(this.createEmbedFields(role, roleItem));
 
@@ -114,31 +113,38 @@ export class ShopButtonHandler extends InteractionHandler {
         const selectRow =
           new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(menu);
 
-        if (totalPages > 1) {
-          const buttonRow = new ActionRowBuilder<ButtonBuilder>();
-          buttonRow.addComponents(
-            new ButtonBuilder()
-              .setCustomId("prev-page")
-              .setLabel("Предыдущая страница")
-              .setStyle(1), // ButtonStyle.PRIMARY
-            new ButtonBuilder()
-              .setCustomId("next-page")
-              .setLabel("Следующая страница")
-              .setStyle(1), // ButtonStyle.PRIMARY
-          );
+        // Buttons are disabled for now until properly implemented
+        // ------
+        // if (totalPages > 1) {
+        //   const buttonRow = new ActionRowBuilder<ButtonBuilder>();
+        //   buttonRow.addComponents(
+        //     new ButtonBuilder()
+        //       .setCustomId("prev-page")
+        //       .setLabel("Предыдущая страница")
+        //       .setStyle(1), // ButtonStyle.PRIMARY
+        //     new ButtonBuilder()
+        //       .setCustomId("next-page")
+        //       .setLabel("Следующая страница")
+        //       .setStyle(1), // ButtonStyle.PRIMARY
+        //   );
 
-          await interaction.reply({
-            embeds: [embed],
-            components: [selectRow, buttonRow],
-            ephemeral: true,
-          });
-        } else {
-          await interaction.reply({
-            embeds: [embed],
-            components: [selectRow],
-            ephemeral: true,
-          });
-        }
+        //   await interaction.reply({
+        //     embeds: [embed],
+        //     components: [selectRow, buttonRow],
+        //     ephemeral: true,
+        //   });
+        // } else {
+        //   await interaction.reply({
+        //     embeds: [embed],
+        //     components: [selectRow],
+        //     ephemeral: true,
+        //   });
+        // }
+        await interaction.reply({
+          embeds: [embed],
+          components: [selectRow],
+          ephemeral: true,
+        });
       } catch (error) {
         logError(error, interaction);
       }
