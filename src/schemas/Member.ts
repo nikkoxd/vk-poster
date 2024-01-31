@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-interface IMember {
+export interface IMember {
   memberId: string;
   coins: number;
   roles: IRole[];

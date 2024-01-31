@@ -10,10 +10,11 @@ import {
   StringSelectMenuOptionBuilder,
   Role,
   ButtonBuilder,
+  ComponentType,
 } from "discord.js";
 import { t } from "i18next";
 import ShopItem, { IShopItem } from "../schemas/ShopItem";
-import Member from "../schemas/Member";
+import Member, { IMember } from "../schemas/Member";
 import { logError } from "..";
 
 export class ShopButtonHandler extends InteractionHandler {
@@ -28,8 +29,7 @@ export class ShopButtonHandler extends InteractionHandler {
   }
 
   public override parse(interaction: ButtonInteraction) {
-    const validIds = ["shop", "next-page", "prev-page"];
-    return validIds.includes(interaction.customId) ? this.some() : this.none();
+    return interaction.customId == "shop" ? this.some() : this.none();
   }
 
   private createEmbedFields(role: Role, roleItem: IShopItem) {
@@ -61,39 +61,57 @@ export class ShopButtonHandler extends InteractionHandler {
     );
   }
 
-  page = 1;
+  private createPageEmbed(
+    page: number,
+    itemsPerPage: number,
+    memberItem: IMember,
+    roleData: { role: Role | null; roleItem: IShopItem }[],
+  ): EmbedBuilder {
+    const totalPages = Math.ceil(roleData.length / itemsPerPage);
+
+    const startIdx = (page - 1) * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+
+    const embed = new EmbedBuilder()
+      .setTitle(t("shop.title"))
+      .setDescription(`${t("shop.balance")} ${memberItem!.coins}`)
+      .setColor(`#${process.env.EMBED_COLOR}`)
+      .setFooter({ text: `Страница: ${page}/${totalPages}` });
+
+    const paginatedRoles = roleData.slice(startIdx, endIdx);
+    const fields = paginatedRoles
+      .filter(({ role }) => role !== null)
+      .map(({ role, roleItem }) => this.createEmbedFields(role!, roleItem))
+      .flat();
+
+    embed.addFields(fields);
+
+    return embed;
+  }
 
   public async run(interaction: ButtonInteraction) {
-    if (interaction.guild) {
+    if (interaction.guild && interaction.channel) {
       const memberItem = await Member.findOne({
         memberId: interaction.user.id,
       });
       if (!memberItem) {
         await Member.create({ memberId: interaction.user.id, coins: 0 });
       }
-      const embed = new EmbedBuilder()
-        .setTitle(t("shop.title"))
-        .setDescription(`${t("shop.balance")} ${memberItem!.coins}`)
-        .setColor(`#${process.env.EMBED_COLOR}`);
       const roleOptions: StringSelectMenuOptionBuilder[] = [];
 
       try {
+        const reply = await interaction.deferReply({
+          ephemeral: true,
+          fetchReply: true,
+        });
         const roleData = await this.fetchShopRoles(interaction);
-        // const itemsPerPage = 9;
-        // const totalPages = Math.ceil(roleData.length / itemsPerPage);
+        const itemsPerPage = 9;
+        const totalPages = Math.ceil(roleData.length / itemsPerPage);
 
-        // interaction.customId === "next-page" ? this.page++ : null;
-        // interaction.customId === "prev-page" ? this.page-- : null;
+        let page = 1;
 
-        // const startIdx = (this.page - 1) * itemsPerPage;
-        // const endIdx = startIdx + itemsPerPage;
-
-        // const paginatedRoles = roleData.slice(startIdx, endIdx);
-        //paginatedRoles.forEach(({ role, roleItem }) => {
         roleData.forEach(({ role, roleItem }) => {
           if (role) {
-            embed.addFields(this.createEmbedFields(role, roleItem));
-
             roleOptions.push(
               new StringSelectMenuOptionBuilder()
                 .setLabel(role.name)
@@ -105,6 +123,13 @@ export class ShopButtonHandler extends InteractionHandler {
           }
         });
 
+        const embed = this.createPageEmbed(
+          page,
+          itemsPerPage,
+          memberItem!,
+          roleData,
+        );
+
         const menu = new StringSelectMenuBuilder()
           .setCustomId("shop-select")
           .setPlaceholder(t("shop.selectRole"))
@@ -113,38 +138,56 @@ export class ShopButtonHandler extends InteractionHandler {
         const selectRow =
           new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(menu);
 
-        // Buttons are disabled for now until properly implemented
-        // ------
-        // if (totalPages > 1) {
-        //   const buttonRow = new ActionRowBuilder<ButtonBuilder>();
-        //   buttonRow.addComponents(
-        //     new ButtonBuilder()
-        //       .setCustomId("prev-page")
-        //       .setLabel("Предыдущая страница")
-        //       .setStyle(1), // ButtonStyle.PRIMARY
-        //     new ButtonBuilder()
-        //       .setCustomId("next-page")
-        //       .setLabel("Следующая страница")
-        //       .setStyle(1), // ButtonStyle.PRIMARY
-        //   );
+        if (totalPages > 1) {
+          const buttonRow = new ActionRowBuilder<ButtonBuilder>();
+          buttonRow.addComponents(
+            new ButtonBuilder()
+              .setCustomId("prev-page")
+              .setLabel("Предыдущая страница")
+              .setStyle(1), // ButtonStyle.PRIMARY
+            new ButtonBuilder()
+              .setCustomId("next-page")
+              .setLabel("Следующая страница")
+              .setStyle(1), // ButtonStyle.PRIMARY
+          );
 
-        //   await interaction.reply({
-        //     embeds: [embed],
-        //     components: [selectRow, buttonRow],
-        //     ephemeral: true,
-        //   });
-        // } else {
-        //   await interaction.reply({
-        //     embeds: [embed],
-        //     components: [selectRow],
-        //     ephemeral: true,
-        //   });
-        // }
-        await interaction.reply({
-          embeds: [embed],
-          components: [selectRow],
-          ephemeral: true,
-        });
+          await interaction.editReply({
+            embeds: [embed],
+            components: [selectRow, buttonRow],
+          });
+
+          const collector = reply.createMessageComponentCollector({
+            componentType: ComponentType.Button,
+            time: 60_000,
+          });
+
+          collector.on("collect", async (collectedInteraction) => {
+            if (collectedInteraction.customId == "prev-page" && page != 1)
+              page--;
+            if (
+              collectedInteraction.customId == "next-page" &&
+              page != totalPages
+            )
+              page++;
+
+            const embed = this.createPageEmbed(
+              page,
+              itemsPerPage,
+              memberItem!,
+              roleData,
+            );
+
+            await collectedInteraction.update({ embeds: [embed] });
+          });
+          collector.on("end", (collected) => {
+            console.log(`Collected ${collected.size} interactions.`);
+          });
+        } else {
+          await interaction.editReply({
+            embeds: [embed],
+            components: [selectRow],
+          });
+        }
       } catch (error) {
         logError(error, interaction);
       }
