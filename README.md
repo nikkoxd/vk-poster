@@ -1,4 +1,5 @@
 # 💫 Stella
+[![Fly Deploy](https://github.com/nikkoxd/stella/actions/workflows/fly.yml/badge.svg)](https://github.com/nikkoxd/stella/actions/workflows/fly.yml)
 
 General purpose bot built for https://discord.gg/starrysky
 
