@@ -1,7 +1,7 @@
 import { Listener } from "@sapphire/framework";
 import { Message, PermissionFlagsBits, TextChannel } from "discord.js";
 import { t } from "i18next";
-import Member from "../schemas/Member";
+import Member, { IMember } from "../schemas/Member";
 import { logError } from "..";
 import { cooldowns } from "..";
 import ms from "ms";
@@ -19,15 +19,23 @@ export class messageCreateListener extends Listener {
     });
   }
 
-  async getRandomCoins(min: number, max: number) {
+  private getRandomCoins(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  public override async run(message: Message) {
-    const memberId = message.author.id;
-    const member = await Member.findOne({ memberId: memberId });
+  private processPings(message: Message) {
+    if (message.content.includes("@everyone" || "@here")) {
+      if (!message.member?.permissions.has(PermissionFlagsBits.MentionEveryone))
+        message.react("🤡");
+    }
+  }
 
-    const guild = await Guild.findOne({ id: process.env.GUILD_ID });
+  private async giveCoins(
+    message: Message,
+    guild: IGuild | null,
+    member: IMember | null,
+  ) {
+    const memberId = message.author.id;
     let cooldown, min, max;
     if (guild) {
       cooldown = ms(guild.coins.cooldown);
@@ -46,11 +54,6 @@ export class messageCreateListener extends Listener {
     }
     const now = Date.now();
 
-    if (message.content.includes("@everyone" || "@here")) {
-      if (!message.member?.permissions.has(PermissionFlagsBits.MentionEveryone))
-        message.react("🤡");
-    }
-
     if (!message.author.bot) {
       if ((cooldowns.get(message.author) as number) >= now - cooldown) return;
       cooldowns.set(message.author, now);
@@ -65,8 +68,10 @@ export class messageCreateListener extends Listener {
         await Member.create({ memberId: memberId, coins: addedCoins });
       }
     }
+  }
+
+  private processLinks(message: Message) {
     // REPLY TO FAILED EMBED LINKS
-    // =============
     if (
       message.content.startsWith("https://tenor.com/") &&
       !message.member
@@ -76,7 +81,6 @@ export class messageCreateListener extends Listener {
       message.reply(t("listeners.messageCreate.cantSendGifs"));
     }
     // REPLY TO FAILED ATTACHMENTS
-    // =============
     // if (
     //   message.attachments &&
     //   !message.content.startsWith("https://tenor.com") &&
@@ -86,5 +90,16 @@ export class messageCreateListener extends Listener {
     // ) {
     //   message.reply(t("listeners.messageCreate.cantAttachFiles"));
     // }
+  }
+
+  public override async run(message: Message) {
+    const member = await Member.findOne({ memberId: message.author.id });
+    const guild = await Guild.findOne({ id: process.env.GUILD_ID });
+
+    await this.giveCoins(message, guild, member);
+
+    this.processPings(message);
+
+    this.processLinks(message);
   }
 }
