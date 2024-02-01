@@ -9,6 +9,7 @@ import type {
 import ShopItem from "../schemas/ShopItem";
 import Member from "../schemas/Member";
 import ms from "ms";
+import { t } from "i18next";
 
 export class ShopSelectHandler extends InteractionHandler {
   public constructor(
@@ -36,7 +37,7 @@ export class ShopSelectHandler extends InteractionHandler {
       if (userItem && roleItem) {
         if ((member!.roles as GuildMemberRoleManager).cache.get(role.id)) {
           interaction.reply({
-            content: "У тебя уже есть эта роль!",
+            content: t("shop.memberAlreadyHasRole"),
             ephemeral: true,
           });
         } else {
@@ -57,12 +58,12 @@ export class ShopSelectHandler extends InteractionHandler {
             }
 
             interaction.reply({
-              content: `Тебе добавлена роль <@&${role.id}>!`,
+              content: `${t("shop.roleGiven")} <@&${role.id}>!`,
               ephemeral: true,
             });
           } else {
             interaction.reply({
-              content: "У тебя недостаточно монеток!",
+              content: t("shop.notEnoughCoins"),
               ephemeral: true,
             });
           }

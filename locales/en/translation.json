@@ -173,6 +173,10 @@
       },
       "wasSetTo": "was set to",
       "memberRole": "Member Role"
+    },
+    "balance": {
+      "yourBalance": "Your balance:",
+      "description": "Get balance"
     }
   },
   "listeners": {
@@ -200,6 +204,11 @@
     "balance": "Your balance:",
     "price": "Price",
     "coins": "coins",
-    "duration": "Duration:"
+    "duration": "Duration:",
+    "memberAlreadyHasRole": "You already have this role!",
+    "roleGiven": "You've bought the role",
+    "notEnoughCoins": "You can't afford this role!",
+    "previous-page": "Previous page",
+    "next-page": "Next page"
   }
 }

@@ -153,11 +153,11 @@ export class ShopButtonHandler extends InteractionHandler {
           buttonRow.addComponents(
             new ButtonBuilder()
               .setCustomId("prev-page")
-              .setLabel("Предыдущая страница")
+              .setLabel(t("shop.previous-page"))
               .setStyle(1), // ButtonStyle.PRIMARY
             new ButtonBuilder()
               .setCustomId("next-page")
-              .setLabel("Следующая страница")
+              .setLabel(t("shop.next-page"))
               .setStyle(1), // ButtonStyle.PRIMARY
           );
 

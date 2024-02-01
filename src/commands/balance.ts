@@ -10,7 +10,10 @@ export class balanceCommand extends Command {
 
   public override registerApplicationCommands(registry: Command.Registry) {
     registry.registerChatInputCommand(
-      (builder) => builder.setName("balance").setDescription("Get balance"),
+      (builder) =>
+        builder
+          .setName("balance")
+          .setDescription(t("commands.balance.description")),
       { idHints: [process.env.BALANCE_ID as string] },
     );
   }
@@ -20,10 +23,16 @@ export class balanceCommand extends Command {
     const member = await Member.findOne({ memberId: memberId });
 
     if (member) {
-      interaction.reply("Твой баланс: " + member.coins + " монет");
+      interaction.reply(
+        `${t("shop.balance")} ${member.coins} ${t("shop.coins")}`,
+      );
     } else {
-      await Member.create({ memberId: memberId, coins: 0 });
-      interaction.reply("Твой баланс: 0 монет");
+      const member = new Member({ memberId: memberId, coins: 0 });
+      member.save();
+
+      interaction.reply(
+        `${t("shop.balance")} ${member.coins} ${t("shop.coins")}`,
+      );
     }
   }
 }
