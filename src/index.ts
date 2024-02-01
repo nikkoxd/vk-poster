@@ -49,8 +49,6 @@ export async function logError(
   client.logger.error("Error reading message:", err);
 }
 
-export let cooldowns = new Collection<User, number>();
-
 let timing = "0 */1 * * *"; // Ran every hour
 if (process.env.NODE_ENV == "development") timing = "*/1 * * * *"; // Ran every minute
 
@@ -96,13 +94,6 @@ mongoose
   .then(() => client.logger.info("Connected to MongoDB"))
   .catch((error) => client.logger.error("Error connecting to MongoDB:", error));
 
-client
-  .login(process.env.TOKEN)
-  .then(() => client.logger.info("Successfuly connected to Discord API"))
-  .catch((error) =>
-    client.logger.error("Error connecting to Discord API: ", error),
-  );
-
 // Initializing i18next for internationalization
 function i18nConfig(guild: IGuild) {
   i18next.use(I18NexFsBackend).init<FsBackendOptions>(
@@ -135,4 +126,11 @@ async function runi18n() {
   }
 }
 
-runi18n();
+runi18n().then(() => {
+  client
+    .login(process.env.TOKEN)
+    .then(() => client.logger.info("Successfuly connected to Discord API"))
+    .catch((error) =>
+      client.logger.error("Error connecting to Discord API: ", error),
+    );
+});
