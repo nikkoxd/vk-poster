@@ -19,6 +19,11 @@ export interface IGuild {
     min: number;
     max: number;
   };
+  exp: {
+    cooldown: string;
+    min: number;
+    max: number;
+  };
 }
 
 const guildSchema = new Schema<IGuild>({
@@ -46,6 +51,14 @@ const guildSchema = new Schema<IGuild>({
       cooldown: "5s",
       min: 50,
       max: 85,
+    },
+  },
+  exp: {
+    type: Object,
+    default: {
+      cooldown: "5s",
+      min: 15,
+      max: 35,
     },
   },
 });
