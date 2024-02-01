@@ -179,7 +179,11 @@ export class ShopButtonHandler extends InteractionHandler {
 
             await collectedInteraction.update({ embeds: [embed] });
           });
-          collector.on("end", (collected) => {
+          collector.on("end", async (collected) => {
+            buttonRow.components.map(async (component: ButtonBuilder) => {
+              component.setDisabled(true);
+            });
+            await interaction.editReply({ components: [selectRow, buttonRow] });
             console.log(`Collected ${collected.size} interactions.`);
           });
         } else {
