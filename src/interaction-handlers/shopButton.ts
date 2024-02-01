@@ -16,6 +16,7 @@ import { t } from "i18next";
 import ShopItem, { IShopItem } from "../schemas/ShopItem";
 import Member, { IMember } from "../schemas/Member";
 import { logError } from "..";
+import Guild from "../schemas/Guild";
 
 export class ShopButtonHandler extends InteractionHandler {
   public constructor(
@@ -61,12 +62,13 @@ export class ShopButtonHandler extends InteractionHandler {
     );
   }
 
-  private createPageEmbed(
+  private async createPageEmbed(
     page: number,
     itemsPerPage: number,
     memberItem: IMember,
     roleData: { role: Role | null; roleItem: IShopItem }[],
-  ): EmbedBuilder {
+  ): Promise<EmbedBuilder> {
+    const guild = await Guild.findOne({ id: process.env.GUILD_ID });
     const totalPages = Math.ceil(roleData.length / itemsPerPage);
 
     const startIdx = (page - 1) * itemsPerPage;
@@ -75,8 +77,16 @@ export class ShopButtonHandler extends InteractionHandler {
     const embed = new EmbedBuilder()
       .setTitle(t("shop.title"))
       .setDescription(`${t("shop.balance")} ${memberItem!.coins}`)
-      .setColor(`#${process.env.EMBED_COLOR}`)
       .setFooter({ text: `Страница: ${page}/${totalPages}` });
+
+    if (guild) {
+      embed.setColor(`#${guild.embedColor}`);
+    } else {
+      const guild = new Guild({ id: process.env.GUILD_ID });
+      guild.save();
+
+      embed.setColor(`#${guild.embedColor}`);
+    }
 
     const paginatedRoles = roleData.slice(startIdx, endIdx);
     const fields = paginatedRoles
@@ -123,7 +133,7 @@ export class ShopButtonHandler extends InteractionHandler {
           }
         });
 
-        const embed = this.createPageEmbed(
+        const embed = await this.createPageEmbed(
           page,
           itemsPerPage,
           memberItem!,
@@ -170,7 +180,7 @@ export class ShopButtonHandler extends InteractionHandler {
             )
               page++;
 
-            const embed = this.createPageEmbed(
+            const embed = await this.createPageEmbed(
               page,
               itemsPerPage,
               memberItem!,

@@ -1,6 +1,7 @@
 import { Listener } from "@sapphire/framework";
 import { GuildMember, TextChannel } from "discord.js";
 import { t } from "i18next";
+import Guild from "../schemas/Guild";
 
 export class GuildMemberUpdateListener extends Listener {
   public constructor(
@@ -16,24 +17,31 @@ export class GuildMemberUpdateListener extends Listener {
 
   public override async run(oldMember: GuildMember, newMember: GuildMember) {
     const guild = newMember.guild;
+    const guildItem = await Guild.findOne({ id: process.env.GUILD_ID });
 
     if (
       guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED") &&
       oldMember.pending &&
       !newMember.pending
     ) {
-      const channelID = process.env.WELCOME_CHANNEL_ID;
-      const welcomeRoleID = process.env.WELCOME_ROLE_ID;
-      const memberRoleID = process.env.MEMBER_ROLE_ID;
+      let channelID;
+      let roleID;
+      let memberRoleID;
+      if (guildItem) {
+        channelID = guildItem.welcome.channelId;
+        roleID = guildItem.welcome.roleId;
+        memberRoleID = guildItem.memberRoleId;
+      } else {
+        await Guild.create({ id: process.env.GUILD_ID });
+      }
 
       if (channelID) {
         const channel = guild.channels.cache.get(channelID) as TextChannel;
 
-        const welcomeMessage = welcomeRoleID
-          ? `<@&${welcomeRoleID}> ${t(
-              "listeners.guildMemberUpdate.welcome_message",
-              { member: newMember.id },
-            )}`
+        const welcomeMessage = roleID
+          ? `<@&${roleID}> ${t("listeners.guildMemberUpdate.welcome_message", {
+              member: newMember.id,
+            })}`
           : t("listeners.guildMemberUpdate.welcome_message", {
               member: newMember.id,
             });

@@ -1,6 +1,7 @@
 import { Listener } from "@sapphire/framework";
 import { GuildMember, TextChannel } from "discord.js";
 import { t } from "i18next";
+import Guild from "../schemas/Guild";
 
 export class GuildMemberAvailableListener extends Listener {
   public constructor(
@@ -18,10 +19,19 @@ export class GuildMemberAvailableListener extends Listener {
     this.container.logger.info("User", member.id, "joined the guild!");
 
     const guild = member.guild;
+    const guildItem = await Guild.findOne({ id: process.env.GUILD_ID });
 
     if (!member.guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED")) {
-      const channelID = process.env.WELCOME_CHANNEL_ID;
-      const roleID = process.env.WELCOME_ROLE_ID;
+      let channelID;
+      let roleID;
+      let memberRoleID;
+      if (guildItem) {
+        channelID = guildItem.welcome.channelId;
+        roleID = guildItem.welcome.roleId;
+        memberRoleID = guildItem.memberRoleId;
+      } else {
+        await Guild.create({ id: process.env.GUILD_ID });
+      }
 
       if (channelID) {
         const channel = this.container.client.channels.cache.get(
@@ -42,8 +52,6 @@ export class GuildMemberAvailableListener extends Listener {
           );
         }
       }
-
-      const memberRoleID = process.env.MEMBER_ROLE_ID;
 
       if (memberRoleID) {
         const role = member.guild.roles.cache.get(memberRoleID);

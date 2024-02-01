@@ -143,6 +143,36 @@
       "roleAdded": "Role added to the shop!",
       "roleDeleted": "Role deleted",
       "roleDoesNotExist": "There is no such role in the shop"
+    },
+    "config": {
+      "description": "Configure the bot",
+      "optionOne": {
+        "name": "option",
+        "description": "Option to set"
+      },
+      "language": "Bot's Language",
+      "status": "Bot's Status",
+      "embedColor": "Embed Color",
+      "welcomeConfig": "Welcome Config (configure with option 2)",
+      "reactionConfig": "Reactions Config (configure with option 2)",
+      "coinsConfig": "Coins Config (configure with option 2)",
+      "optionTwo": {
+        "name": "option_2",
+        "description": "Second option to set"
+      },
+      "welcomeChannelId": "Welcome - Channel ID",
+      "welcomeRoleId": "Welcome - Role ID",
+      "reactionYes": "Reactions - Yes",
+      "reactionNo": "Reactions - No",
+      "coinsCooldown": "Coins - Cooldown",
+      "coinsMin": "Coins - Min Value",
+      "coinsMax": "Coins - Max Value",
+      "value": {
+        "name": "value",
+        "description": "Value to set the chosen option to"
+      },
+      "wasSetTo": "was set to",
+      "memberRole": "Member Role"
     }
   },
   "listeners": {

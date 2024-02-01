@@ -2,6 +2,7 @@ import { Subcommand } from "@sapphire/plugin-subcommands";
 import { ChannelType, Message, PermissionFlagsBits } from "discord.js";
 import { logError } from "..";
 import { t } from "i18next";
+import Guild from "../schemas/Guild";
 
 export class pollCommand extends Subcommand {
   constructor(context: Subcommand.LoaderContext, options: Subcommand.Options) {
@@ -103,15 +104,24 @@ export class pollCommand extends Subcommand {
     );
 
     try {
+      const guild = await Guild.findOne({ id: process.env.GUILD_ID });
+      let reactYes, reactNo;
+
+      if (guild) {
+        reactYes = guild.reactions.yes;
+        reactNo = guild.reactions.no;
+      } else {
+        const guild = new Guild({ id: process.env.GUILD_ID });
+        guild.save();
+
+        reactYes = guild.reactions.yes;
+        reactNo = guild.reactions.no;
+      }
+
       if (channel) {
         const msg = await channel.send(`📊 **${text}**`);
-        if (process.env.REACT_YES && process.env.REACT_NO) {
-          msg.react(process.env.REACT_YES);
-          msg.react(process.env.REACT_NO);
-        } else {
-          msg.react("👍");
-          msg.react("👎");
-        }
+        msg.react(reactYes);
+        msg.react(reactNo);
 
         // prettier-ignore
         interaction.reply({
@@ -119,14 +129,9 @@ export class pollCommand extends Subcommand {
           ephemeral: true,
         });
       } else {
-        const msg = await interaction.channel?.send(`📊 **${text}**`);
-        if (process.env.REACT_YES && process.env.REACT_NO) {
-          (msg as Message).react(process.env.REACT_YES);
-          (msg as Message).react(process.env.REACT_NO);
-        } else {
-          (msg as Message).react("👍");
-          (msg as Message).react("👎");
-        }
+        const msg = await interaction.channel!.send(`📊 **${text}**`);
+        msg.react(reactYes);
+        msg.react(reactNo);
 
         interaction.reply({
           content: t("commands.poll.success"),

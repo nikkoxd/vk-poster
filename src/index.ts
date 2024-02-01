@@ -19,6 +19,7 @@ import { schedule } from "node-cron";
 
 import "dotenv/config";
 import Member from "./schemas/Member";
+import Guild, { IGuild } from "./schemas/Guild";
 
 // Creating a new instance of the Discord bot client
 export const client = new SapphireClient({
@@ -31,24 +32,6 @@ export const client = new SapphireClient({
     GatewayIntentBits.GuildMessageReactions,
   ],
 });
-
-// Initializing i18next for internationalization
-i18next.use(I18NexFsBackend).init<FsBackendOptions>(
-  {
-    lng: process.env.LANGUAGE,
-    fallbackLng: "en",
-    preload: ["en", "ru"],
-    ns: ["translation"],
-    defaultNS: "translation",
-    backend: {
-      loadPath: "./locales/{{lng}}/{{ns}}.json",
-    },
-  },
-  (err, t) => {
-    if (err) return client.logger.error(err);
-    client.logger.info("i18next is ready...");
-  },
-);
 
 // Error logger with interaction reply
 export async function logError(
@@ -119,3 +102,37 @@ client
   .catch((error) =>
     client.logger.error("Error connecting to Discord API: ", error),
   );
+
+// Initializing i18next for internationalization
+function i18nConfig(guild: IGuild) {
+  i18next.use(I18NexFsBackend).init<FsBackendOptions>(
+    {
+      lng: guild.language,
+      fallbackLng: "en",
+      preload: ["en", "ru"],
+      ns: ["translation"],
+      defaultNS: "translation",
+      backend: {
+        loadPath: "./locales/{{lng}}/{{ns}}.json",
+      },
+    },
+    (err, t) => {
+      if (err) return client.logger.error(err);
+      client.logger.info("i18next is ready...");
+    },
+  );
+}
+
+async function runi18n() {
+  const guild = await Guild.findOne({ id: process.env.GUILD_ID });
+  if (guild) {
+    i18nConfig(guild);
+  } else {
+    const guild = new Guild({ id: process.env.GUILD_ID });
+    guild.save();
+
+    i18nConfig(guild);
+  }
+}
+
+runi18n();

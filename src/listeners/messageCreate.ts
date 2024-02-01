@@ -5,6 +5,7 @@ import Member from "../schemas/Member";
 import { logError } from "..";
 import { cooldowns } from "..";
 import ms from "ms";
+import Guild, { IGuild } from "../schemas/Guild";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -18,30 +19,32 @@ export class messageCreateListener extends Listener {
     });
   }
 
-  async getRandomCoins() {
-    const min = Number(process.env.COINS_MIN);
-    const max = Number(process.env.COINS_MAX);
-    if (min && max) {
-      return Math.floor(Math.random() * (max - min) + min);
-    } else {
-      this.container.logger.error(
-        "MIN and MAX values for coins not found, giving predefined amount",
-      );
-      return Math.floor(Math.random() * (85 - 50) + 50);
-    }
+  async getRandomCoins(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   public override async run(message: Message) {
     const memberId = message.author.id;
     const member = await Member.findOne({ memberId: memberId });
 
+    const guild = await Guild.findOne({ id: process.env.GUILD_ID });
+    let cooldown, min, max;
+    if (guild) {
+      cooldown = ms(guild.coins.cooldown);
+      min = guild.coins.min;
+      max = guild.coins.max;
+    } else {
+      const guild = new Guild({ id: process.env.GUILD_ID });
+      guild.save();
+      cooldown = ms(guild.coins.cooldown);
+      min = guild.coins.min;
+      max = guild.coins.max;
+    }
+
     if (!cooldowns.has(message.author)) {
       cooldowns.set(message.author, 0);
     }
     const now = Date.now();
-    let delay;
-    if (process.env.COINS_COOLDOWN) delay = ms(process.env.COINS_COOLDOWN);
-    else delay = 0;
 
     if (message.content.includes("@everyone" || "@here")) {
       if (!message.member?.permissions.has(PermissionFlagsBits.MentionEveryone))
@@ -49,10 +52,10 @@ export class messageCreateListener extends Listener {
     }
 
     if (!message.author.bot) {
-      if ((cooldowns.get(message.author) as number) >= now - delay) return;
+      if ((cooldowns.get(message.author) as number) >= now - cooldown) return;
       cooldowns.set(message.author, now);
 
-      const addedCoins = await this.getRandomCoins();
+      const addedCoins = await this.getRandomCoins(min, max);
       if (member) {
         await Member.updateOne(
           { memberId: memberId },
