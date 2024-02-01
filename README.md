@@ -1,4 +1,6 @@
 # 💫 Stella
+[![Discord](https://img.shields.io/discord/764191923954122752)](https://discord.gg/starrysky)
+[![Fly Deploy](https://github.com/nikkoxd/stella/actions/workflows/fly.yml/badge.svg)](https://github.com/nikkoxd/stella/actions/workflows/fly.yml)
 
 General purpose bot built for https://discord.gg/starrysky
 
