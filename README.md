@@ -63,6 +63,8 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
 
 ## TODO
 
+- Make better error handling
+- Make an exp system
 - Give coins when using /bump type commands
 - Create private channels for coins
 
