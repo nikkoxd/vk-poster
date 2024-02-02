@@ -45,6 +45,10 @@ export class configCommand extends Command {
                   name: t("commands.config.coinsConfig"),
                   value: "coinsConfig",
                 },
+                {
+                  name: t("commands.config.expConfig"),
+                  value: "expConfig",
+                },
               )
               .setRequired(true),
           )
@@ -79,6 +83,18 @@ export class configCommand extends Command {
                 },
                 {
                   name: t("commands.config.coinsMax"),
+                  value: "coinsMax",
+                },
+                {
+                  name: t("commands.config.expCooldown"),
+                  value: "coinsCooldown",
+                },
+                {
+                  name: t("commands.config.expMin"),
+                  value: "coinsMin",
+                },
+                {
+                  name: t("commands.config.expMax"),
                   value: "coinsMax",
                 },
               ),
@@ -120,7 +136,8 @@ export class configCommand extends Command {
     if (
       (option1 == "welcomeConfig" && !option2) ||
       (option1 == "reactionConfig" && !option2) ||
-      (option1 == "coinsConfig" && !option2)
+      (option1 == "coinsConfig" && !option2) ||
+      (option1 == "expConfig" && !option2)
     ) {
       logError("option2 parameter not present", interaction);
     }
@@ -158,7 +175,7 @@ export class configCommand extends Command {
               this.respond(interaction, option2, value!);
               break;
             default:
-              logError(`No corrent option2 found for ${option1}`, interaction);
+              logError(`No correct option2 found for ${option1}`, interaction);
               break;
           }
           break;
@@ -177,7 +194,7 @@ export class configCommand extends Command {
               this.respond(interaction, option2, value!);
               break;
             default:
-              logError(`No corrent option2 found for ${option1}`, interaction);
+              logError(`No correct option2 found for ${option1}`, interaction);
               break;
           }
           break;
@@ -205,7 +222,7 @@ export class configCommand extends Command {
               break;
             case "coinsMax":
               await guild.updateOne({
-                coind: {
+                coins: {
                   cooldown: guild.coins.cooldown,
                   min: guild.coins.min,
                   max: Number(value),
@@ -214,7 +231,44 @@ export class configCommand extends Command {
               this.respond(interaction, option2, value!);
               break;
             default:
-              logError(`No corrent option2 found for ${option1}`, interaction);
+              logError(`No correct option2 found for ${option1}`, interaction);
+              break;
+          }
+          break;
+        case "expConfig":
+          switch (option2) {
+            case "expCooldown":
+              await guild.updateOne({
+                exp: {
+                  cooldown: value,
+                  min: guild.exp.min,
+                  max: guild.exp.max,
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            case "expMin":
+              await guild.updateOne({
+                exp: {
+                  cooldown: guild.exp.cooldown,
+                  min: Number(value),
+                  max: guild.exp.max,
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            case "expMax":
+              await guild.updateOne({
+                exp: {
+                  cooldown: guild.exp.cooldown,
+                  min: guild.exp.min,
+                  max: Number(value),
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            default:
+              logError(`No correct option2 found for ${option1}`, interaction);
               break;
           }
           break;
