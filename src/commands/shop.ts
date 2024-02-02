@@ -85,19 +85,18 @@ export class ShopCommand extends Subcommand {
       false,
     );
 
-    if (await ShopItem.findOne({ roleId: role.id })) {
+    const shopItem = await ShopItem.findOneAndUpdate(
+      { roleId: role.id },
+      { $setOnInsert: { price: price, duration: duration } },
+      { upsert: true },
+    );
+
+    if (shopItem) {
       interaction.reply({
         content: t("commands.shop.roleAlreadyExists"),
         ephemeral: true,
       });
     } else {
-      if (duration)
-        await ShopItem.create({
-          roleId: role.id,
-          price: price,
-          duration: duration,
-        });
-      else await ShopItem.create({ roleId: role.id, price: price });
       interaction.reply({
         content: t("commands.shop.roleAdded"),
         ephemeral: true,
@@ -113,8 +112,9 @@ export class ShopCommand extends Subcommand {
       true,
     );
 
-    if (await ShopItem.findOne({ roleId: role.id })) {
-      await ShopItem.deleteOne({ roleId: role.id });
+    const shopItem = await ShopItem.findOneAndDelete({ roleId: role.id });
+
+    if (shopItem) {
       interaction.reply({
         content: t("commands.shop.roleDeleted"),
         ephemeral: true,

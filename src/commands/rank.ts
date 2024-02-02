@@ -17,20 +17,14 @@ export class RankCommand extends Command {
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-    const member = await Member.findOne({ memberId: interaction.user.id });
-    if (member) {
-      const required =
-        100 * (member.level + 1) + Math.pow(member.level, 2) * 50;
-      interaction.reply(
-        `**Уровень:** ${member.level}\n**Опыт:** ${member.exp}/${required}`,
-      );
-    } else {
-      const member = new Member({ memberId: interaction.user.id });
-      const required =
-        100 * (member.level + 1) + Math.pow(member.level, 2) * 50;
-      interaction.reply(
-        `**Уровень:** ${member.level}\n**Опыт:** ${member.exp}/${required}`,
-      );
-    }
+    const member = await Member.findOneAndUpdate(
+      { memberId: interaction.user.id },
+      { $setOnInsert: { memberId: interaction.user.id } },
+      { upsert: true, new: true },
+    );
+    const required = 100 * (member.level + 1) + Math.pow(member.level, 2) * 50;
+    interaction.reply(
+      `**Уровень:** ${member.level}\n**Опыт:** ${member.exp}/${required}`,
+    );
   }
 }

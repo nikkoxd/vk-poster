@@ -20,19 +20,19 @@ export class balanceCommand extends Command {
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const memberId = interaction.user.id;
-    const member = await Member.findOne({ memberId: memberId });
 
-    if (member) {
-      interaction.reply(
-        `${t("shop.balance")} ${member.coins} ${t("shop.coins")}`,
+    try {
+      const member = await Member.findOneAndUpdate(
+        { memberId: memberId },
+        { $setOnInsert: { coins: 0 } },
+        { upsert: true, new: true },
       );
-    } else {
-      const member = new Member({ memberId: memberId, coins: 0 });
-      member.save();
 
       interaction.reply(
         `${t("shop.balance")} ${member.coins} ${t("shop.coins")}`,
       );
+    } catch (err: any) {
+      logError(err, interaction);
     }
   }
 }
