@@ -97,23 +97,6 @@
       },
       "success": "The message has been sent."
     },
-    "balance-top": {
-      "embed": {
-        "title": "Top 10 server members"
-      },
-      "description": "Server's top members"
-    },
-    "set-balance": {
-      "description": "Set member's balance",
-      "member": {
-        "name": "member",
-        "description": "Member to set balance to"
-      },
-      "amount": {
-        "name": "amount"
-      },
-      "amount-description": "Amount of coins to set balance to"
-    },
     "shop": {
       "description": "Manage shop",
       "add": {
@@ -177,6 +160,57 @@
     "balance": {
       "yourBalance": "Your balance:",
       "description": "Get balance"
+    },
+    "rank": {
+      "description": "Show rank"
+    },
+    "set": {
+      "description": "Set balance/exp",
+      "coins": {
+        "member": {
+          "description": "Member",
+          "name": "member"
+        },
+        "amount": {
+          "name": "amount",
+          "description": "Amount of coins"
+        },
+        "description": "Set member's balance"
+      },
+      "exp": {
+        "member": {
+          "description": "Member",
+          "name": "member"
+        },
+        "amount": {
+          "description": "Amount of exp",
+          "name": "exp"
+        },
+        "description": "Set member's exp"
+      },
+      "level": {
+        "description": "Set member's level",
+        "member": {
+          "name": "member",
+          "description": "Member"
+        },
+        "amount": {
+          "name": "amount"
+        },
+        "level": {
+          "name": "level",
+          "description": "Level"
+        }
+      }
+    },
+    "leaderboard": {
+      "description": "Leaderboard",
+      "coins": {
+        "description": "By balance"
+      },
+      "exp": {
+        "description": "By exp"
+      }
     }
   },
   "listeners": {
@@ -210,5 +244,27 @@
     "notEnoughCoins": "You can't afford this role!",
     "previous-page": "Previous page",
     "next-page": "Next page"
+  },
+  "command": {
+    "set": {
+      "balance": {
+        "description": "Set member's balance",
+        "member": {
+          "name": "member"
+        }
+      },
+      "exp": {
+        "description": "Set member's exp",
+        "member": {
+          "name": "member"
+        },
+        "amount": {
+          "name": "amount"
+        }
+      }
+    }
+  },
+  "leaderboard": {
+    "title": "Leaderboard"
   }
 }
