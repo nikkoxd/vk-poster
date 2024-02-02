@@ -99,24 +99,6 @@
       },
       "success": "Cообщение отправлено."
     },
-    "balance-top": {
-      "embed-title": "Топ 10 участников сервера",
-      "embed": {
-        "title": "Топ 10 участников сервера"
-      },
-      "description": "Топ участников сервера"
-    },
-    "set-balance": {
-      "member": {
-        "name": "участник",
-        "description": "Участник, которому необходимо установить баланс"
-      },
-      "amount": {
-        "name": "кол-во"
-      },
-      "description": "Установить баланс участнику",
-      "amount-description": "Количество монет, которые необходимо выставить"
-    },
     "shop": {
       "description": "Редактировать магазин",
       "add": {
@@ -179,6 +161,57 @@
     },
     "balance": {
       "description": "Узнать баланс"
+    },
+    "rank": {
+      "description": "Показать уровень"
+    },
+    "set": {
+      "description": "Выставить баланс/опыт",
+      "coins": {
+        "member": {
+          "description": "Участник",
+          "name": "участник"
+        },
+        "amount": {
+          "name": "кол-во",
+          "description": "Количество монет"
+        },
+        "description": "Установить баланс участнику"
+      },
+      "exp": {
+        "member": {
+          "description": "Участник",
+          "name": "участник"
+        },
+        "amount": {
+          "description": "Количество опыта",
+          "name": "опыт"
+        },
+        "description": "Установить опыт участнику"
+      },
+      "level": {
+        "description": "Установить уровень участнику",
+        "member": {
+          "name": "участник",
+          "description": "Участник"
+        },
+        "amount": {
+          "name": "кол-во"
+        },
+        "level": {
+          "name": "уровень",
+          "description": "Уровень"
+        }
+      }
+    },
+    "leaderboard": {
+      "description": "Топ участников",
+      "coins": {
+        "description": "Топ по балансу"
+      },
+      "exp": {
+        "description": "Топ по опыту"
+      }
     }
   },
   "listeners": {
@@ -212,5 +245,27 @@
     "notEnoughCoins": "У тебя недостаточно монеток!",
     "previous-page": "Предыдущая страница",
     "next-page": "Следующая страница"
+  },
+  "command": {
+    "set": {
+      "balance": {
+        "description": "Установить баланс участнику",
+        "member": {
+          "name": "участник"
+        }
+      },
+      "exp": {
+        "description": "Установить опыт участнику",
+        "member": {
+          "name": "участник"
+        },
+        "amount": {
+          "name": "кол-во"
+        }
+      }
+    }
+  },
+  "leaderboard": {
+    "title": "Топ участников"
   }
 }

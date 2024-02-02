@@ -79,14 +79,7 @@ export class ShopButtonHandler extends InteractionHandler {
       .setDescription(`${t("shop.balance")} ${memberItem!.coins}`)
       .setFooter({ text: `Страница: ${page}/${totalPages}` });
 
-    if (guild) {
-      embed.setColor(`#${guild.embedColor}`);
-    } else {
-      const guild = new Guild({ id: process.env.GUILD_ID });
-      guild.save();
-
-      embed.setColor(`#${guild.embedColor}`);
-    }
+    embed.setColor(`#${guild!.embedColor}`);
 
     const paginatedRoles = roleData.slice(startIdx, endIdx);
     const fields = paginatedRoles
