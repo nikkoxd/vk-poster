@@ -1,8 +1,9 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import { logError } from "..";
 import { t } from "i18next";
-import { PermissionFlagsBits } from "discord.js";
-import Member from "../schemas/Member";
+import { GuildMemberRoleManager, PermissionFlagsBits } from "discord.js";
+import Member, { IMember } from "../schemas/Member";
+import RoleReward, { IRoleReward } from "../schemas/RoleReward";
 
 export class SetCommand extends Subcommand {
   public constructor(
@@ -96,11 +97,11 @@ export class SetCommand extends Subcommand {
     let reqExp = 0;
 
     while (exp >= reqExp) {
-      level++;
       reqExp = 100 * (level + 1) + Math.pow(level, 2) * 50;
+      level++;
     }
 
-    return level;
+    return level - 1;
   }
 
   public async chatInputCoins(
@@ -131,6 +132,34 @@ export class SetCommand extends Subcommand {
     }
   }
 
+  private async processRoles(
+    interaction: Subcommand.ChatInputCommandInteraction,
+    member: IMember,
+  ) {
+    const level = member.level;
+    const roles = await RoleReward.find().sort({ level: 1 });
+    try {
+      if (roles && interaction.member) {
+        let roleReward: IRoleReward | null = await RoleReward.findOne({
+          level: level,
+        });
+        roles.forEach((role) => {
+          if (role.level <= level) {
+            roleReward = role;
+          }
+          (interaction.member!.roles as GuildMemberRoleManager).remove(role.id);
+        });
+        if (roleReward) {
+          (interaction.member!.roles as GuildMemberRoleManager).add(
+            roleReward.id,
+          );
+        }
+      }
+    } catch (err: any) {
+      logError(err, interaction);
+    }
+  }
+
   public async chatInputExp(
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
@@ -143,14 +172,18 @@ export class SetCommand extends Subcommand {
       true,
     );
     const level = this.calculateLevel(amount);
+    this.container.logger.info(level);
 
     try {
-      const dbMember = await Member.findOne({ memberId: member.id });
+      let dbMember = await Member.findOne({ memberId: member.id });
       if (dbMember) {
         await dbMember.updateOne({ exp: amount, level: level });
       } else {
         await Member.create({ memberId: member.id, exp: amount, level: level });
       }
+
+      const newMember = await Member.findOne({ memberId: member.id });
+      this.processRoles(interaction, newMember!);
 
       interaction.reply({
         content: `Опыт ${member.displayName} теперь составляет ${amount} и его уровень ${level}`,
@@ -172,15 +205,19 @@ export class SetCommand extends Subcommand {
       t("commands.set.level.level.name"),
       true,
     );
-    const exp = 100 * level + Math.pow(level - 1, 2) * 50;
+    let exp = 0;
+    if (level) exp = 100 * level + Math.pow(level - 1, 2) * 50;
 
     try {
-      const dbMember = await Member.findOne({ memberId: member.id });
+      let dbMember = await Member.findOne({ memberId: member.id });
       if (dbMember) {
         await dbMember.updateOne({ exp: exp, level: level });
       } else {
         await Member.create({ memberId: member.id, exp: exp, level: level });
       }
+
+      const newMember = await Member.findOne({ memberId: member.id });
+      this.processRoles(interaction, newMember!);
 
       interaction.reply({
         content: `Опыт ${member.displayName} теперь составляет ${exp} и его уровень ${level}`,
