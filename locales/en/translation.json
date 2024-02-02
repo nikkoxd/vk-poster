@@ -155,7 +155,11 @@
         "description": "Value to set the chosen option to"
       },
       "wasSetTo": "was set to",
-      "memberRole": "Member Role"
+      "memberRole": "Member Role",
+      "expConfig": "Exp Config (configure with option 2)",
+      "expCooldown": "Exp - Cooldown",
+      "expMin": "Exp - Min Value",
+      "expMax": "Exp - Max Value"
     },
     "balance": {
       "yourBalance": "Your balance:",
