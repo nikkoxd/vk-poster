@@ -16,9 +16,9 @@ interface IRole {
 
 const memberSchema = new Schema<IMember>({
   memberId: { type: String, required: true },
-  exp: { type: Number, default: 0 },
-  level: { type: Number, default: 0 },
-  coins: { type: Number, default: 0 },
+  exp: { type: Number, default: 0, required: true },
+  level: { type: Number, default: 0, required: true },
+  coins: { type: Number, default: 0, required: true },
   roles: Array<IRole>,
 });
 
