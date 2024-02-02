@@ -11,6 +11,8 @@ import Member, { IMember } from "../schemas/Member";
 import { logError } from "..";
 import ms from "ms";
 import Guild, { IGuild } from "../schemas/Guild";
+import RoleReward, { IRoleReward } from "../schemas/RoleReward";
+import { Subcommand } from "@sapphire/plugin-subcommands";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -83,6 +85,31 @@ export class messageCreateListener extends Listener {
     }
   }
 
+  private async processRoles(message: Message, member: IMember) {
+    const level = member.level;
+    const roles = await RoleReward.find();
+    try {
+      if (roles && message.member) {
+        let roleReward: IRoleReward | null = await RoleReward.findOne({
+          level: level,
+        });
+        let found = false;
+        roles.forEach((role) => {
+          if (role.level >= level && !found) {
+            found = true;
+            roleReward = role;
+          }
+          message.member!.roles.remove(role.id);
+        });
+        if (roleReward) {
+          message.member!.roles.add(roleReward.id);
+        }
+      }
+    } catch (err: any) {
+      this.container.logger.error(err);
+    }
+  }
+
   private async processExp(
     message: Message,
     member: IMember,
@@ -104,6 +131,9 @@ export class messageCreateListener extends Listener {
       message.channel.send(
         `<@${message.author.id}> достиг ${level + 1} уровня!`,
       );
+
+      const newMember = await Member.findOne({ memberId: member.memberId });
+      this.processRoles(message, newMember!);
     }
   }
 
