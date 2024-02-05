@@ -94,10 +94,10 @@
     tslib "^2.6.1"
     ws "^8.13.0"
 
-"@flydotio/dockerfile@^0.4.10":
-  version "0.4.10"
-  resolved "https://registry.npmjs.org/@flydotio/dockerfile/-/dockerfile-0.4.10.tgz"
-  integrity sha512-cyxxVTzPX7qRD3/yq24eiIsSKlUFPcBjbIQmWeuXn3qS2rSdYMioUmDISchfGE7S75cEdL/baK0AJP2q7+aw6w==
+"@flydotio/dockerfile@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.0.tgz#e236f9a370cd635b2daaba1cbc7d3dcde9f4a6bf"
+  integrity sha512-SZIDwq2UdHy0fe2xK6Pk82nQqZS6G/s/30hD5OYs33zaDmYw6O3pHloNsT/Ycuk9TnnrDLQ7m1MrK0ssyAdXJw==
   dependencies:
     chalk "^5.3.0"
     diff "^5.1.0"
