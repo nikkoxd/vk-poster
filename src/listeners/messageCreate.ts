@@ -90,16 +90,13 @@ export class messageCreateListener extends Listener {
     const roles = await RoleReward.find();
     try {
       if (roles && message.member) {
-        let roleReward: IRoleReward | null = await RoleReward.findOne({
+        let roleReward = await RoleReward.findOne({
           level: level,
         });
-        roles.forEach((role) => {
-          if (role.level <= level) {
-            roleReward = role;
-          }
-          message.member!.roles.remove(role.id);
-        });
         if (roleReward) {
+          roles.forEach((role) => {
+            message.member!.roles.remove(role.id);
+          });
           message.member!.roles.add(roleReward.id);
         }
       }
