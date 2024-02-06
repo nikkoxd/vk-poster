@@ -24,6 +24,10 @@ export interface IGuild {
     min: number;
     max: number;
   };
+  card: {
+    fontFamily: string;
+    defaultBackground: string;
+  };
 }
 
 const guildSchema = new Schema<IGuild>({
@@ -59,6 +63,13 @@ const guildSchema = new Schema<IGuild>({
       cooldown: "5s",
       min: 15,
       max: 35,
+    },
+  },
+  card: {
+    type: Object,
+    default: {
+      fontFamily: "NotoSans",
+      defaultBackground: "",
     },
   },
 });
