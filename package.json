@@ -8,6 +8,7 @@
   "license": "GPL-3.0-or-later",
   "private": false,
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.45",
     "@sapphire/framework": "^5.0.7",
     "@sapphire/plugin-logger": "^3.0.6",
     "@sapphire/plugin-subcommands": "^5.1.0",
