@@ -95,9 +95,10 @@ export class messageCreateListener extends Listener {
         });
         if (roleReward) {
           roles.forEach((role) => {
-            message.member!.roles.remove(role.id);
+            if (message.member!.roles.cache.has(role.id))
+              message.member!.roles.remove(role.id);
           });
-          message.member!.roles.add(roleReward.id);
+          message.member!.roles.add(roleReward!.id);
         }
       }
     } catch (err: any) {
