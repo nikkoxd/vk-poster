@@ -163,10 +163,18 @@
     },
     "balance": {
       "yourBalance": "Your balance:",
-      "description": "Get balance"
+      "description": "Get balance",
+      "member": {
+        "name": "member",
+        "description": " Member"
+      }
     },
     "rank": {
-      "description": "Show rank"
+      "description": "Show rank",
+      "member": {
+        "name": "member",
+        "description": "Member"
+      }
     },
     "set": {
       "description": "Set balance/exp",

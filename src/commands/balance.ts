@@ -13,23 +13,31 @@ export class balanceCommand extends Command {
       (builder) =>
         builder
           .setName("balance")
-          .setDescription(t("commands.balance.description")),
+          .setDescription(t("commands.balance.description"))
+          .addUserOption((option) =>
+            option
+              .setName(t("commands.balance.member.name"))
+              .setDescription(t("commands.balance.member.description")),
+          ),
       { idHints: [process.env.BALANCE_ID as string] },
     );
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-    const memberId = interaction.user.id;
+    const member = interaction.options.getUser(
+      t("commands.balance.member.name"),
+    );
+    const memberId = member ? member.id : interaction.user.id;
 
     try {
-      const member = await Member.findOneAndUpdate(
+      const memberItem = await Member.findOneAndUpdate(
         { memberId: memberId },
         { $setOnInsert: { coins: 0 } },
         { upsert: true, new: true },
       );
 
       interaction.reply(
-        `${t("shop.balance")} ${member.coins} ${t("shop.coins")}`,
+        `${t("shop.balance")} ${memberItem.coins} ${t("shop.coins")}`,
       );
     } catch (err: any) {
       logError(err, interaction);

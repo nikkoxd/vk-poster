@@ -11,20 +11,37 @@ export class RankCommand extends Command {
   public override registerApplicationCommands(registry: Command.Registry) {
     registry.registerChatInputCommand(
       (builder) =>
-        builder.setName("rank").setDescription(t("commands.rank.description")),
+        builder
+          .setName("rank")
+          .setDescription(t("commands.rank.description"))
+          .addUserOption((option) =>
+            option
+              .setName(t("commands.rank.member.name"))
+              .setDescription(t("commands.rank.member.description")),
+          ),
       { idHints: [process.env.RANK_ID as string] },
     );
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-    const member = await Member.findOneAndUpdate(
-      { memberId: interaction.user.id },
-      { $setOnInsert: { memberId: interaction.user.id } },
-      { upsert: true, new: true },
+    const member = interaction.options.getUser(
+      t("commands.balance.member.name"),
     );
-    const required = 100 * (member.level + 1) + Math.pow(member.level, 2) * 50;
-    interaction.reply(
-      `**Уровень:** ${member.level}\n**Опыт:** ${member.exp}/${required}`,
-    );
+    const memberId = member ? member.id : interaction.user.id;
+
+    try {
+      const memberItem = await Member.findOneAndUpdate(
+        { memberId: memberId },
+        { $setOnInsert: { memberId: memberId } },
+        { upsert: true, new: true },
+      );
+      const required =
+        100 * (memberItem.level + 1) + Math.pow(memberItem.level, 2) * 50;
+      interaction.reply(
+        `**Уровень:** ${memberItem.level}\n**Опыт:** ${memberItem.exp}/${required}`,
+      );
+    } catch (err: any) {
+      logError(err, interaction);
+    }
   }
 }

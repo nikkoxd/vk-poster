@@ -164,10 +164,18 @@
       "expMax": "Опыт - Максимальное значение"
     },
     "balance": {
-      "description": "Узнать баланс"
+      "description": "Узнать баланс",
+      "member": {
+        "name": "участник",
+        "description": "Участник"
+      }
     },
     "rank": {
-      "description": "Показать уровень"
+      "description": "Показать уровень",
+      "member": {
+        "name": "участник",
+        "description": "Участник"
+      }
     },
     "set": {
       "description": "Выставить баланс/опыт",
