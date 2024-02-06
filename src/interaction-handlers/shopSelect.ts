@@ -10,6 +10,7 @@ import ShopItem from "../schemas/ShopItem";
 import Member from "../schemas/Member";
 import ms from "ms";
 import { t } from "i18next";
+import { logError } from "..";
 
 export class ShopSelectHandler extends InteractionHandler {
   public constructor(
@@ -27,34 +28,41 @@ export class ShopSelectHandler extends InteractionHandler {
   }
 
   public async run(interaction: StringSelectMenuInteraction) {
-    const { member, guild } = interaction;
+    try {
+      const { member, guild } = interaction;
+      const roleId = interaction.values[0];
+      const role = await guild!.roles.fetch(roleId);
 
-    const role = await guild!.roles.fetch(interaction.values[0]);
-    if (role) {
+      if (!role) return;
+
       const roleItem = await ShopItem.findOne({ roleId: role.id });
       const userItem = await Member.findOne({ memberId: member!.user.id });
 
       if (userItem && roleItem) {
-        if ((member!.roles as GuildMemberRoleManager).cache.get(role.id)) {
+        const memberRoles = member!.roles as GuildMemberRoleManager;
+
+        if (memberRoles.cache.get(role.id)) {
           interaction.reply({
             content: t("shop.memberAlreadyHasRole"),
             ephemeral: true,
           });
         } else {
-          if (userItem.coins >= roleItem.price) {
+          const { coins, roles } = userItem;
+
+          if (coins >= roleItem.price) {
             await userItem.updateOne({
               coins: userItem.coins - roleItem.price,
             });
-            (member!.roles as GuildMemberRoleManager).add(role);
+            memberRoles.add(role);
 
             if (roleItem.duration) {
-              const roles = userItem.roles || [];
-              roles.push({
+              const newRoles = roles || [];
+              newRoles.push({
                 guildId: interaction.guild!.id,
                 roleId: role.id,
                 expiryDate: Date.now() + ms(roleItem.duration),
               });
-              await userItem.updateOne({ roles });
+              await userItem.updateOne({ roles: newRoles });
             }
 
             interaction.reply({
@@ -69,6 +77,8 @@ export class ShopSelectHandler extends InteractionHandler {
           }
         }
       }
+    } catch (err: any) {
+      logError(err, interaction);
     }
   }
 }
