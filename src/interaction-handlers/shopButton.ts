@@ -45,7 +45,7 @@ export class ShopButtonHandler extends InteractionHandler {
   }
 
   private async fetchShopRoles(interaction: ButtonInteraction) {
-    const roles = await ShopItem.find();
+    const roles = await ShopItem.find().sort({ price: -1 });
     return Promise.all(
       roles.map(async (roleItem: IShopItem) => {
         try {
