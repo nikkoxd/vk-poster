@@ -87,15 +87,15 @@ export class configCommand extends Command {
                 },
                 {
                   name: t("commands.config.expCooldown"),
-                  value: "coinsCooldown",
+                  value: "expCooldown",
                 },
                 {
                   name: t("commands.config.expMin"),
-                  value: "coinsMin",
+                  value: "expMin",
                 },
                 {
                   name: t("commands.config.expMax"),
-                  value: "coinsMax",
+                  value: "expMax",
                 },
               ),
           )
