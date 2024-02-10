@@ -70,7 +70,7 @@ const guildSchema = new Schema<IGuild>({
     default: {
       fontFamily: "NotoSans",
       defaultBackground:
-        "https://github.com/nikkoxd/stella/blob/rank-card/background.png",
+        "https://github.com/nikkoxd/stella/blob/rank-card/background.png?raw=true",
     },
   },
 });
