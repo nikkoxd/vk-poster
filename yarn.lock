@@ -174,12 +174,12 @@
     "@sapphire/utilities" "^3.15.3"
     tslib "^2.6.2"
 
-"@sapphire/plugin-logger@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.npmjs.org/@sapphire/plugin-logger/-/plugin-logger-3.0.6.tgz"
-  integrity sha512-BMluxIdVODObdbCy4TRkCmSAB/T/XQlYxaD25HD+1Z4feUVrBGWFmmWQo/2X4aLMD3VZi5RQ5oY6kZgtHn+ufA==
+"@sapphire/plugin-logger@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@sapphire/plugin-logger/-/plugin-logger-4.0.2.tgz#e9422906a4d429bf687d677f24765a52243a1f91"
+  integrity sha512-5Nr++u+fA3/jZwj1aL9Z16RgyJZRE1gyUftfWjrzdndE5FkcbnLiVCKvnI8WzSupVhdn6kMaCWAteOSgAaq3lQ==
   dependencies:
-    "@sapphire/timestamp" "^1.0.1"
+    "@sapphire/timestamp" "^1.0.3"
     colorette "^2.0.20"
 
 "@sapphire/plugin-subcommands@^5.1.0":
@@ -220,10 +220,10 @@
   dependencies:
     tslib "^2.6.2"
 
-"@sapphire/timestamp@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@sapphire/timestamp/-/timestamp-1.0.1.tgz"
-  integrity sha512-uLg+rBFuBiaQY/pFGDDzZSOH2cfv4ONIB7zQGNuRCTpYKBW/iIhRBIZjJZyn8NVkXQhVi+Q94DI4i6gDhYVs7w==
+"@sapphire/timestamp@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@sapphire/timestamp/-/timestamp-1.0.3.tgz#dad55aaa54cc5b22e5952dd8cb8d6c182f2a12fd"
+  integrity sha512-I2TwqlLDA2Uu576VUgyBaT1gP1WSWPxeW3NqFxsSJfwFyvzXkTzyQiYce0eWMpM6BdBCq7Dddg+Yayls/5K1RA==
 
 "@sapphire/utilities@^3.13.0", "@sapphire/utilities@^3.15.3":
   version "3.15.3"
