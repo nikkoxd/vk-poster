@@ -1,4 +1,5 @@
 # 💫 Stella
+
 [![Discord](https://img.shields.io/discord/764191923954122752)](https://discord.gg/starrysky)
 [![Fly Deploy](https://github.com/nikkoxd/stella/actions/workflows/fly.yml/badge.svg)](https://github.com/nikkoxd/stella/actions/workflows/fly.yml)
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
@@ -32,9 +33,10 @@ yarn start
 
 ## Custom messages
 
-No good solution has been implemented for this yet.
-Right now, to make your own messages, insert a document
+To make your own messages, insert a document
 following the schema located at `src/schemas/Message.ts`
+
+A proper solution is being worked on [here](https://github.com/stella-embed-builder).
 
 ## Custom translations
 
@@ -67,7 +69,7 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
 ## TODO
 
 - Make better error handling
-- Make an exp system
+- ~~Make an exp system~~
 - Give coins when using /bump type commands
 - Create private channels for coins
 
