@@ -36,7 +36,7 @@ yarn start
 To make your own messages, insert a document
 following the schema located at `src/schemas/Message.ts`
 
-A proper solution is being worked on [here](https://github.com/stella-embed-builder).
+A proper solution is being worked on [here](https://github.com/nikkoxd/stella-embed-builder).
 
 ## Custom translations
 
