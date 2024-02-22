@@ -136,6 +136,8 @@ export class SetCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
     member: IMember,
   ) {
+    const roleManager = interaction.member!.roles as GuildMemberRoleManager;
+
     const level = member.level;
     const roles = await RoleReward.find().sort({ level: 1 });
 
@@ -149,13 +151,13 @@ export class SetCommand extends Subcommand {
           if (role.level <= level) {
             roleReward = role;
           }
-          (interaction.member!.roles as GuildMemberRoleManager).remove(role.id);
+          if (roleManager.cache.has(role.id)) {
+            roleManager.remove(role.id);
+          }
         });
 
         if (roleReward) {
-          (interaction.member!.roles as GuildMemberRoleManager).add(
-            roleReward.id,
-          );
+          roleManager.add(roleReward.id);
         }
       }
     } catch (err: any) {
