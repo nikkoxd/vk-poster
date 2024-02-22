@@ -12,18 +12,18 @@
     "@sapphire/plugin-logger": "^4.0.2",
     "@sapphire/plugin-subcommands": "^6.0.3",
     "discord.js": "14.x",
-    "i18next": "^23.8.2",
+    "i18next": "^23.9.0",
     "i18next-fs-backend": "^2.3.1",
-    "mongoose": "^8.1.2",
+    "mongoose": "^8.1.3",
     "ms": "^2.1.3",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {
-    "@flydotio/dockerfile": "^0.5.0",
+    "@flydotio/dockerfile": "^0.5.2",
     "@types/ms": "^0.7.34",
     "@types/node-cron": "^3.0.11",
     "copyfiles": "^2.4.1",
-    "dotenv": "^16.4.2",
+    "dotenv": "^16.4.4",
     "prettier": "3.2.5",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
