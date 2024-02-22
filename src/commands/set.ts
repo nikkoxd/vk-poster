@@ -92,18 +92,6 @@ export class SetCommand extends Subcommand {
     );
   }
 
-  private calculateLevel(exp: number): number {
-    let level = 0;
-    let reqExp = 0;
-
-    while (exp >= reqExp) {
-      reqExp = 100 * (level + 1) + Math.pow(level, 2) * 50;
-      level++;
-    }
-
-    return level - 1;
-  }
-
   public async chatInputCoins(
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
@@ -130,6 +118,18 @@ export class SetCommand extends Subcommand {
     } catch (err: any) {
       logError(err, interaction);
     }
+  }
+
+  private calculateLevel(exp: number): number {
+    let level = 0;
+    let reqExp = 0;
+
+    while (exp >= reqExp) {
+      reqExp = 100 * (level + 1) + Math.pow(level, 2) * 50;
+      level++;
+    }
+
+    return level - 1;
   }
 
   private async processRoles(
