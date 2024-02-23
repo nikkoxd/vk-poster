@@ -31,7 +31,7 @@ export class PingCommand extends Command {
       const ping = Math.round(this.container.client.ws.ping);
       // prettier-ignore
       return interaction.editReply(
-        `${i18next.t("ping.success")} (Round trip took: {{diff}}ms. Heartbeat: {{ping}}ms.)`,
+        `${i18next.t("commands.ping.success")} (Round trip took: ${diff}ms. Heartbeat: ${ping}ms.)`,
       );
     }
 
