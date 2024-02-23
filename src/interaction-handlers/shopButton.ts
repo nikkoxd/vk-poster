@@ -12,7 +12,7 @@ import {
   ButtonBuilder,
   ComponentType,
 } from "discord.js";
-import { t } from "i18next";
+import i18next from "i18next";
 import ShopItem, { IShopItem } from "../schemas/ShopItem";
 import Member, { IMember } from "../schemas/Member";
 import { logError } from "..";
@@ -34,9 +34,9 @@ export class ShopButtonHandler extends InteractionHandler {
   }
 
   private createEmbedFields(role: Role, roleItem: IShopItem) {
-    let value = `**${t("shop.price")}** ${roleItem.price} ${t("shop.coins")}`;
+    let value = `**${i18next.t("shop.price")}** ${roleItem.price} ${i18next.t("shop.coins")}`;
     if (roleItem.duration)
-      value = `${value}\n**${t("shop.duration")}** ${roleItem.duration}`;
+      value = `${value}\n**${i18next.t("shop.duration")}** ${roleItem.duration}`;
     return {
       name: role ? role.name : "Unknown Role",
       value,
@@ -75,8 +75,8 @@ export class ShopButtonHandler extends InteractionHandler {
     const endIdx = startIdx + itemsPerPage;
 
     const embed = new EmbedBuilder()
-      .setTitle(t("shop.title"))
-      .setDescription(`${t("shop.balance")} ${memberItem!.coins}`)
+      .setTitle(i18next.t("shop.title"))
+      .setDescription(`${i18next.t("shop.balance")} ${memberItem!.coins}`)
       .setFooter({ text: `Страница: ${page}/${totalPages}` });
 
     embed.setColor(`#${guild!.embedColor}`);
@@ -120,7 +120,7 @@ export class ShopButtonHandler extends InteractionHandler {
                 .setLabel(role.name)
                 .setValue(role.id)
                 .setDescription(
-                  `${t("shop.price")} ${roleItem.price} ${t("shop.coins")}`,
+                  `${i18next.t("shop.price")} ${roleItem.price} ${i18next.t("shop.coins")}`,
                 ),
             );
           }
@@ -135,7 +135,7 @@ export class ShopButtonHandler extends InteractionHandler {
 
         const menu = new StringSelectMenuBuilder()
           .setCustomId("shop-select")
-          .setPlaceholder(t("shop.selectRole"))
+          .setPlaceholder(i18next.t("shop.selectRole"))
           .addOptions(roleOptions);
 
         const selectRow =
@@ -146,11 +146,11 @@ export class ShopButtonHandler extends InteractionHandler {
           buttonRow.addComponents(
             new ButtonBuilder()
               .setCustomId("prev-page")
-              .setLabel(t("shop.previous-page"))
+              .setLabel(i18next.t("shop.previous-page"))
               .setStyle(1), // ButtonStyle.PRIMARY
             new ButtonBuilder()
               .setCustomId("next-page")
-              .setLabel(t("shop.next-page"))
+              .setLabel(i18next.t("shop.next-page"))
               .setStyle(1), // ButtonStyle.PRIMARY
           );
 

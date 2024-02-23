@@ -1,6 +1,6 @@
 import { Command } from "@sapphire/framework";
 import { logError } from "..";
-import { t } from "i18next";
+import i18next from "i18next";
 import { PermissionFlagsBits, REST, Routes } from "discord.js";
 
 export class CommandRemove extends Command {

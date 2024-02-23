@@ -1,6 +1,6 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import { logError } from "..";
-import { t } from "i18next";
+import i18next from "i18next";
 import { GuildMemberRoleManager, PermissionFlagsBits, Role } from "discord.js";
 import Member, { IMember } from "../schemas/Member";
 import RoleReward, { IRoleReward } from "../schemas/RoleReward";
@@ -35,56 +35,68 @@ export class SetCommand extends Subcommand {
       (builder) =>
         builder
           .setName("set")
-          .setDescription(t("commands.set.description"))
+          .setDescription(i18next.t("commands.set.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addSubcommand((command) =>
             command
               .setName("coins")
-              .setDescription(t("commands.set.coins.description"))
+              .setDescription(i18next.t("commands.set.coins.description"))
               .addUserOption((option) =>
                 option
-                  .setName(t("commands.set.coins.member.name"))
-                  .setDescription(t("commands.set.coins.member.description"))
+                  .setName(i18next.t("commands.set.coins.member.name"))
+                  .setDescription(
+                    i18next.t("commands.set.coins.member.description"),
+                  )
                   .setRequired(true),
               )
               .addIntegerOption((option) =>
                 option
-                  .setName(t("commands.set.coins.amount.name"))
-                  .setDescription(t("commands.set.coins.amount.description"))
+                  .setName(i18next.t("commands.set.coins.amount.name"))
+                  .setDescription(
+                    i18next.t("commands.set.coins.amount.description"),
+                  )
                   .setRequired(true),
               ),
           )
           .addSubcommand((command) =>
             command
               .setName("exp")
-              .setDescription(t("commands.set.exp.description"))
+              .setDescription(i18next.t("commands.set.exp.description"))
               .addUserOption((option) =>
                 option
-                  .setName(t("commands.set.exp.member.name"))
-                  .setDescription(t("commands.set.exp.member.description"))
+                  .setName(i18next.t("commands.set.exp.member.name"))
+                  .setDescription(
+                    i18next.t("commands.set.exp.member.description"),
+                  )
                   .setRequired(true),
               )
               .addIntegerOption((option) =>
                 option
-                  .setName(t("commands.set.exp.amount.name"))
-                  .setDescription(t("commands.set.exp.amount.description"))
+                  .setName(i18next.t("commands.set.exp.amount.name"))
+                  .setDescription(
+                    i18next.t("commands.set.exp.amount.description"),
+                  )
                   .setRequired(true),
               ),
           )
           .addSubcommand((command) =>
             command
               .setName("level")
-              .setDescription(t("commands.set.level.description"))
+              .setDescription(i18next.t("commands.set.level.description"))
               .addUserOption((option) =>
                 option
-                  .setName(t("commands.set.level.member.name"))
-                  .setDescription(t("commands.set.level.member.description"))
+                  .setName(i18next.t("commands.set.level.member.name"))
+                  .setDescription(
+                    i18next.t("commands.set.level.member.description"),
+                  )
                   .setRequired(true),
               )
               .addIntegerOption((option) =>
                 option
-                  .setName(t("commands.set.level.level.name"))
-                  .setDescription(t("commands.set.level.level.description"))
+                  .setName(i18next.t("commands.set.level.level.name"))
+                  .setDescription(
+                    i18next.t("commands.set.level.level.description"),
+                  )
                   .setRequired(true),
               ),
           ),
@@ -96,11 +108,11 @@ export class SetCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const member = interaction.options.getUser(
-      t("commands.set.coins.member.name"),
+      i18next.t("commands.set.coins.member.name"),
       true,
     );
     const amount = interaction.options.getInteger(
-      t("commands.set.coins.amount.name"),
+      i18next.t("commands.set.coins.amount.name"),
       true,
     );
 
@@ -169,11 +181,11 @@ export class SetCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const member = interaction.options.getUser(
-      t("commands.set.exp.member.name"),
+      i18next.t("commands.set.exp.member.name"),
       true,
     );
     const amount = interaction.options.getInteger(
-      t("commands.set.exp.amount.name"),
+      i18next.t("commands.set.exp.amount.name"),
       true,
     );
     const level = this.calculateLevel(amount);
@@ -200,11 +212,11 @@ export class SetCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const member = interaction.options.getUser(
-      t("commands.set.level.member.name"),
+      i18next.t("commands.set.level.member.name"),
       true,
     );
     const level = interaction.options.getInteger(
-      t("commands.set.level.level.name"),
+      i18next.t("commands.set.level.level.name"),
       true,
     );
     const exp = level ? 100 * level + Math.pow(level - 1, 2) * 50 : 0;

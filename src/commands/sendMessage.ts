@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import { logError } from "..";
 import { readFile } from "fs";
-import { t } from "i18next";
+import i18next from "i18next";
 import Message from "../schemas/Message";
 
 export class SendMessageCommand extends Command {
@@ -23,19 +23,21 @@ export class SendMessageCommand extends Command {
       (builder) =>
         builder
           .setName("sendmsg")
-          .setDescription(t("commands.sendMessage.description"))
+          .setDescription(i18next.t("commands.sendMessage.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addStringOption((option) =>
             option
-              .setName(t("commands.sendMessage.options.id.name"))
-              .setDescription(t("commands.sendMessage.options.id.description"))
+              .setName(i18next.t("commands.sendMessage.options.id.name"))
+              .setDescription(
+                i18next.t("commands.sendMessage.options.id.description"),
+              )
               .setRequired(true),
           )
           .addChannelOption((option) =>
             option
-              .setName(t("commands.sendMessage.options.channel.name"))
+              .setName(i18next.t("commands.sendMessage.options.channel.name"))
               .setDescription(
-                t("commands.sendMessage.options.channel.description"),
+                i18next.t("commands.sendMessage.options.channel.description"),
               )
               .setRequired(false)
               .addChannelTypes(ChannelType.GuildText),
@@ -46,7 +48,7 @@ export class SendMessageCommand extends Command {
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const name = interaction.options.getString(
-      t("commands.sendMessage.options.id.name"),
+      i18next.t("commands.sendMessage.options.id.name"),
       true,
     );
     const message = await Message.findOne({ name: name });
@@ -54,7 +56,7 @@ export class SendMessageCommand extends Command {
     if (message) {
       try {
         const channel: TextChannel | null = interaction.options.getChannel(
-          t("commands.sendMessage.options.channel.name"),
+          i18next.t("commands.sendMessage.options.channel.name"),
         );
         let attachments = [];
 
@@ -124,7 +126,7 @@ export class SendMessageCommand extends Command {
         }
 
         interaction.reply({
-          content: t("commands.sendMessage.success"),
+          content: i18next.t("commands.sendMessage.success"),
           ephemeral: true,
         });
       } catch (err: any) {

@@ -1,7 +1,7 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import { ChannelType, Message, PermissionFlagsBits } from "discord.js";
 import { logError } from "..";
-import { t } from "i18next";
+import i18next from "i18next";
 import Guild from "../schemas/Guild";
 
 export class pollCommand extends Subcommand {
@@ -31,25 +31,29 @@ export class pollCommand extends Subcommand {
       (builder) =>
         builder
           .setName("poll")
-          .setDescription(t("commands.poll.description"))
+          .setDescription(i18next.t("commands.poll.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageEvents)
           .addSubcommand((command) =>
             command
               .setName("start")
-              .setDescription(t("commands.poll.start.description"))
+              .setDescription(i18next.t("commands.poll.start.description"))
               .addStringOption((option) =>
                 option
-                  .setName(t("commands.poll.start.options.text.name"))
+                  .setName(i18next.t("commands.poll.start.options.text.name"))
                   .setDescription(
-                    t("commands.poll.start.options.text.description"),
+                    i18next.t("commands.poll.start.options.text.description"),
                   )
                   .setRequired(true),
               )
               .addChannelOption((option) =>
                 option
-                  .setName(t("commands.poll.start.options.channel.name"))
+                  .setName(
+                    i18next.t("commands.poll.start.options.channel.name"),
+                  )
                   .setDescription(
-                    t("commands.poll.start.options.channel.description"),
+                    i18next.t(
+                      "commands.poll.start.options.channel.description",
+                    ),
                   )
                   .setRequired(false),
               ),
@@ -57,20 +61,20 @@ export class pollCommand extends Subcommand {
           .addSubcommand((command) =>
             command
               .setName("edit")
-              .setDescription(t("commands.poll.edit.description"))
+              .setDescription(i18next.t("commands.poll.edit.description"))
               .addStringOption((option) =>
                 option
-                  .setName(t("commands.poll.edit.options.id.name"))
+                  .setName(i18next.t("commands.poll.edit.options.id.name"))
                   .setDescription(
-                    t("commands.poll.edit.options.id.description"),
+                    i18next.t("commands.poll.edit.options.id.description"),
                   )
                   .setRequired(true),
               )
               .addStringOption((option) =>
                 option
-                  .setName(t("commands.poll.edit.options.text.name"))
+                  .setName(i18next.t("commands.poll.edit.options.text.name"))
                   .setDescription(
-                    t("commands.poll.edit.options.text.description"),
+                    i18next.t("commands.poll.edit.options.text.description"),
                   )
                   .setRequired(true),
               ),
@@ -78,11 +82,13 @@ export class pollCommand extends Subcommand {
           .addSubcommand((command) =>
             command
               .setName("end")
-              .setDescription(t("commands.poll.end.description"))
+              .setDescription(i18next.t("commands.poll.end.description"))
               .addStringOption((option) =>
                 option
-                  .setName(t("commands.poll.end.options.id.name"))
-                  .setDescription(t("commands.poll.end.options.id.description"))
+                  .setName(i18next.t("commands.poll.end.options.id.name"))
+                  .setDescription(
+                    i18next.t("commands.poll.end.options.id.description"),
+                  )
                   .setRequired(true),
               ),
           ),
@@ -94,11 +100,11 @@ export class pollCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const text = interaction.options.getString(
-      t("commands.poll.start.options.text.name"),
+      i18next.t("commands.poll.start.options.text.name"),
       true,
     );
     const channel = interaction.options.getChannel(
-      t("commands.poll.start.options.channel.name"),
+      i18next.t("commands.poll.start.options.channel.name"),
       false,
       [ChannelType.GuildText],
     );
@@ -125,7 +131,7 @@ export class pollCommand extends Subcommand {
 
         // prettier-ignore
         interaction.reply({
-          content: `${t("commands.poll.success")}\n${t("commands.poll.link",)} <#${channel.id}>`,
+          content: `${i18next.t("commands.poll.success")}\n${i18next.t("commands.poll.link",)} <#${channel.id}>`,
           ephemeral: true,
         });
       } else {
@@ -134,7 +140,7 @@ export class pollCommand extends Subcommand {
         msg.react(reactNo);
 
         interaction.reply({
-          content: t("commands.poll.success"),
+          content: i18next.t("commands.poll.success"),
           ephemeral: true,
         });
       }
@@ -147,19 +153,19 @@ export class pollCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const messageID = interaction.options.getString(
-      t("commands.poll.edit.options.id.name"),
+      i18next.t("commands.poll.edit.options.id.name"),
       true,
     );
     const message = interaction.channel?.messages.fetch(messageID);
     const text = interaction.options.getString(
-      t("commands.poll.edit.options.text.name"),
+      i18next.t("commands.poll.edit.options.text.name"),
       true,
     );
 
     try {
       (await message)?.edit(`📊 **${text}**`);
       interaction.reply({
-        content: t("commands.poll.edited"),
+        content: i18next.t("commands.poll.edited"),
         ephemeral: true,
       });
     } catch (err) {
@@ -171,7 +177,7 @@ export class pollCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const messageID = interaction.options.getString(
-      t("commands.poll.end.options.id.name"),
+      i18next.t("commands.poll.end.options.id.name"),
       true,
     );
     const message = interaction.channel?.messages.fetch(messageID);
@@ -192,14 +198,14 @@ export class pollCommand extends Subcommand {
         }
         // Edit the message
         (await message)?.edit(
-          `${text?.replace("📊", "🔒")}\n${t("poll.for")} - ${
+          `${text?.replace("📊", "🔒")}\n${i18next.t("poll.for")} - ${
             (reactionsYes as number) - 1
-          }   ${t("poll.against")} - ${(reactionsNo as number) - 1}`,
+          }   ${i18next.t("poll.against")} - ${(reactionsNo as number) - 1}`,
         );
         // Remove all reactions
         (await message)?.reactions.removeAll();
         interaction.reply({
-          content: t("commands.poll.ended"),
+          content: i18next.t("commands.poll.ended"),
           ephemeral: true,
         });
       } else {

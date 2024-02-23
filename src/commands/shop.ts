@@ -1,5 +1,5 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { t } from "i18next";
+import i18next from "i18next";
 import { PermissionFlagsBits } from "discord.js";
 import ShopItem from "../schemas/ShopItem";
 
@@ -29,39 +29,47 @@ export class ShopCommand extends Subcommand {
       (builder) =>
         builder
           .setName("shop")
-          .setDescription(t("commands.shop.description"))
+          .setDescription(i18next.t("commands.shop.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
           .addSubcommand((command) =>
             command
               .setName("add")
-              .setDescription(t("commands.shop.add.description"))
+              .setDescription(i18next.t("commands.shop.add.description"))
               .addRoleOption((option) =>
                 option
-                  .setName(t("commands.shop.role.name"))
-                  .setDescription(t("commands.shop.add.role.description"))
+                  .setName(i18next.t("commands.shop.role.name"))
+                  .setDescription(
+                    i18next.t("commands.shop.add.role.description"),
+                  )
                   .setRequired(true),
               )
               .addNumberOption((option) =>
                 option
-                  .setName(t("commands.shop.add.price.name"))
-                  .setDescription(t("commands.shop.add.price.description"))
+                  .setName(i18next.t("commands.shop.add.price.name"))
+                  .setDescription(
+                    i18next.t("commands.shop.add.price.description"),
+                  )
                   .setRequired(true),
               )
               .addStringOption((option) =>
                 option
-                  .setName(t("commands.shop.add.duration.name"))
-                  .setDescription(t("commands.shop.add.duration.description"))
+                  .setName(i18next.t("commands.shop.add.duration.name"))
+                  .setDescription(
+                    i18next.t("commands.shop.add.duration.description"),
+                  )
                   .setRequired(false),
               ),
           )
           .addSubcommand((command) =>
             command
               .setName("remove")
-              .setDescription(t("commands.shop.remove.description"))
+              .setDescription(i18next.t("commands.shop.remove.description"))
               .addRoleOption((option) =>
                 option
-                  .setName(t("commands.shop.role.name"))
-                  .setDescription(t("commands.shop.remove.role.description"))
+                  .setName(i18next.t("commands.shop.role.name"))
+                  .setDescription(
+                    i18next.t("commands.shop.remove.role.description"),
+                  )
                   .setRequired(true),
               ),
           ),
@@ -73,15 +81,15 @@ export class ShopCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const role = interaction.options.getRole(
-      t("commands.shop.role.name"),
+      i18next.t("commands.shop.role.name"),
       true,
     );
     const price = interaction.options.getNumber(
-      t("commands.shop.add.price.name"),
+      i18next.t("commands.shop.add.price.name"),
       true,
     );
     const duration = interaction.options.getString(
-      t("commands.shop.add.duration.name"),
+      i18next.t("commands.shop.add.duration.name"),
       false,
     );
 
@@ -93,12 +101,12 @@ export class ShopCommand extends Subcommand {
 
     if (shopItem) {
       interaction.reply({
-        content: t("commands.shop.roleAlreadyExists"),
+        content: i18next.t("commands.shop.roleAlreadyExists"),
         ephemeral: true,
       });
     } else {
       interaction.reply({
-        content: t("commands.shop.roleAdded"),
+        content: i18next.t("commands.shop.roleAdded"),
         ephemeral: true,
       });
     }
@@ -108,7 +116,7 @@ export class ShopCommand extends Subcommand {
     interaction: Subcommand.ChatInputCommandInteraction,
   ) {
     const role = interaction.options.getRole(
-      t("commands.shop.role.name"),
+      i18next.t("commands.shop.role.name"),
       true,
     );
 
@@ -116,12 +124,12 @@ export class ShopCommand extends Subcommand {
 
     if (shopItem) {
       interaction.reply({
-        content: t("commands.shop.roleDeleted"),
+        content: i18next.t("commands.shop.roleDeleted"),
         ephemeral: true,
       });
     } else {
       interaction.reply({
-        content: t("commands.shop.roleDoesNotExist"),
+        content: i18next.t("commands.shop.roleDoesNotExist"),
         ephemeral: true,
       });
     }

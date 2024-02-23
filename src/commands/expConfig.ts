@@ -1,6 +1,6 @@
 import { Command } from "@sapphire/framework";
 import { logError } from "..";
-import { t } from "i18next";
+import i18next from "i18next";
 import Guild from "../schemas/Guild";
 import RoleReward from "../schemas/RoleReward";
 

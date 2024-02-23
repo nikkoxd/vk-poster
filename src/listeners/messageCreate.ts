@@ -6,7 +6,7 @@ import {
   TextChannel,
   User,
 } from "discord.js";
-import { t } from "i18next";
+import i18next from "i18next";
 import Member, { IMember } from "../schemas/Member";
 import { logError } from "..";
 import ms from "ms";
@@ -187,7 +187,7 @@ export class messageCreateListener extends Listener {
         ?.permissionsIn(message.channel as TextChannel)
         .has("EmbedLinks")
     ) {
-      message.reply(t("listeners.messageCreate.cantSendGifs"));
+      message.reply(i18next.t("listeners.messageCreate.cantSendGifs"));
     }
     // REPLY TO FAILED ATTACHMENTS
     // if (
@@ -197,7 +197,7 @@ export class messageCreateListener extends Listener {
     //     ?.permissionsIn(message.channel as TextChannel)
     //     .has("AttachFiles")
     // ) {
-    //   message.reply(t("listeners.messageCreate.cantAttachFiles"));
+    //   message.reply(i18next.t("listeners.messageCreate.cantAttachFiles"));
     // }
   }
 

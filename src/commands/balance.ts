@@ -1,6 +1,6 @@
 import { Command } from "@sapphire/framework";
 import { logError } from "..";
-import { t } from "i18next";
+import i18next from "i18next";
 import Member from "../schemas/Member";
 
 export class balanceCommand extends Command {
@@ -13,11 +13,11 @@ export class balanceCommand extends Command {
       (builder) =>
         builder
           .setName("balance")
-          .setDescription(t("commands.balance.description"))
+          .setDescription(i18next.t("commands.balance.description"))
           .addUserOption((option) =>
             option
-              .setName(t("commands.balance.member.name"))
-              .setDescription(t("commands.balance.member.description")),
+              .setName(i18next.t("commands.balance.member.name"))
+              .setDescription(i18next.t("commands.balance.member.description")),
           ),
       { idHints: [process.env.BALANCE_ID as string] },
     );
@@ -25,7 +25,7 @@ export class balanceCommand extends Command {
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const member = interaction.options.getUser(
-      t("commands.balance.member.name"),
+      i18next.t("commands.balance.member.name"),
     );
     const memberId = member ? member.id : interaction.user.id;
 
@@ -37,7 +37,7 @@ export class balanceCommand extends Command {
       );
 
       interaction.reply(
-        `${t("shop.balance")} ${memberItem.coins} ${t("shop.coins")}`,
+        `${i18next.t("shop.balance")} ${memberItem.coins} ${i18next.t("shop.coins")}`,
       );
     } catch (err: any) {
       logError(err, interaction);

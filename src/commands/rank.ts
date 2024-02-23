@@ -1,6 +1,6 @@
 import { Command } from "@sapphire/framework";
 import { logError } from "..";
-import { t } from "i18next";
+import i18next from "i18next";
 import Member from "../schemas/Member";
 
 export class RankCommand extends Command {
@@ -13,11 +13,11 @@ export class RankCommand extends Command {
       (builder) =>
         builder
           .setName("rank")
-          .setDescription(t("commands.rank.description"))
+          .setDescription(i18next.t("commands.rank.description"))
           .addUserOption((option) =>
             option
-              .setName(t("commands.rank.member.name"))
-              .setDescription(t("commands.rank.member.description")),
+              .setName(i18next.t("commands.rank.member.name"))
+              .setDescription(i18next.t("commands.rank.member.description")),
           ),
       { idHints: [process.env.RANK_ID as string] },
     );
@@ -25,7 +25,7 @@ export class RankCommand extends Command {
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const member = interaction.options.getUser(
-      t("commands.balance.member.name"),
+      i18next.t("commands.balance.member.name"),
     );
     const memberId = member ? member.id : interaction.user.id;
 

@@ -1,8 +1,8 @@
 import { Command } from "@sapphire/framework";
 import { logError } from "..";
-import { t } from "i18next";
 import { PermissionFlagsBits } from "discord.js";
 import Guild from "../schemas/Guild";
+import i18next from "i18next";
 
 export class configCommand extends Command {
   public constructor(ctx: Command.LoaderContext, options: Command.Options) {
@@ -14,39 +14,41 @@ export class configCommand extends Command {
       (builder) =>
         builder
           .setName("config")
-          .setDescription(t("commands.config.description"))
+          .setDescription(i18next.t("commands.config.description"))
           .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
           .addStringOption((option) =>
             option
-              .setName(t("commands.config.optionOne.name"))
-              .setDescription(t("commands.config.optionOne.description"))
+              .setName(i18next.t("commands.config.optionOne.name"))
+              .setDescription(
+                i18next.t("commands.config.optionOne.description"),
+              )
               .addChoices(
                 {
-                  name: t("commands.config.language"),
+                  name: i18next.t("commands.config.language"),
                   value: "language",
                 },
                 {
-                  name: t("commands.config.embedColor"),
+                  name: i18next.t("commands.config.embedColor"),
                   value: "embedColor",
                 },
                 {
-                  name: t("commands.config.memberRole"),
+                  name: i18next.t("commands.config.memberRole"),
                   value: "memberRole",
                 },
                 {
-                  name: t("commands.config.welcomeConfig"),
+                  name: i18next.t("commands.config.welcomeConfig"),
                   value: "welcomeConfig",
                 },
                 {
-                  name: t("commands.config.reactionConfig"),
+                  name: i18next.t("commands.config.reactionConfig"),
                   value: "reactionConfig",
                 },
                 {
-                  name: t("commands.config.coinsConfig"),
+                  name: i18next.t("commands.config.coinsConfig"),
                   value: "coinsConfig",
                 },
                 {
-                  name: t("commands.config.expConfig"),
+                  name: i18next.t("commands.config.expConfig"),
                   value: "expConfig",
                 },
               )
@@ -54,55 +56,57 @@ export class configCommand extends Command {
           )
           .addStringOption((option) =>
             option
-              .setName(t("commands.config.optionTwo.name"))
-              .setDescription(t("commands.config.optionTwo.description"))
+              .setName(i18next.t("commands.config.optionTwo.name"))
+              .setDescription(
+                i18next.t("commands.config.optionTwo.description"),
+              )
               .addChoices(
                 {
-                  name: t("commands.config.welcomeChannelId"),
+                  name: i18next.t("commands.config.welcomeChannelId"),
                   value: "welcomeChannelId",
                 },
                 {
-                  name: t("commands.config.welcomeRoleId"),
+                  name: i18next.t("commands.config.welcomeRoleId"),
                   value: "welcomeRoleId",
                 },
                 {
-                  name: t("commands.config.reactionYes"),
+                  name: i18next.t("commands.config.reactionYes"),
                   value: "reactionYes",
                 },
                 {
-                  name: t("commands.config.reactionNo"),
+                  name: i18next.t("commands.config.reactionNo"),
                   value: "reactionNo",
                 },
                 {
-                  name: t("commands.config.coinsCooldown"),
+                  name: i18next.t("commands.config.coinsCooldown"),
                   value: "coinsCooldown",
                 },
                 {
-                  name: t("commands.config.coinsMin"),
+                  name: i18next.t("commands.config.coinsMin"),
                   value: "coinsMin",
                 },
                 {
-                  name: t("commands.config.coinsMax"),
+                  name: i18next.t("commands.config.coinsMax"),
                   value: "coinsMax",
                 },
                 {
-                  name: t("commands.config.expCooldown"),
+                  name: i18next.t("commands.config.expCooldown"),
                   value: "expCooldown",
                 },
                 {
-                  name: t("commands.config.expMin"),
+                  name: i18next.t("commands.config.expMin"),
                   value: "expMin",
                 },
                 {
-                  name: t("commands.config.expMax"),
+                  name: i18next.t("commands.config.expMax"),
                   value: "expMax",
                 },
               ),
           )
           .addStringOption((option) =>
             option
-              .setName(t("commands.config.value.name"))
-              .setDescription(t("commands.config.value.description")),
+              .setName(i18next.t("commands.config.value.name"))
+              .setDescription(i18next.t("commands.config.value.description")),
           ),
       { idHints: [process.env.CONFIG_ID as string] },
     );
@@ -114,22 +118,22 @@ export class configCommand extends Command {
     value: string,
   ) {
     interaction.reply({
-      content: `\`${option}\` ${t("commands.config.wasSetTo")} \`${value}\``,
+      content: `\`${option}\` ${i18next.t("commands.config.wasSetTo")} \`${value}\``,
       ephemeral: true,
     });
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const option1 = interaction.options.getString(
-      t("commands.config.optionOne.name"),
+      i18next.t("commands.config.optionOne.name"),
       true,
     );
     const option2 = interaction.options.getString(
-      t("commands.config.optionTwo.name"),
+      i18next.t("commands.config.optionTwo.name"),
       false,
     );
     const value = interaction.options.getString(
-      t("commands.config.value.name"),
+      i18next.t("commands.config.value.name"),
       false,
     );
 

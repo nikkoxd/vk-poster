@@ -9,7 +9,7 @@ import type {
 import ShopItem from "../schemas/ShopItem";
 import Member from "../schemas/Member";
 import ms from "ms";
-import { t } from "i18next";
+import i18next from "i18next";
 import { logError } from "..";
 
 export class ShopSelectHandler extends InteractionHandler {
@@ -43,7 +43,7 @@ export class ShopSelectHandler extends InteractionHandler {
 
         if (memberRoles.cache.get(role.id)) {
           interaction.reply({
-            content: t("shop.memberAlreadyHasRole"),
+            content: i18next.t("shop.memberAlreadyHasRole"),
             ephemeral: true,
           });
         } else {
@@ -66,12 +66,12 @@ export class ShopSelectHandler extends InteractionHandler {
             }
 
             interaction.reply({
-              content: `${t("shop.roleGiven")} <@&${role.id}>!`,
+              content: `${i18next.t("shop.roleGiven")} <@&${role.id}>!`,
               ephemeral: true,
             });
           } else {
             interaction.reply({
-              content: t("shop.notEnoughCoins"),
+              content: i18next.t("shop.notEnoughCoins"),
               ephemeral: true,
             });
           }

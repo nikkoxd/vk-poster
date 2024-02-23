@@ -1,6 +1,6 @@
 import { Listener } from "@sapphire/framework";
 import { GuildMember, TextChannel } from "discord.js";
-import { t } from "i18next";
+import i18next from "i18next";
 import Guild from "../schemas/Guild";
 
 export class GuildMemberUpdateListener extends Listener {
@@ -39,10 +39,13 @@ export class GuildMemberUpdateListener extends Listener {
         const channel = guild.channels.cache.get(channelID) as TextChannel;
 
         const welcomeMessage = roleID
-          ? `<@&${roleID}> ${t("listeners.guildMemberUpdate.welcome_message", {
-              member: newMember.id,
-            })}`
-          : t("listeners.guildMemberUpdate.welcome_message", {
+          ? `<@&${roleID}> ${i18next.t(
+              "listeners.guildMemberUpdate.welcome_message",
+              {
+                member: newMember.id,
+              },
+            )}`
+          : i18next.t("listeners.guildMemberUpdate.welcome_message", {
               member: newMember.id,
             });
 
@@ -56,13 +59,13 @@ export class GuildMemberUpdateListener extends Listener {
           try {
             await newMember.roles.add(
               role,
-              t("listeners.guildMemberUpdate.member_role.reason"),
+              i18next.t("listeners.guildMemberUpdate.member_role.reason"),
             );
           } catch (error) {
             console.error("Error adding role to the member:", error);
           }
         } else {
-          console.error("Specified member role doesn't exist");
+          console.error("Specified member role doesn'i18next.t exist");
         }
       }
     }

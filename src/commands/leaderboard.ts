@@ -1,6 +1,6 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import { logError } from "..";
-import { t } from "i18next";
+import i18next from "i18next";
 import Member, { IMember } from "../schemas/Member";
 import {
   ActionRowBuilder,
@@ -36,16 +36,20 @@ export class LeaderboardCommand extends Subcommand {
       (builder) =>
         builder
           .setName("leaderboard")
-          .setDescription(t("commands.leaderboard.description"))
+          .setDescription(i18next.t("commands.leaderboard.description"))
           .addSubcommand((command) =>
             command
               .setName("coins")
-              .setDescription(t("commands.leaderboard.coins.description")),
+              .setDescription(
+                i18next.t("commands.leaderboard.coins.description"),
+              ),
           )
           .addSubcommand((command) =>
             command
               .setName("exp")
-              .setDescription(t("commands.leaderboard.exp.description")),
+              .setDescription(
+                i18next.t("commands.leaderboard.exp.description"),
+              ),
           ),
       { idHints: [process.env.LEADERBOARD_ID as string] },
     );
@@ -64,7 +68,7 @@ export class LeaderboardCommand extends Subcommand {
     const endIdx = startIdx + itemsPerPage;
 
     const embed = new EmbedBuilder()
-      .setTitle(t("leaderboard.title"))
+      .setTitle(i18next.t("leaderboard.title"))
       .setColor(`#${guild!.embedColor}`)
       .setFooter({ text: `Страница: ${page}/${totalPages}` });
 
@@ -96,7 +100,7 @@ export class LeaderboardCommand extends Subcommand {
     const endIdx = startIdx + itemsPerPage;
 
     const embed = new EmbedBuilder()
-      .setTitle(t("leaderboard.title"))
+      .setTitle(i18next.t("leaderboard.title"))
       .setColor(`#${guild!.embedColor}`)
       .setFooter({ text: `Страница: ${page}/${totalPages}` });
 
