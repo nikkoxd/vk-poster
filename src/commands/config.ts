@@ -51,6 +51,10 @@ export class configCommand extends Command {
                   name: i18next.t("commands.config.expConfig"),
                   value: "expConfig",
                 },
+                {
+                  name: i18next.t("commands.config.roomsConfig"),
+                  value: "roomsConfig",
+                },
               )
               .setRequired(true),
           )
@@ -100,6 +104,18 @@ export class configCommand extends Command {
                 {
                   name: i18next.t("commands.config.expMax"),
                   value: "expMax",
+                },
+                {
+                  name: i18next.t("commands.config.roomsManager"),
+                  value: "roomsManager",
+                },
+                {
+                  name: i18next.t("commands.config.roomsCategory"),
+                  value: "roomsCategory",
+                },
+                {
+                  name: i18next.t("commands.config.roomsName"),
+                  value: "roomsName",
                 },
               ),
           )
@@ -267,6 +283,43 @@ export class configCommand extends Command {
                   cooldown: guild.exp.cooldown,
                   min: guild.exp.min,
                   max: Number(value),
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            default:
+              logError(`No correct option2 found for ${option1}`, interaction);
+              break;
+          }
+          break;
+        case "roomsConfig":
+          switch (option2) {
+            case "roomsManager":
+              await guild.updateOne({
+                rooms: {
+                  manager: value,
+                  category: guild.rooms.category,
+                  name: guild.rooms.name,
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            case "roomsCategory":
+              await guild.updateOne({
+                rooms: {
+                  manager: guild.rooms.manager,
+                  category: value,
+                  name: guild.rooms.name,
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            case "roomsName":
+              await guild.updateOne({
+                rooms: {
+                  manager: guild.rooms.manager,
+                  category: guild.rooms.category,
+                  name: value,
                 },
               });
               this.respond(interaction, option2, value!);
