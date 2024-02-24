@@ -30,6 +30,7 @@ export const client = new SapphireClient({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildVoiceStates,
   ],
 });
 
