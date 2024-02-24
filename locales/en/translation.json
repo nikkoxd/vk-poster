@@ -81,7 +81,9 @@
       "success": "Poll has been created! ",
       "link": "Take a look:",
       "edited": "Poll edited",
-      "ended": "Poll has ended"
+      "ended": "Poll has ended",
+      "against": "Against",
+      "for": "For"
     },
     "sendMessage": {
       "description": "Send a message to chat",
@@ -159,7 +161,11 @@
       "expConfig": "Exp Config (configure with option 2)",
       "expCooldown": "Exp - Cooldown",
       "expMin": "Exp - Min Value",
-      "expMax": "Exp - Max Value"
+      "expMax": "Exp - Max Value",
+      "roomsConfig": "Rooms Config (configure with option 2)",
+      "roomsManager": "Rooms - Manager Channel",
+      "roomsName": "Rooms - Default Channel Name",
+      "roomsCategory": "Rooms - Category"
     },
     "balance": {
       "yourBalance": "Your balance:",
@@ -238,6 +244,12 @@
     "messageCreate": {
       "cantSendGifs": "To send GIFs you first need to get level 1!",
       "cantAttachFiles": "To send images or files you first need to get level 1!"
+    },
+    "voiceStateUpdate": {
+      "embed": {
+        "description": "- 🔒 - Lock channel\n- 🔓 - Unlock channel\n- 🔧 - Add a channel moderator",
+        "title": "Channel Options"
+      }
     }
   },
   "poll": {
@@ -278,5 +290,12 @@
   },
   "leaderboard": {
     "title": "Leaderboard"
+  },
+  "interaction-handlers": {
+    "optionsButton": {
+      "notChannelOwner": "You are not the owner of this channel!",
+      "locked": "Channel locked",
+      "unlocked": "Channel unlocked"
+    }
   }
 }
