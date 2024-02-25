@@ -80,6 +80,25 @@ schedule(timing, async () => {
           }
         }
       }
+      for (let i = 0; i < memberItem.rooms.length; i++) {
+        const roomItem = memberItem.rooms[i];
+        const guild = client.guilds.cache.get(roomItem.guildId);
+        if (!guild) return;
+
+        if (date >= roomItem.expiryDate) {
+          const channel = guild.channels.cache.get(roomItem.channelId);
+
+          const newChannels = memberItem.rooms.filter(
+            (r, index) => index !== i,
+          );
+
+          await memberItem.updateOne({ rooms: newChannels });
+
+          if (!channel) return;
+
+          await channel.delete();
+        }
+      }
     }
   } catch (error) {
     client.logger.error("Error in role expiry checker:", error);
