@@ -38,12 +38,16 @@ following the schema located at `src/schemas/Message.ts`
 
 A proper solution is being worked on [here](https://github.com/nikkoxd/stella-embed-builder).
 
+## Setting up a shop/room renting
+
+To set up a shop or room renting:
+
+1. Make a new message with a button.
+2. Set the button's `customId` value to either `shop` or `room-rent`
+
 ## Custom translations
 
-To add new translations, go to `/locales`,
-make a folder there with your language's code
-and make a JSON file named `translation.json`, then
-preload your translation in `/src/index.ts`:
+To add new translations, preload your translation in `/src/index.ts`:
 
 ```ts
 ...
@@ -65,6 +69,8 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
 );
 ...
 ```
+
+Then, either make a new folder in `locales/`, or use [i18n Ally extension](https://marketplace.visualstudio.com/items?itemName=scaukk.i18n-downloader)
 
 ## TODO
 
