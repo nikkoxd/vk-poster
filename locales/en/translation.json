@@ -165,7 +165,9 @@
       "roomsConfig": "Rooms Config (configure with option 2)",
       "roomsManager": "Rooms - Manager Channel",
       "roomsName": "Rooms - Default Channel Name",
-      "roomsCategory": "Rooms - Category"
+      "roomsCategory": "Rooms - Category",
+      "roomsPrefix": "Rooms - Prefix",
+      "roomsPrice": "Rooms - Price per hour"
     },
     "balance": {
       "yourBalance": "Your balance:",
@@ -296,6 +298,21 @@
       "notChannelOwner": "You are not the owner of this channel!",
       "locked": "Channel locked",
       "unlocked": "Channel unlocked"
+    },
+    "rentButton": {
+      "modal": {
+        "title": "Private room rent",
+        "fields": {
+          "label": "Custom name:",
+          "placeholder": "You can change it later"
+        },
+        "duration": {
+          "label": "Duration:",
+          "placeholder": "24h/30d/1m etc"
+        }
+      },
+      "notEnoughCoins": "You don't have enough money!",
+      "success": "Created a channel for you! Join: <#{{channelId}}>"
     }
   }
 }
