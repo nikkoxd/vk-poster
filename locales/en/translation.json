@@ -312,7 +312,8 @@
         }
       },
       "notEnoughCoins": "You don't have enough money!",
-      "success": "Created a channel for you! Join: <#{{channelId}}>"
+      "success": "Created a channel for you! Join: <#{{channelId}}>",
+      "expiresAt": "This room is rented until <t:{{timestamp}}>"
     }
   }
 }

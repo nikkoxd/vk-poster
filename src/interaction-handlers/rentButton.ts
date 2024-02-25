@@ -84,16 +84,16 @@ export class RentButtonHandler extends InteractionHandler {
     if (submitted) {
       if (!submitted.guild) return;
 
-      const nameValue = submitted.fields.getTextInputValue("rent-name-input");
-      const durationValue = submitted.fields.getTextInputValue(
-        "rent-duration-input",
-      );
-
       const guildConfig = await Guild.findOne({ id: process.env.GUILD_ID });
       if (!guildConfig) return;
 
       const { category, prefix, price } = guildConfig.rooms;
       if (!category) return;
+
+      const nameValue = submitted.fields.getTextInputValue("rent-name-input");
+      const durationValue = submitted.fields.getTextInputValue(
+        "rent-duration-input",
+      );
 
       let name: string;
       if (prefix) {
@@ -103,6 +103,8 @@ export class RentButtonHandler extends InteractionHandler {
         if (nameValue) name = `${nameValue}`;
         else name = `${submitted.user.displayName}`;
       }
+
+      let expiryDate = Date.now() + ms(durationValue);
 
       let member = await Member.findOne({
         memberId: submitted.user.id,
@@ -162,14 +164,20 @@ export class RentButtonHandler extends InteractionHandler {
           .setStyle(3),
       ]);
 
-      await channel.send({ embeds: [optionsEmbed], components: [optionsRow] });
+      await channel.send({
+        content: i18next.t("interaction-handlers.rentButton.expiresAt", {
+          timestamp: Math.round(expiryDate / 1000),
+        }),
+        embeds: [optionsEmbed],
+        components: [optionsRow],
+      });
 
       const rooms = member.rooms;
 
       rooms.push({
         guildId: submitted.guild.id,
         channelId: channel.id,
-        expiryDate: Date.now() + ms(durationValue),
+        expiryDate: expiryDate,
       });
 
       await member.updateOne({
