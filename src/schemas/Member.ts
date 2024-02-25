@@ -6,11 +6,18 @@ export interface IMember {
   level: number;
   coins: number;
   roles: IRole[];
+  rooms: IRoom[];
 }
 
 interface IRole {
   guildId: string;
   roleId: string;
+  expiryDate: number;
+}
+
+interface IRoom {
+  guildId: string;
+  channelId: string;
   expiryDate: number;
 }
 
@@ -20,6 +27,7 @@ const memberSchema = new Schema<IMember>({
   level: { type: Number, default: 0, required: true },
   coins: { type: Number, default: 0, required: true },
   roles: Array<IRole>,
+  rooms: Array<IRoom>,
 });
 
 export default model<IMember>("Member", memberSchema);

@@ -51,6 +51,10 @@ export class configCommand extends Command {
                   name: i18next.t("commands.config.expConfig"),
                   value: "expConfig",
                 },
+                {
+                  name: i18next.t("commands.config.roomsConfig"),
+                  value: "roomsConfig",
+                },
               )
               .setRequired(true),
           )
@@ -100,6 +104,18 @@ export class configCommand extends Command {
                 {
                   name: i18next.t("commands.config.expMax"),
                   value: "expMax",
+                },
+                {
+                  name: i18next.t("commands.config.roomsCategory"),
+                  value: "roomsCategory",
+                },
+                {
+                  name: i18next.t("commands.config.roomsPrefix"),
+                  value: "roomsPrefix",
+                },
+                {
+                  name: i18next.t("commands.config.roomsPrice"),
+                  value: "roomsPrice",
                 },
               ),
           )
@@ -267,6 +283,43 @@ export class configCommand extends Command {
                   cooldown: guild.exp.cooldown,
                   min: guild.exp.min,
                   max: Number(value),
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            default:
+              logError(`No correct option2 found for ${option1}`, interaction);
+              break;
+          }
+          break;
+        case "roomsConfig":
+          switch (option2) {
+            case "roomsCategory":
+              await guild.updateOne({
+                rooms: {
+                  category: value,
+                  prefix: guild.rooms.prefix,
+                  price: guild.rooms.price,
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            case "roomsPrefix":
+              await guild.updateOne({
+                rooms: {
+                  category: guild.rooms.category,
+                  prefix: value,
+                  price: guild.rooms.price,
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            case "roomsPrice":
+              await guild.updateOne({
+                rooms: {
+                  category: guild.rooms.category,
+                  prefix: guild.rooms.prefix,
+                  price: value,
                 },
               });
               this.respond(interaction, option2, value!);

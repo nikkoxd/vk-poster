@@ -30,6 +30,7 @@ export const client = new SapphireClient({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildVoiceStates,
   ],
 });
 
@@ -77,6 +78,25 @@ schedule(timing, async () => {
             // Update the Member document with the new roles array
             await memberItem.updateOne({ roles: newRoles });
           }
+        }
+      }
+      for (let i = 0; i < memberItem.rooms.length; i++) {
+        const roomItem = memberItem.rooms[i];
+        const guild = client.guilds.cache.get(roomItem.guildId);
+        if (!guild) return;
+
+        if (date >= roomItem.expiryDate) {
+          const channel = guild.channels.cache.get(roomItem.channelId);
+
+          const newChannels = memberItem.rooms.filter(
+            (r, index) => index !== i,
+          );
+
+          await memberItem.updateOne({ rooms: newChannels });
+
+          if (!channel) return;
+
+          await channel.delete();
         }
       }
     }
