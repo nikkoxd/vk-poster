@@ -13,7 +13,7 @@ interface IEmbed {
   title: string;
   description: string;
   color: number;
-  field: IEmbedField[];
+  fields: IEmbedField[];
 }
 
 interface IEmbedField {
