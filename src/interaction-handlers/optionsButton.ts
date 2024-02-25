@@ -36,7 +36,6 @@ export class OptionsButtonHandler extends InteractionHandler {
 
     if (interaction.channel.type != ChannelType.GuildVoice) return;
     if (interaction.channel.parentId != guildConfig.rooms.category) return;
-    if (interaction.channelId == guildConfig.rooms.manager) return;
 
     if (!interaction.channel.permissionsFor(interaction.user)) return;
 
