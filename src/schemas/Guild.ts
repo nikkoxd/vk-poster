@@ -25,9 +25,9 @@ export interface IGuild {
     max: number;
   };
   rooms: {
-    manager: string;
     category: string;
-    name: string;
+    prefix: string;
+    price: number;
   };
 }
 
@@ -67,8 +67,10 @@ const guildSchema = new Schema<IGuild>({
     },
   },
   rooms: {
-    manager: String,
     category: String,
+    prefix: String,
+    price: Number,
+    manager: String,
     name: String,
   },
 });
