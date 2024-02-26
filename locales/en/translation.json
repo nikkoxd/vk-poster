@@ -167,7 +167,8 @@
       "roomsName": "Rooms - Default Channel Name",
       "roomsCategory": "Rooms - Category",
       "roomsPrefix": "Rooms - Prefix",
-      "roomsPrice": "Rooms - Price per hour"
+      "roomsPrice": "Rooms - Price per hour",
+      "coinsBumpReward": "Coins - Bump Reward"
     },
     "balance": {
       "yourBalance": "Your balance:",
@@ -245,7 +246,8 @@
     },
     "messageCreate": {
       "cantSendGifs": "To send GIFs you first need to get level 1!",
-      "cantAttachFiles": "To send images or files you first need to get level 1!"
+      "cantAttachFiles": "To send images or files you first need to get level 1!",
+      "bumpRewarded": "<@{{memberId}}>, you have been given {{coins}} coins"
     },
     "voiceStateUpdate": {
       "embed": {
@@ -315,5 +317,8 @@
       "success": "Created a channel for you! Join: <#{{channelId}}>",
       "expiresAt": "This room is rented until <t:{{timestamp}}>"
     }
+  },
+  "handlers": {
+    "log": "An error occured while performing the interaction: {{error}}"
   }
 }

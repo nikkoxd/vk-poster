@@ -167,7 +167,8 @@
       "roomsName": "Комнаты - Стандартное Название Канала",
       "roomsCategory": "Комнаты - Категория",
       "roomsPrice": "Комнаты - Цена за час",
-      "roomsPrefix": "Комнаты - Префикс"
+      "roomsPrefix": "Комнаты - Префикс",
+      "coinsBumpReward": "Валюта - Награда за бампы"
     },
     "balance": {
       "description": "Узнать баланс",
@@ -245,7 +246,8 @@
     },
     "messageCreate": {
       "cantSendGifs": "Чтобы отправлять гифки заработай 1 уровень!",
-      "cantAttachFiles": "Чтобы отправлять картинки/файлы заработай 1 уровень!"
+      "cantAttachFiles": "Чтобы отправлять картинки/файлы заработай 1 уровень!",
+      "bumpRewarded": "<@{{memberId}}>, тебе начислено {{coins}} монет"
     },
     "voiceStateUpdate": {
       "embed": {
@@ -315,5 +317,8 @@
       "success": "Успешно создан канал! Зайти: <#{{channelId}}>",
       "expiresAt": "Эта комната арендована до <t:{{timestamp}}>"
     }
+  },
+  "handlers": {
+    "log": "При взаимодействии произошла ошибка: {{error}}"
   }
 }

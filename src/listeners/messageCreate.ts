@@ -29,6 +29,8 @@ export class messageCreateListener extends Listener {
   coinCooldowns = new Collection<User, number>();
   expCooldowns = new Collection<User, number>();
 
+  // TODO: Remove member and guild checking from all of the methods
+
   private getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
   }
@@ -201,14 +203,55 @@ export class messageCreateListener extends Listener {
     // }
   }
 
+  private async processCommands(
+    message: Message,
+    guild: IGuild,
+    member: IMember,
+  ) {
+    if (guild.coins.bumpReward == 0) return;
+
+    const interaction = message.interaction;
+    if (!interaction) return;
+    if (interaction.commandName != "like" || "up" || "bump") return;
+
+    await Member.updateOne(
+      {
+        memberId: interaction.user.id,
+      },
+      {
+        coins: member.coins + guild.coins.bumpReward,
+      },
+    );
+
+    message.reply(
+      i18next.t("listeners.messageCreate.bumpRewarded", {
+        memberId: interaction.user.id,
+        coins: guild.coins.bumpReward,
+      }),
+    );
+  }
+
   public override async run(message: Message) {
-    const member = await Member.findOne({ memberId: message.author.id });
     const guild = await Guild.findOne({ id: process.env.GUILD_ID });
+    if (!guild) return;
 
-    await this.giveCoins(message, guild, member);
-    await this.giveExp(message, guild, member);
+    if (!message.author.bot) {
+      const member = await Member.findOne({ memberId: message.author.id });
 
-    this.processPings(message);
-    this.processLinks(message);
+      await this.giveCoins(message, guild, member);
+      await this.giveExp(message, guild, member);
+
+      this.processPings(message);
+      this.processLinks(message);
+    } else {
+      if (!message.interaction) return;
+
+      const member = await Member.findOne({
+        memberId: message.interaction.user.id,
+      });
+      if (!member) return;
+
+      this.processCommands(message, guild, member);
+    }
   }
 }

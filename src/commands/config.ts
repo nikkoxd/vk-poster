@@ -94,6 +94,10 @@ export class configCommand extends Command {
                   value: "coinsMax",
                 },
                 {
+                  name: i18next.t("commands.config.coinsBumpReward"),
+                  value: "coinsBumpReward",
+                },
+                {
                   name: i18next.t("commands.config.expCooldown"),
                   value: "expCooldown",
                 },
@@ -226,6 +230,7 @@ export class configCommand extends Command {
                   cooldown: value,
                   min: guild.coins.min,
                   max: guild.coins.max,
+                  bumpReward: guild.coins.bumpReward,
                 },
               });
               this.respond(interaction, option2, value!);
@@ -236,6 +241,7 @@ export class configCommand extends Command {
                   cooldown: guild.coins.cooldown,
                   min: Number(value),
                   max: guild.coins.max,
+                  bumpReward: guild.coins.bumpReward,
                 },
               });
               this.respond(interaction, option2, value!);
@@ -246,6 +252,18 @@ export class configCommand extends Command {
                   cooldown: guild.coins.cooldown,
                   min: guild.coins.min,
                   max: Number(value),
+                  bumpReward: guild.coins.bumpReward,
+                },
+              });
+              this.respond(interaction, option2, value!);
+              break;
+            case "coinsBumpReward":
+              await guild.updateOne({
+                coins: {
+                  cooldown: guild.coins.cooldown,
+                  min: guild.coins.min,
+                  max: guild.coins.max,
+                  bumpReward: Number(value),
                 },
               });
               this.respond(interaction, option2, value!);

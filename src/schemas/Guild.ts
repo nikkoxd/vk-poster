@@ -18,6 +18,7 @@ export interface IGuild {
     cooldown: string;
     min: number;
     max: number;
+    bumpReward: number;
   };
   exp: {
     cooldown: string;
@@ -56,6 +57,7 @@ const guildSchema = new Schema<IGuild>({
       cooldown: "5s",
       min: 50,
       max: 85,
+      bumpReward: 0,
     },
   },
   exp: {
