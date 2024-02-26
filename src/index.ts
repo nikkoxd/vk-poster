@@ -62,22 +62,19 @@ schedule(timing, async () => {
       for (let i = 0; i < memberItem.roles.length; i++) {
         const roleItem = memberItem.roles[i];
         const guild = client.guilds.cache.get(roleItem.guildId);
+        if (!guild) return;
 
-        // Check if current date is after the role expiry date
-        if (guild && date >= roleItem.expiryDate) {
+        if (date >= roleItem.expiryDate) {
           const role = guild.roles.cache.get(roleItem.roleId);
           const member = guild.members.cache.get(memberItem.memberId);
 
-          if (role && member) {
-            // Create a new array without the expired role
-            const newRoles = memberItem.roles.filter((r, index) => index !== i);
+          const newRoles = memberItem.roles.filter((r, index) => index !== i);
 
-            // Remove the role from the member
-            await member.roles.remove(role);
+          await memberItem.updateOne({ roles: newRoles });
 
-            // Update the Member document with the new roles array
-            await memberItem.updateOne({ roles: newRoles });
-          }
+          if (!role || !member) return;
+
+          await member.roles.remove(role);
         }
       }
       for (let i = 0; i < memberItem.rooms.length; i++) {
