@@ -223,12 +223,12 @@ export class messageCreateListener extends Listener {
       },
     );
 
-    message.reply(
-      i18next.t("listeners.messageCreate.bumpRewarded", {
-        memberId: interaction.user.id,
-        coins: guild.coins.bumpReward,
-      }),
-    );
+    // message.reply(
+    //   i18next.t("listeners.messageCreate.bumpRewarded", {
+    //     memberId: interaction.user.id,
+    //     coins: guild.coins.bumpReward,
+    //   }),
+    // );
   }
 
   public override async run(message: Message) {
