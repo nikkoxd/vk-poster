@@ -37,51 +37,44 @@ export class CommandRemove extends Command {
     const commandId = interaction.options.getString("command_id", true);
     const ownerId = process.env.OWNER_ID;
 
-    if (ownerId) {
-      if (interaction.user.id == ownerId) {
-        const rest = new REST().setToken(process.env.TOKEN as string);
+    if (interaction.user.id == ownerId) {
+      const rest = new REST().setToken(process.env.TOKEN as string);
 
-        if (isGlobal) {
-          rest
-            .delete(
-              Routes.applicationCommand(
-                process.env.CLIENT_ID as string,
-                commandId,
-              ),
-            )
-            .then(() =>
-              interaction.reply({
-                content: `Global command with ID ${commandId} has been deleted`,
-                ephemeral: true,
-              }),
-            )
-            .catch(this.container.logger.error);
-        } else {
-          rest
-            .delete(
-              Routes.applicationGuildCommand(
-                process.env.CLIENT_ID as string,
-                interaction.guild!.id,
-                commandId,
-              ),
-            )
-            .then(() =>
-              interaction.reply({
-                content: `Guild command with ID ${commandId} has been deleted`,
-                ephemeral: true,
-              }),
-            )
-            .catch(this.container.logger.error);
-        }
+      if (isGlobal) {
+        rest
+          .delete(
+            Routes.applicationCommand(
+              process.env.CLIENT_ID as string,
+              commandId,
+            ),
+          )
+          .then(() =>
+            interaction.reply({
+              content: `Global command with ID ${commandId} has been deleted`,
+              ephemeral: true,
+            }),
+          )
+          .catch(this.container.logger.error);
       } else {
-        interaction.reply({
-          content: "Only the bot owner can use this command!",
-          ephemeral: true,
-        });
+        rest
+          .delete(
+            Routes.applicationGuildCommand(
+              process.env.CLIENT_ID as string,
+              interaction.guild!.id,
+              commandId,
+            ),
+          )
+          .then(() =>
+            interaction.reply({
+              content: `Guild command with ID ${commandId} has been deleted`,
+              ephemeral: true,
+            }),
+          )
+          .catch(this.container.logger.error);
       }
     } else {
       interaction.reply({
-        content: "Owner has not been set for this bot's instance",
+        content: "Only the bot owner can use this command!",
         ephemeral: true,
       });
     }
