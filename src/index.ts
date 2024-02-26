@@ -151,4 +151,17 @@ async function startBot() {
   }
 }
 
+const requiredEnvVars = [
+  "CLIENT_ID",
+  "GUILD_ID",
+  "TOKEN",
+  "DB_USERNAME",
+  "DB_PASSWORD",
+];
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    throw new Error(`Environment variable ${envVar} is not defined.`);
+  }
+}
+
 startBot();
