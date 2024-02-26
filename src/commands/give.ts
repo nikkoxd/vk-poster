@@ -118,27 +118,26 @@ export class GiveCommand extends Subcommand {
     const level = member.level;
     const roles = await RoleReward.find().sort({ level: 1 });
 
+    if (!roles) return;
+    if (!interaction.member) return;
+
     try {
-      if (roles && interaction.member) {
-        let roleReward: IRoleReward | null = await RoleReward.findOne({
-          level: level,
-        });
+      let roleReward: IRoleReward | null = await RoleReward.findOne({
+        level: level,
+      });
 
-        roles.forEach((role: IRoleReward) => {
-          if (role.level <= level) {
-            roleReward = role;
-          }
-          if (roleManager.cache.has(role.id)) {
-            roleManager.remove(role.id);
-          }
-        });
-
-        if (roleReward) {
-          roleManager.add(roleReward.id);
+      roles.forEach((role: IRoleReward) => {
+        if (role.level <= level) {
+          roleReward = role;
         }
-      }
-    } catch (err: any) {
-      logError(err, interaction);
+        if (roleManager.cache.has(role.id)) {
+          roleManager.remove(role.id);
+        }
+      });
+
+      if (roleReward) roleManager.add(roleReward.id);
+    } catch (error) {
+      logError(error, interaction);
     }
   }
 
