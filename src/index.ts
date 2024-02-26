@@ -50,6 +50,8 @@ export async function logError(
   client.logger.error("Error reading message:", err);
 }
 
+export const bumpCooldowns = new Map<string, number>();
+
 let timing = "0 */1 * * *"; // Ran every hour
 if (process.env.NODE_ENV == "development") timing = "*/1 * * * *"; // Ran every minute
 
@@ -131,23 +133,22 @@ function i18nConfig(guild: IGuild) {
   );
 }
 
-async function runi18n() {
-  const guild = await Guild.findOne({ id: process.env.GUILD_ID });
-  if (guild) {
-    i18nConfig(guild);
-  } else {
-    const guild = new Guild({ id: process.env.GUILD_ID });
-    guild.save();
+async function startBot() {
+  try {
+    const guild = await Guild.findOne({ id: process.env.GUILD_ID });
+    if (!guild) {
+      const newGuild = new Guild({ id: process.env.GUILD_ID });
+      await newGuild.save();
+      i18nConfig(newGuild);
+    } else {
+      i18nConfig(guild);
+    }
 
-    i18nConfig(guild);
+    await client.login(process.env.TOKEN);
+    client.logger.info("Successfully connected to Discord API");
+  } catch (error) {
+    client.logger.error("Error starting bot:", error);
   }
 }
 
-runi18n().then(() => {
-  client
-    .login(process.env.TOKEN)
-    .then(() => client.logger.info("Successfuly connected to Discord API"))
-    .catch((error) =>
-      client.logger.error("Error connecting to Discord API: ", error),
-    );
-});
+startBot();
