@@ -32,6 +32,46 @@ export class CommandRemove extends Command {
     );
   }
 
+  public async processGlobalCommand(
+    interaction: Command.ChatInputCommandInteraction,
+    rest: REST,
+    commandId: string,
+  ) {
+    rest
+      .delete(
+        Routes.applicationCommand(process.env.CLIENT_ID as string, commandId),
+      )
+      .then(() =>
+        interaction.reply({
+          content: `Global command with ID ${commandId} has been deleted`,
+          ephemeral: true,
+        }),
+      )
+      .catch(this.container.logger.error);
+  }
+
+  public async processGuildCommand(
+    interaction: Command.ChatInputCommandInteraction,
+    rest: REST,
+    commandId: string,
+  ) {
+    rest
+      .delete(
+        Routes.applicationGuildCommand(
+          process.env.CLIENT_ID as string,
+          interaction.guild!.id,
+          commandId,
+        ),
+      )
+      .then(() =>
+        interaction.reply({
+          content: `Guild command with ID ${commandId} has been deleted`,
+          ephemeral: true,
+        }),
+      )
+      .catch(this.container.logger.error);
+  }
+
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const isGlobal = interaction.options.getBoolean("is_global", true);
     const commandId = interaction.options.getString("command_id", true);
@@ -41,36 +81,9 @@ export class CommandRemove extends Command {
       const rest = new REST().setToken(process.env.TOKEN as string);
 
       if (isGlobal) {
-        rest
-          .delete(
-            Routes.applicationCommand(
-              process.env.CLIENT_ID as string,
-              commandId,
-            ),
-          )
-          .then(() =>
-            interaction.reply({
-              content: `Global command with ID ${commandId} has been deleted`,
-              ephemeral: true,
-            }),
-          )
-          .catch(this.container.logger.error);
+        this.processGlobalCommand(interaction, rest, commandId);
       } else {
-        rest
-          .delete(
-            Routes.applicationGuildCommand(
-              process.env.CLIENT_ID as string,
-              interaction.guild!.id,
-              commandId,
-            ),
-          )
-          .then(() =>
-            interaction.reply({
-              content: `Guild command with ID ${commandId} has been deleted`,
-              ephemeral: true,
-            }),
-          )
-          .catch(this.container.logger.error);
+        this.processGuildCommand(interaction, rest, commandId);
       }
     } else {
       interaction.reply({
