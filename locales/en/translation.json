@@ -357,7 +357,11 @@
     "optionsButton": {
       "notChannelOwner": "You are not the owner of this channel!",
       "locked": "Channel locked",
-      "unlocked": "Channel unlocked"
+      "unlocked": "Channel unlocked",
+      "newMod": {
+        "select": "Select a member",
+        "success": "Moderator added"
+      }
     },
     "rentButton": {
       "modal": {

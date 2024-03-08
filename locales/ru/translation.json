@@ -357,7 +357,11 @@
     "optionsButton": {
       "locked": "Канал закрыт",
       "notChannelOwner": "Ты не владелец этого канала!",
-      "unlocked": "Канал открыт"
+      "unlocked": "Канал открыт",
+      "newMod": {
+        "select": "Выбери участника",
+        "success": "Модератор добавлен"
+      }
     },
     "rentButton": {
       "modal": {
