@@ -173,7 +173,11 @@
         "name": "параметр",
         "description": "Параметр"
       },
-      "logChannel": "Канал для логов"
+      "logChannel": "Канал для логов",
+      "log": {
+        "title": "Изменен конфиг сервера",
+        "description": "**Ответственный:** <@{{memberId}}>\n**Параметр:** {{param}}\n**Значение:** {{value}}"
+      }
     },
     "balance": {
       "description": "Узнать баланс",

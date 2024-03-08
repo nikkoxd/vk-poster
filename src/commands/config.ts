@@ -144,25 +144,21 @@ export class configCommand extends Command {
         await guild.updateOne({
           language: value,
         });
-        this.respond(interaction, param, value);
         break;
       case "logChannel":
         await guild.updateOne({
           logChannel: value,
         });
-        this.respond(interaction, param, value);
         break;
       case "embedColor":
         await guild.updateOne({
           embedColor: value,
         });
-        this.respond(interaction, param, value);
         break;
       case "memberRole":
         await guild.updateOne({
           memberRoleId: value,
         });
-        this.respond(interaction, param, value);
         break;
       case "welcomeChannelId":
         await guild.updateOne({
@@ -171,7 +167,6 @@ export class configCommand extends Command {
             roleId: guild.welcome.roleId,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "welcomeRoleId":
         await guild.updateOne({
@@ -180,7 +175,6 @@ export class configCommand extends Command {
             roleId: value,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "reactionYes":
         await guild.updateOne({
@@ -189,7 +183,6 @@ export class configCommand extends Command {
             no: guild.reactions.no,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "reactionNo":
         await guild.updateOne({
@@ -198,7 +191,6 @@ export class configCommand extends Command {
             no: value,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "coinsCooldown":
         await guild.updateOne({
@@ -209,7 +201,6 @@ export class configCommand extends Command {
             bumpReward: guild.coins.bumpReward,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "coinsMin":
         await guild.updateOne({
@@ -220,7 +211,6 @@ export class configCommand extends Command {
             bumpReward: guild.coins.bumpReward,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "coinsMax":
         await guild.updateOne({
@@ -231,7 +221,6 @@ export class configCommand extends Command {
             bumpReward: guild.coins.bumpReward,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "coinsBumpReward":
         await guild.updateOne({
@@ -242,7 +231,6 @@ export class configCommand extends Command {
             bumpReward: value,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "expCooldown":
         await guild.updateOne({
@@ -252,7 +240,6 @@ export class configCommand extends Command {
             max: guild.exp.max,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "expMin":
         await guild.updateOne({
@@ -262,7 +249,6 @@ export class configCommand extends Command {
             max: guild.exp.max,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "expMax":
         await guild.updateOne({
@@ -272,7 +258,6 @@ export class configCommand extends Command {
             max: value,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "roomsCategory":
         await guild.updateOne({
@@ -282,7 +267,6 @@ export class configCommand extends Command {
             price: guild.rooms.price,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "roomsPrefix":
         await guild.updateOne({
@@ -292,7 +276,6 @@ export class configCommand extends Command {
             price: guild.rooms.price,
           },
         });
-        this.respond(interaction, param, value);
         break;
       case "roomsPrice":
         await guild.updateOne({
@@ -302,11 +285,20 @@ export class configCommand extends Command {
             price: value,
           },
         });
-        this.respond(interaction, param, value);
         break;
       default:
         logError("No correct parameter found", interaction);
-        break;
+        return;
     }
+    this.container.client.log(
+      interaction,
+      i18next.t("commands.config.log.title"),
+      i18next.t("commands.config.log.description", {
+        memberId: interaction.user.id,
+        param: param,
+        value: value,
+      }),
+    );
+    this.respond(interaction, param, value);
   }
 }

@@ -173,7 +173,11 @@
         "name": "parameter",
         "description": "Parameter"
       },
-      "logChannel": "Logging channel"
+      "logChannel": "Logging channel",
+      "log": {
+        "title": "Server config changed",
+        "description": "**Responsible:** <@{{memberId}}>\n**Parameter:** {{param}}\n**Value:** {{value}}"
+      }
     },
     "balance": {
       "yourBalance": "Your balance:",
