@@ -1,6 +1,6 @@
 {
   "name": "stella",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "General purpose bot built for https://discord.gg/starrysky",
   "main": "dist/index.js",
   "repository": "https://github.com/nikkoxd/stella.git",
@@ -26,6 +26,7 @@
     "dotenv": "^16.4.4",
     "prettier": "3.2.5",
     "rimraf": "^5.0.5",
+    "standard-version": "^9.5.0",
     "typescript": "^5.3.3"
   },
   "scripts": {
@@ -33,6 +34,7 @@
     "copy-files": "copyfiles -u 1 src/messages/*.json src/messages/attachments/* dist/",
     "build": "yarn clean && tsc && yarn copy-files",
     "dev": "NODE_ENV=development yarn start",
-    "start": "yarn build && node dist/index.js"
+    "start": "yarn build && node dist/index.js",
+    "release": "standard-version"
   }
 }
