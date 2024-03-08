@@ -22,6 +22,22 @@ export class configCommand extends Command {
               .setDescription(i18next.t("commands.config.param.description"))
               .addChoices(
                 {
+                  name: i18next.t("commands.config.language"),
+                  value: "language",
+                },
+                {
+                  name: i18next.t("commands.config.logChannel"),
+                  value: "logChannel",
+                },
+                {
+                  name: i18next.t("commands.config.embedColor"),
+                  value: "embedColor",
+                },
+                {
+                  name: i18next.t("commands.config.memberRole"),
+                  value: "memberRole",
+                },
+                {
                   name: i18next.t("commands.config.welcomeChannelId"),
                   value: "welcomeChannelId",
                 },
@@ -124,6 +140,30 @@ export class configCommand extends Command {
     }
 
     switch (param) {
+      case "language":
+        await guild.updateOne({
+          language: value,
+        });
+        this.respond(interaction, param, value);
+        break;
+      case "logChannel":
+        await guild.updateOne({
+          logChannel: value,
+        });
+        this.respond(interaction, param, value);
+        break;
+      case "embedColor":
+        await guild.updateOne({
+          embedColor: value,
+        });
+        this.respond(interaction, param, value);
+        break;
+      case "memberRole":
+        await guild.updateOne({
+          memberRoleId: value,
+        });
+        this.respond(interaction, param, value);
+        break;
       case "welcomeChannelId":
         await guild.updateOne({
           welcome: {
