@@ -278,6 +278,18 @@
         },
         "description": "**Ответственный:** <@{{memberId}}>\n**Уровень:** {{level}}\n**Награда:** <@&{{roleId}}>"
       }
+    },
+    "give": {
+      "log": {
+        "coins": {
+          "title": "Баланс участника изменен",
+          "description": "**Ответственный:** <@{{moderatorId}}>\n**Участник:** <@{{memberId}}>\n**Старый баланс:** {{oldBalance}}\n**Новый баланс:** {{newBalance}}"
+        },
+        "exp": {
+          "title": "Опыт участника изменен",
+          "description": "**Ответственный:** {{moderatorId}}\n**Участник:** {{memberId}}\n**Старый опыт:** {{oldExp}}\n**Новый опыт:** {{newExp}}"
+        }
+      }
     }
   },
   "listeners": {

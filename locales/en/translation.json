@@ -278,6 +278,18 @@
         },
         "description": "**Responsible:** <@{{memberId}}>\n**Level:** {{level}}\n**Reward:** <@&{{roleId}}>"
       }
+    },
+    "give": {
+      "log": {
+        "coins": {
+          "title": "Member's balance changed",
+          "description": "**Responsible:** <@{{moderatorId}}>\n**Member:** <@{{memberId}}>\n**Old balance:** {{oldBalance}}\n**New balance:** {{newBalance}}"
+        },
+        "exp": {
+          "title": "Member's exp changed",
+          "description": "**Responsible:** {{moderatorId}}\n**Member:** {{memberId}}\n**Old exp:** {{oldExp}}\n**New exp:** {{newExp}}"
+        }
+      }
     }
   },
   "listeners": {
