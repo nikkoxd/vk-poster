@@ -168,7 +168,11 @@
       "roomsCategory": "Комнаты - Категория",
       "roomsPrice": "Комнаты - Цена за час",
       "roomsPrefix": "Комнаты - Префикс",
-      "coinsBumpReward": "Валюта - Награда за бампы"
+      "coinsBumpReward": "Валюта - Награда за бампы",
+      "param": {
+        "name": "параметр",
+        "description": "Параметр"
+      }
     },
     "balance": {
       "description": "Узнать баланс",

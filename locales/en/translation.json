@@ -168,7 +168,11 @@
       "roomsCategory": "Rooms - Category",
       "roomsPrefix": "Rooms - Prefix",
       "roomsPrice": "Rooms - Price per hour",
-      "coinsBumpReward": "Coins - Bump Reward"
+      "coinsBumpReward": "Coins - Bump Reward",
+      "param": {
+        "name": "parameter",
+        "description": "Parameter"
+      }
     },
     "balance": {
       "yourBalance": "Your balance:",
