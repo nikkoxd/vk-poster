@@ -1,5 +1,4 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { logError } from "..";
 import i18next from "i18next";
 import RoleReward from "../schemas/RoleReward";
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";

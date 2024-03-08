@@ -9,7 +9,6 @@ import {
   TextChannel,
 } from "discord.js";
 import { logError } from "..";
-import { readFile } from "fs";
 import i18next from "i18next";
 import Message from "../schemas/Message";
 
