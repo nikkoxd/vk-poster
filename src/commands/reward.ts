@@ -90,9 +90,9 @@ export class RewardCommand extends Subcommand {
       true,
     );
 
-    let dbRole = await RoleReward.findOne({ id: role.id, level: level });
+    let reward = await RoleReward.findOne({ id: role.id, level: level });
 
-    if (dbRole) {
+    if (reward) {
       interaction.reply({
         content: i18next.t("commands.reward.reply.rewardAlreadyExists"),
         ephemeral: true,
@@ -100,8 +100,8 @@ export class RewardCommand extends Subcommand {
       return;
     }
 
-    dbRole = new RoleReward({ id: role.id, level: level });
-    dbRole.save();
+    reward = new RoleReward({ id: role.id, level: level });
+    reward.save();
 
     interaction.reply({
       content: i18next.t("commands.reward.reply.rewardAdded", {
@@ -120,9 +120,9 @@ export class RewardCommand extends Subcommand {
       true,
     );
 
-    const dbRole = await RoleReward.findOne({ level: level });
+    const reward = await RoleReward.findOne({ level: level });
 
-    if (!dbRole) {
+    if (!reward) {
       interaction.reply({
         content: i18next.t("commands.reward.reply.rewardDoesNotExist", {
           level: level,
@@ -132,7 +132,7 @@ export class RewardCommand extends Subcommand {
       return;
     }
 
-    await dbRole.deleteOne();
+    await reward.deleteOne();
     interaction.reply({
       content: i18next.t("commands.reward.reply.rewardRemoved", {
         level: level,
