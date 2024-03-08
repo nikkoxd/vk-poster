@@ -72,13 +72,6 @@ i18next.use(I18NexFsBackend).init<FsBackendOptions>(
 
 Then, either make a new folder in `locales/`, or use [i18n Ally extension](https://marketplace.visualstudio.com/items?itemName=scaukk.i18n-downloader)
 
-## TODO
-
-- Make better error handling
-- ~~Make an exp system~~
-- Give coins when using /bump type commands
-- ~~Create private channels for coins~~
-
 ## License
 
 This project is licensed under [GNU General Public License v3.0][license]
