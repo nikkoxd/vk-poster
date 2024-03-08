@@ -3,9 +3,13 @@ import {
   InteractionHandlerTypes,
 } from "@sapphire/framework";
 import {
+  ActionRowBuilder,
   ButtonInteraction,
   ChannelType,
+  ComponentType,
+  GuildChannel,
   PermissionFlagsBits,
+  UserSelectMenuBuilder,
 } from "discord.js";
 import Guild from "../schemas/Guild";
 import i18next from "i18next";
@@ -72,6 +76,48 @@ export class OptionsButtonHandler extends InteractionHandler {
         interaction.reply({
           content: i18next.t("interaction-handlers.optionsButton.unlocked"),
           ephemeral: true,
+        });
+        break;
+      case "rooms-newmod":
+        const reply = await interaction.deferReply({
+          ephemeral: true,
+          fetchReply: true,
+        });
+
+        const selectMenu = new UserSelectMenuBuilder()
+          .setCustomId("rooms-newmod-select")
+          .setPlaceholder(
+            i18next.t("interaction-handlers.optionsButton.newMod.select"),
+          );
+
+        const row = new ActionRowBuilder<UserSelectMenuBuilder>().addComponents(
+          selectMenu,
+        );
+
+        interaction.editReply({ components: [row] });
+
+        const collector = reply.createMessageComponentCollector({
+          componentType: ComponentType.UserSelect,
+          time: 60_000,
+        });
+
+        collector.on("collect", async (collectedInteraction) => {
+          if (!collectedInteraction.channel) return;
+          if (!collectedInteraction.guild) return;
+
+          (
+            collectedInteraction.channel as GuildChannel
+          ).permissionOverwrites.create(collectedInteraction.values[0], {
+            Connect: true,
+            ManageChannels: true,
+          });
+
+          collectedInteraction.reply({
+            content: i18next.t(
+              "interaction-handlers.optionsButton.newMod.success",
+            ),
+            ephemeral: true,
+          });
         });
         break;
       default:

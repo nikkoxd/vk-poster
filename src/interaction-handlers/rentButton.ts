@@ -6,11 +6,10 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonInteraction,
+  ButtonStyle,
   ChannelType,
-  ComponentType,
   EmbedBuilder,
   ModalBuilder,
-  ModalSubmitInteraction,
   PermissionFlagsBits,
   TextInputBuilder,
   TextInputStyle,
@@ -149,19 +148,34 @@ export class RentButtonHandler extends InteractionHandler {
           i18next.t("listeners.voiceStateUpdate.embed.description"),
         );
 
-      const optionsRow = new ActionRowBuilder<ButtonBuilder>().addComponents([
+      const optionsRow1 = new ActionRowBuilder<ButtonBuilder>().addComponents([
         new ButtonBuilder()
           .setCustomId("rooms-lock")
           .setLabel("🔒")
-          .setStyle(3),
+          .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
           .setCustomId("rooms-unlock")
           .setLabel("🔓")
-          .setStyle(3),
+          .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
           .setCustomId("rooms-newmod")
           .setLabel("🔧")
-          .setStyle(3),
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId("rooms-removemod")
+          .setLabel("🗑️")
+          .setStyle(ButtonStyle.Secondary),
+      ]);
+
+      const optionsRow2 = new ActionRowBuilder<ButtonBuilder>().addComponents([
+        new ButtonBuilder()
+          .setCustomId("rooms-enable-chatting")
+          .setLabel("💬")
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId("rooms-disable-chatting")
+          .setLabel("🤫")
+          .setStyle(ButtonStyle.Secondary),
       ]);
 
       await channel.send({
@@ -169,7 +183,7 @@ export class RentButtonHandler extends InteractionHandler {
           timestamp: Math.round(expiryDate / 1000),
         }),
         embeds: [optionsEmbed],
-        components: [optionsRow],
+        components: [optionsRow1, optionsRow2],
       });
 
       const rooms = member.rooms;
