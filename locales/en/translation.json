@@ -172,7 +172,8 @@
       "param": {
         "name": "parameter",
         "description": "Parameter"
-      }
+      },
+      "logChannel": "Logging channel"
     },
     "balance": {
       "yourBalance": "Your balance:",
@@ -265,6 +266,13 @@
       "embed": {
         "title": "Rewards",
         "reward": "Level {{level}} - <@&{{roleId}}>\n"
+      },
+      "log": {
+        "title": {
+          "added": "Level reward added",
+          "removed": "Level reward removed"
+        },
+        "description": "**Responsible:** <@{{memberId}}>\n**Level:** {{level}}\n**Reward:** <@&{{roleId}}>"
       }
     }
   },

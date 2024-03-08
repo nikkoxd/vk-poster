@@ -20,6 +20,21 @@ import { schedule } from "node-cron";
 import "dotenv/config";
 import Member from "./schemas/Member";
 import Guild, { IGuild } from "./schemas/Guild";
+import { log } from "./logger";
+
+const requiredEnvVars = [
+  "CLIENT_ID",
+  "LOG_CHANNEL",
+  "GUILD_ID",
+  "TOKEN",
+  "DB_USERNAME",
+  "DB_PASSWORD",
+];
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    throw new Error(`Environment variable ${envVar} is not defined.`);
+  }
+}
 
 // Creating a new instance of the Discord bot client
 export const client = new SapphireClient({
@@ -135,32 +150,16 @@ function i18nConfig(guild: IGuild) {
 
 async function startBot() {
   try {
-    const guild = await Guild.findOne({ id: process.env.GUILD_ID });
-    if (!guild) {
-      const newGuild = new Guild({ id: process.env.GUILD_ID });
-      await newGuild.save();
-      i18nConfig(newGuild);
-    } else {
-      i18nConfig(guild);
-    }
+    let config = await Guild.findOne({ id: process.env.GUILD_ID });
+    if (!config) config = new Guild({ id: process.env.GUILD_ID });
+    i18nConfig(config);
+
+    client.log = log;
 
     await client.login(process.env.TOKEN);
     client.logger.info("Successfully connected to Discord API");
   } catch (error) {
     client.logger.error("Error starting bot:", error);
-  }
-}
-
-const requiredEnvVars = [
-  "CLIENT_ID",
-  "GUILD_ID",
-  "TOKEN",
-  "DB_USERNAME",
-  "DB_PASSWORD",
-];
-for (const envVar of requiredEnvVars) {
-  if (!process.env[envVar]) {
-    throw new Error(`Environment variable ${envVar} is not defined.`);
   }
 }
 

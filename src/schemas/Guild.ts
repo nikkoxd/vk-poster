@@ -2,8 +2,8 @@ import { Schema, model } from "mongoose";
 
 export interface IGuild {
   id: string;
-
   language: string;
+  logChannel: string;
   embedColor: string;
   memberRoleId: string | null;
   welcome: {
@@ -35,6 +35,7 @@ export interface IGuild {
 const guildSchema = new Schema<IGuild>({
   id: { type: String, required: true },
   language: { type: String, default: "ru" },
+  logChannel: String,
   embedColor: { type: String, default: "D381D2" },
   memberRoleId: { type: String, default: null },
   welcome: {

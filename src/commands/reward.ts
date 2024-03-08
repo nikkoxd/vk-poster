@@ -102,6 +102,15 @@ export class RewardCommand extends Subcommand {
     reward = new RoleReward({ id: role.id, level: level });
     reward.save();
 
+    await this.container.client.log(
+      interaction,
+      i18next.t("commands.reward.log.title.added"),
+      i18next.t("commands.reward.log.description", {
+        memberId: interaction.user.id,
+        level: level,
+        roleId: role.id,
+      }),
+    );
     interaction.reply({
       content: i18next.t("commands.reward.reply.rewardAdded", {
         level: level,
@@ -131,6 +140,15 @@ export class RewardCommand extends Subcommand {
       return;
     }
 
+    await this.container.client.log(
+      interaction,
+      i18next.t("commands.reward.log.title.removed"),
+      i18next.t("commands.reward.log.description", {
+        memberId: interaction.user.id,
+        level: level,
+        roleId: reward.id,
+      }),
+    );
     await reward.deleteOne();
     interaction.reply({
       content: i18next.t("commands.reward.reply.rewardRemoved", {
