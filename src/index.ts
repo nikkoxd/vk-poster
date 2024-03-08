@@ -24,7 +24,6 @@ import { log } from "./logger";
 
 const requiredEnvVars = [
   "CLIENT_ID",
-  "LOG_CHANNEL",
   "GUILD_ID",
   "TOKEN",
   "DB_USERNAME",
