@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.1](https://github.com/nikkoxd/stella/compare/v2.0.0...v2.0.1) (2024-03-08)
+
+
+### Bug Fixes
+
+* :heavy_plus_sign: replace standard-version with release-please ([5b6e840](https://github.com/nikkoxd/stella/commit/5b6e840d71eed02676a910f372525a22571a87cf))
+* **actions:** :bug: update the token name ([ea4649f](https://github.com/nikkoxd/stella/commit/ea4649f55fe7bb37947cefd44a4311fa7dbc7dfc))
+
 ## 2.0.0 (2024-03-08)
 
 
