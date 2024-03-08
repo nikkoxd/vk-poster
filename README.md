@@ -44,6 +44,7 @@ To set up a shop or room renting:
 
 1. Make a new message with a button.
 2. Set the button's `customId` value to either `shop` or `room-rent`
+3. Send the message via `/sendmsg` command
 
 ## Custom translations
 
