@@ -236,6 +236,36 @@
       "exp": {
         "description": "By exp"
       }
+    },
+    "reward": {
+      "description": "Edit exp rewards",
+      "add": {
+        "description": "Add a reward"
+      },
+      "role": {
+        "name": "role",
+        "description": "Role to add as a reward"
+      },
+      "level": {
+        "name": "level",
+        "description": "Level at which the reward should be given"
+      },
+      "remove": {
+        "description": "Remove a reward"
+      },
+      "reply": {
+        "rewardAlreadyExists": "Reward already exists for this level",
+        "rewardAdded": "<@&{{roleId}> will now be given for level {{level}}",
+        "rewardDoesNotExist": "Reward for level {{level}} does not exist",
+        "rewardRemoved": "Level {{level}} reward removed"
+      },
+      "list": {
+        "description": "List all rewards"
+      },
+      "embed": {
+        "title": "Rewards",
+        "reward": "Level {{level}} - <@&{{roleId}}>\n"
+      }
     }
   },
   "listeners": {

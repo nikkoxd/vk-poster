@@ -236,6 +236,36 @@
       "exp": {
         "description": "Топ по опыту"
       }
+    },
+    "reward": {
+      "description": "Редактировать награды за опыт",
+      "role": {
+        "name": "роль",
+        "description": "Роль, которую необходимо добавить в качестве награды"
+      },
+      "add": {
+        "description": "Добавить награду"
+      },
+      "level": {
+        "name": "уровень",
+        "description": "Уровень, на котором должна быть выдана награда"
+      },
+      "remove": {
+        "description": "Удалить награду"
+      },
+      "reply": {
+        "rewardAlreadyExists": "Награда для этого уровня уже существует",
+        "rewardAdded": "За {{level}} уровень теперь будет выдаваться роль <@&{{roleId}}>",
+        "rewardDoesNotExist": "Награды за уровень {{level}} не существует",
+        "rewardRemoved": "Награда уровня {{level}} удалена"
+      },
+      "list": {
+        "description": "Перечислить все награды"
+      },
+      "embed": {
+        "title": "Награды",
+        "reward": "Уровень {{level}} - <@&{{roleId}}>\n"
+      }
     }
   },
   "listeners": {
