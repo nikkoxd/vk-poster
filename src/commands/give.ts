@@ -3,6 +3,7 @@ import { logError } from "..";
 import Member, { IMember } from "../schemas/Member";
 import RoleReward, { IRoleReward } from "../schemas/RoleReward";
 import { GuildMemberRoleManager } from "discord.js";
+import i18next from "i18next";
 
 export class GiveCommand extends Subcommand {
   public constructor(
@@ -85,6 +86,17 @@ export class GiveCommand extends Subcommand {
         await Member.create({ memberId: member.id, coins: coins });
       }
 
+      this.container.client.log(
+        interaction,
+        i18next.t("commands.give.log.coins.title"),
+        i18next.t("commands.give.log.coins.description", {
+          moderatorId: interaction.user.id,
+          memberId: member.id,
+          oldBalance: dbMember ? dbMember.coins : 0,
+          newBalance: dbMember ? dbMember.coins + coins : coins,
+        }),
+      );
+
       interaction.reply({
         content: `Баланс ${member.displayName} теперь составляет ${
           dbMember ? dbMember.coins + coins : coins
@@ -163,6 +175,17 @@ export class GiveCommand extends Subcommand {
 
         this.processRoles(interaction, dbMember);
       }
+
+      this.container.client.log(
+        interaction,
+        i18next.t("commands.give.log.exp.title"),
+        i18next.t("commands.give.log.exp.description", {
+          moderatorId: interaction.user.id,
+          memberId: member.id,
+          oldExp: dbMember.exp,
+          newExp: exp,
+        }),
+      );
 
       interaction.reply({
         content: `Опыт ${member.displayName} теперь составляет ${exp} и его уровень ${level}`,
