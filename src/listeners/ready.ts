@@ -1,6 +1,5 @@
 import { Listener } from "@sapphire/framework";
 import { ActivityType, Client } from "discord.js";
-import Guild from "../schemas/Guild";
 
 export class readyListener extends Listener {
   public constructor(

@@ -8,11 +8,9 @@ import {
 } from "discord.js";
 import i18next from "i18next";
 import Member, { IMember } from "../schemas/Member";
-import { logError } from "..";
 import ms from "ms";
 import Guild, { IGuild } from "../schemas/Guild";
-import RoleReward, { IRoleReward } from "../schemas/RoleReward";
-import { Subcommand } from "@sapphire/plugin-subcommands";
+import RoleReward from "../schemas/RoleReward";
 
 export class messageCreateListener extends Listener {
   public constructor(
