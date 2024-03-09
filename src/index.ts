@@ -7,12 +7,10 @@ import I18NexFsBackend, { FsBackendOptions } from "i18next-fs-backend";
 
 import mongoose from "mongoose";
 
-import { schedule } from "node-cron";
-
 import "dotenv/config";
-import Member from "./schemas/Member";
 import Guild, { IGuild } from "./schemas/Guild";
 import { error, log } from "./logger";
+import { Scheduler } from "./scheduler";
 
 const requiredEnvVars = [
   "CLIENT_ID",
@@ -38,60 +36,6 @@ export const client = new SapphireClient({
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.GuildVoiceStates,
   ],
-});
-
-export const bumpCooldowns = new Map<string, number>();
-
-let timing = "0 */1 * * *"; // Ran every hour
-if (process.env.NODE_ENV == "development") timing = "*/1 * * * *"; // Ran every minute
-
-schedule(timing, async () => {
-  try {
-    const date = Date.now();
-    const memberItems = await Member.find();
-
-    for (const memberItem of memberItems) {
-      for (let i = 0; i < memberItem.roles.length; i++) {
-        const roleItem = memberItem.roles[i];
-        const guild = client.guilds.cache.get(roleItem.guildId);
-        if (!guild) return;
-
-        if (date >= roleItem.expiryDate) {
-          const role = guild.roles.cache.get(roleItem.roleId);
-          const member = guild.members.cache.get(memberItem.memberId);
-
-          const newRoles = memberItem.roles.filter((r, index) => index !== i);
-
-          await memberItem.updateOne({ roles: newRoles });
-
-          if (!role || !member) return;
-
-          await member.roles.remove(role);
-        }
-      }
-      for (let i = 0; i < memberItem.rooms.length; i++) {
-        const roomItem = memberItem.rooms[i];
-        const guild = client.guilds.cache.get(roomItem.guildId);
-        if (!guild) return;
-
-        if (date >= roomItem.expiryDate) {
-          const channel = guild.channels.cache.get(roomItem.channelId);
-
-          const newChannels = memberItem.rooms.filter(
-            (r, index) => index !== i,
-          );
-
-          await memberItem.updateOne({ rooms: newChannels });
-
-          if (!channel) return;
-
-          await channel.delete();
-        }
-      }
-    }
-  } catch (error) {
-    client.logger.error("Error in role expiry checker:", error);
-  }
 });
 
 client.logger.info("Running on", process.env.NODE_ENV);
@@ -131,6 +75,7 @@ async function startBot() {
 
     client.log = log;
     client.error = error;
+    client.scheduler = new Scheduler();
 
     await client.login(process.env.TOKEN);
     client.logger.info("Successfully connected to Discord API");
