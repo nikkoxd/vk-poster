@@ -10,7 +10,6 @@ import ShopItem from "../schemas/ShopItem";
 import Member from "../schemas/Member";
 import ms from "ms";
 import i18next from "i18next";
-import { logError } from "..";
 
 export class ShopSelectHandler extends InteractionHandler {
   public constructor(
@@ -78,7 +77,7 @@ export class ShopSelectHandler extends InteractionHandler {
         }
       }
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 }

@@ -15,7 +15,6 @@ import {
 import i18next from "i18next";
 import ShopItem, { IShopItem } from "../schemas/ShopItem";
 import Member, { IMember } from "../schemas/Member";
-import { logError } from "..";
 import Guild from "../schemas/Guild";
 
 export class ShopButtonHandler extends InteractionHandler {
@@ -196,7 +195,7 @@ export class ShopButtonHandler extends InteractionHandler {
           });
         }
       } catch (error) {
-        logError(error, interaction);
+        this.container.client.error(error, interaction);
       }
     }
   }
