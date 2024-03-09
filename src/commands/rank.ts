@@ -1,5 +1,4 @@
 import { Command } from "@sapphire/framework";
-import { logError } from "..";
 import i18next from "i18next";
 import Member from "../schemas/Member";
 
@@ -41,7 +40,7 @@ export class RankCommand extends Command {
         `**Уровень:** ${memberItem.level}\n**Опыт:** ${memberItem.exp}/${required}`,
       );
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 }

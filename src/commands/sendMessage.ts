@@ -8,7 +8,6 @@ import {
   StringSelectMenuBuilder,
   TextChannel,
 } from "discord.js";
-import { logError } from "..";
 import i18next from "i18next";
 import Message from "../schemas/Message";
 
@@ -69,7 +68,7 @@ export class SendMessageCommand extends Command {
             try {
               attachments.push(file);
             } catch (err) {
-              logError(err, interaction);
+              this.container.client.error(err, interaction);
             }
           }
         }
@@ -129,7 +128,7 @@ export class SendMessageCommand extends Command {
           ephemeral: true,
         });
       } catch (err: any) {
-        logError(interaction, err);
+        this.container.client.error(interaction, err);
       }
     } else {
       this.container.logger.error(`Message ${name} not found`);

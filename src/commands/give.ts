@@ -1,5 +1,4 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { logError } from "..";
 import Member, { IMember } from "../schemas/Member";
 import RoleReward, { IRoleReward } from "../schemas/RoleReward";
 import { GuildMemberRoleManager } from "discord.js";
@@ -104,7 +103,7 @@ export class GiveCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 
@@ -148,7 +147,7 @@ export class GiveCommand extends Subcommand {
 
       if (roleReward) roleManager.add(roleReward.id);
     } catch (error) {
-      logError(error, interaction);
+      this.container.client.error(error, interaction);
     }
   }
 
@@ -192,7 +191,7 @@ export class GiveCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err: any) {
-      logError(interaction, err);
+      this.container.client.error(interaction, err);
     }
   }
 }

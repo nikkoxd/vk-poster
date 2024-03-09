@@ -1,6 +1,5 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import { ChannelType, Message, PermissionFlagsBits } from "discord.js";
-import { logError } from "..";
 import i18next from "i18next";
 import Guild from "../schemas/Guild";
 
@@ -145,7 +144,7 @@ export class pollCommand extends Subcommand {
         });
       }
     } catch (err) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 
@@ -169,7 +168,7 @@ export class pollCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 
@@ -214,7 +213,7 @@ export class pollCommand extends Subcommand {
         );
       }
     } catch (err) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 }

@@ -1,5 +1,4 @@
 import { Command } from "@sapphire/framework";
-import { logError } from "..";
 import i18next from "i18next";
 import Member from "../schemas/Member";
 
@@ -40,7 +39,7 @@ export class balanceCommand extends Command {
         `${i18next.t("shop.balance")} ${member.coins} ${i18next.t("shop.coins")}`,
       );
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 }

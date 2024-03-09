@@ -1,14 +1,6 @@
 import "@sapphire/plugin-logger/register";
-import { Command, SapphireClient } from "@sapphire/framework";
-import {
-  ButtonInteraction,
-  Collection,
-  GatewayIntentBits,
-  StringSelectMenuInteraction,
-  TextChannel,
-  User,
-} from "discord.js";
-import { Subcommand } from "@sapphire/plugin-subcommands";
+import { SapphireClient } from "@sapphire/framework";
+import { GatewayIntentBits } from "discord.js";
 
 import i18next from "i18next";
 import I18NexFsBackend, { FsBackendOptions } from "i18next-fs-backend";
@@ -20,7 +12,7 @@ import { schedule } from "node-cron";
 import "dotenv/config";
 import Member from "./schemas/Member";
 import Guild, { IGuild } from "./schemas/Guild";
-import { log } from "./logger";
+import { error, log } from "./logger";
 
 const requiredEnvVars = [
   "CLIENT_ID",
@@ -47,22 +39,6 @@ export const client = new SapphireClient({
     GatewayIntentBits.GuildVoiceStates,
   ],
 });
-
-// Error logger with interaction reply
-export async function logError(
-  err: any,
-  interaction:
-    | Command.ChatInputCommandInteraction
-    | Subcommand.ChatInputCommandInteraction
-    | ButtonInteraction
-    | StringSelectMenuInteraction,
-) {
-  interaction.reply({
-    content: `${i18next.t("logError")}\n\`\`\`${err}\`\`\``,
-    ephemeral: true,
-  });
-  client.logger.error("Error reading message:", err);
-}
 
 export const bumpCooldowns = new Map<string, number>();
 
@@ -154,6 +130,7 @@ async function startBot() {
     i18nConfig(config);
 
     client.log = log;
+    client.error = error;
 
     await client.login(process.env.TOKEN);
     client.logger.info("Successfully connected to Discord API");

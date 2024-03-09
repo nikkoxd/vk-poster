@@ -1,5 +1,4 @@
 import { Command } from "@sapphire/framework";
-import { logError } from "..";
 import i18next from "i18next";
 import { PermissionFlagsBits } from "discord.js";
 import Guild from "../schemas/Guild";
@@ -131,7 +130,10 @@ export class configCommand extends Command {
     let guild = await Guild.findOne({ id: guildId });
 
     if (!guildId) {
-      logError("GUILD_ID environment variable not set", interaction);
+      this.container.client.error(
+        "GUILD_ID environment variable not set",
+        interaction,
+      );
       return;
     }
     if (!guild) {
@@ -287,7 +289,7 @@ export class configCommand extends Command {
         });
         break;
       default:
-        logError("No correct parameter found", interaction);
+        this.container.client.error("No correct parameter found", interaction);
         return;
     }
     this.container.client.log(

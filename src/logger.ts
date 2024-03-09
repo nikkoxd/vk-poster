@@ -3,11 +3,21 @@ import {
   GuildBasedChannel,
   GuildChannel,
   Interaction,
+  RepliableInteraction,
   TextChannel,
 } from "discord.js";
 import Guild from "./schemas/Guild";
 import { client } from ".";
 import { EmbedBuilder } from "@discordjs/builders";
+import i18next from "i18next";
+
+export async function error(err: any, interaction: RepliableInteraction) {
+  interaction.reply({
+    content: `${i18next.t("logError")}\n\`\`\`${err}\`\`\``,
+    ephemeral: true,
+  });
+  client.logger.error("Error reading message:", err);
+}
 
 export async function log(
   interaction: Interaction,

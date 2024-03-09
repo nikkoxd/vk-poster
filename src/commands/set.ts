@@ -1,5 +1,4 @@
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { logError } from "..";
 import i18next from "i18next";
 import { GuildMemberRoleManager, PermissionFlagsBits, Role } from "discord.js";
 import Member, { IMember } from "../schemas/Member";
@@ -128,7 +127,7 @@ export class SetCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 
@@ -173,7 +172,7 @@ export class SetCommand extends Subcommand {
         }
       }
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 
@@ -204,7 +203,7 @@ export class SetCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 
@@ -235,7 +234,7 @@ export class SetCommand extends Subcommand {
         ephemeral: true,
       });
     } catch (err: any) {
-      logError(err, interaction);
+      this.container.client.error(err, interaction);
     }
   }
 }
