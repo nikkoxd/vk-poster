@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/nikkoxd/stella/compare/v2.2.0...v2.3.0) (2024-03-09)
+
+
+### Features
+
+* :technologist: add types for env vars ([5863481](https://github.com/nikkoxd/stella/commit/5863481f896f89319913b27997ad6a8e08f40204))
+
+
+### Bug Fixes
+
+* :fire: remove error-handler.ts ([6f87c31](https://github.com/nikkoxd/stella/commit/6f87c31b0616cdad8b16c1d557cbb41b83bbbdb8))
+* **handlers:** :ambulance: replace logError with the new method ([c61ac07](https://github.com/nikkoxd/stella/commit/c61ac07ca98e3a14831082c07864026e33046ab4))
+
 ## [2.2.0](https://github.com/nikkoxd/stella/compare/v2.1.0...v2.2.0) (2024-03-08)
 
 
