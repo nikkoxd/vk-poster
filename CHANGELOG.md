@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/nikkoxd/stella/compare/v2.3.0...v2.4.0) (2024-03-11)
+
+
+### Features
+
+* **handlers:** :sparkles: add command cooldown checks ([285a31e](https://github.com/nikkoxd/stella/commit/285a31e32aa33d95255c955f8cb037297d325238))
+* **listeners:** :sparkles: add cooldowns for bumps ([93d9f48](https://github.com/nikkoxd/stella/commit/93d9f48281cbf2d3d5371ab3f12c26b9499b4346))
+
+
+### Bug Fixes
+
+* :ambulance: wait for mongodb to load before doing anything else ([77bbfd0](https://github.com/nikkoxd/stella/commit/77bbfd0b9c91280ed4c40d728adb36cc64db8bde))
+* **config:** :ambulance: convert string type to number where needed ([4a6dd7d](https://github.com/nikkoxd/stella/commit/4a6dd7d0c7a49c22efe00a6b4c86ca829c747283))
+* **types:** :art: move scheduler to container ([2a2174c](https://github.com/nikkoxd/stella/commit/2a2174cbf896e155e0e04b675e0d240a78e71973))
+
 ## [2.3.0](https://github.com/nikkoxd/stella/compare/v2.2.0...v2.3.0) (2024-03-09)
 
 
