@@ -1,5 +1,5 @@
 import "@sapphire/plugin-logger/register";
-import { SapphireClient } from "@sapphire/framework";
+import { SapphireClient, container } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
 
 import i18next from "i18next";
@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import Guild, { IGuild } from "./schemas/Guild";
 import { error, log } from "./logger";
-import { Scheduler } from "./scheduler";
+import Scheduler from "./scheduler";
 
 const requiredEnvVars = [
   "CLIENT_ID",
@@ -40,13 +40,6 @@ export const client = new SapphireClient({
 
 client.logger.info("Running on", process.env.NODE_ENV);
 
-mongoose
-  .connect(
-    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@database.9jp4vnl.mongodb.net/${process.env.GUILD_ID}?retryWrites=true&w=majority`,
-  )
-  .then(() => client.logger.info("Connected to MongoDB"))
-  .catch((error) => client.logger.error("Error connecting to MongoDB:", error));
-
 // Initializing i18next for internationalization
 function i18nConfig(guild: IGuild) {
   i18next.use(I18NexFsBackend).init<FsBackendOptions>(
@@ -67,15 +60,16 @@ function i18nConfig(guild: IGuild) {
   );
 }
 
-async function startBot() {
+async function init() {
   try {
     let config = await Guild.findOne({ id: process.env.GUILD_ID });
     if (!config) config = new Guild({ id: process.env.GUILD_ID });
     i18nConfig(config);
 
-    client.log = log;
     client.error = error;
-    client.scheduler = new Scheduler();
+    client.log = log;
+
+    container.scheduler = new Scheduler();
 
     await client.login(process.env.TOKEN);
     client.logger.info("Successfully connected to Discord API");
@@ -84,4 +78,12 @@ async function startBot() {
   }
 }
 
-startBot();
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@database.9jp4vnl.mongodb.net/${process.env.GUILD_ID}?retryWrites=true&w=majority`,
+  )
+  .then(() => {
+    client.logger.info("Connected to MongoDB");
+    init();
+  })
+  .catch((error) => client.logger.error("Error connecting to MongoDB:", error));
