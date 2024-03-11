@@ -11,6 +11,7 @@ import Member, { IMember } from "../schemas/Member";
 import ms from "ms";
 import Guild, { IGuild } from "../schemas/Guild";
 import RoleReward from "../schemas/RoleReward";
+import { Document } from "mongoose";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -204,29 +205,34 @@ export class messageCreateListener extends Listener {
   private async processCommands(
     message: Message,
     guild: IGuild,
-    member: IMember,
+    member: Document<any, any, IMember> & IMember,
   ) {
     if (guild.coins.bumpReward == 0) return;
 
     const interaction = message.interaction;
+
     if (!interaction) return;
-    if (interaction.commandName != "like" || "up" || "bump") return;
+    if (
+      interaction.commandName != "like" &&
+      interaction.commandName != "up" &&
+      interaction.commandName != "bump"
+    )
+      return;
 
-    await Member.updateOne(
-      {
-        memberId: interaction.user.id,
-      },
-      {
+    if (!this.container.scheduler.isOnCooldown(interaction.commandName)) {
+      this.container.scheduler.addCooldown(interaction.commandName, ms("4h"));
+
+      await member.updateOne({
         coins: member.coins + guild.coins.bumpReward,
-      },
-    );
+      });
 
-    // message.reply(
-    //   i18next.t("listeners.messageCreate.bumpRewarded", {
-    //     memberId: interaction.user.id,
-    //     coins: guild.coins.bumpReward,
-    //   }),
-    // );
+      message.reply(
+        i18next.t("listeners.messageCreate.bumpRewarded", {
+          memberId: interaction.user.id,
+          coins: guild.coins.bumpReward,
+        }),
+      );
+    }
   }
 
   public override async run(message: Message) {
@@ -249,7 +255,7 @@ export class messageCreateListener extends Listener {
       });
       if (!member) return;
 
-      this.processCommands(message, guild, member);
+      await this.processCommands(message, guild, member);
     }
   }
 }
