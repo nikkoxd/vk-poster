@@ -105,17 +105,6 @@ export class configCommand extends Command {
     );
   }
 
-  private respond(
-    interaction: Command.ChatInputCommandInteraction,
-    param: string,
-    value: string,
-  ) {
-    interaction.reply({
-      content: `\`${param}\` ${i18next.t("commands.config.wasSetTo")} \`${value}\``,
-      ephemeral: true,
-    });
-  }
-
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
     const param = interaction.options.getString(
       i18next.t("commands.config.param.name"),
@@ -208,7 +197,7 @@ export class configCommand extends Command {
         await guild.updateOne({
           coins: {
             cooldown: guild.coins.cooldown,
-            min: value,
+            min: Number(value),
             max: guild.coins.max,
             bumpReward: guild.coins.bumpReward,
           },
@@ -219,7 +208,7 @@ export class configCommand extends Command {
           coins: {
             cooldown: guild.coins.cooldown,
             min: guild.coins.min,
-            max: value,
+            max: Number(value),
             bumpReward: guild.coins.bumpReward,
           },
         });
@@ -230,7 +219,7 @@ export class configCommand extends Command {
             cooldown: guild.coins.cooldown,
             min: guild.coins.min,
             max: guild.coins.max,
-            bumpReward: value,
+            bumpReward: Number(value),
           },
         });
         break;
@@ -247,7 +236,7 @@ export class configCommand extends Command {
         await guild.updateOne({
           exp: {
             cooldown: guild.exp.cooldown,
-            min: value,
+            min: Number(value),
             max: guild.exp.max,
           },
         });
@@ -257,7 +246,7 @@ export class configCommand extends Command {
           exp: {
             cooldown: guild.exp.cooldown,
             min: guild.exp.min,
-            max: value,
+            max: Number(value),
           },
         });
         break;
@@ -284,7 +273,7 @@ export class configCommand extends Command {
           rooms: {
             category: guild.rooms.category,
             prefix: guild.rooms.prefix,
-            price: value,
+            price: Number(value),
           },
         });
         break;
@@ -301,6 +290,10 @@ export class configCommand extends Command {
         value: value,
       }),
     );
-    this.respond(interaction, param, value);
+
+    interaction.reply({
+      content: `\`${param}\` ${i18next.t("commands.config.wasSetTo")} \`${value}\``,
+      ephemeral: true,
+    });
   }
 }
