@@ -219,12 +219,21 @@ export class messageCreateListener extends Listener {
     )
       return;
 
+    this.container.logger.info(`Got a ${interaction.commandName} command`);
+
     if (!this.container.scheduler.isOnCooldown(interaction.commandName)) {
+      this.container.logger.info(
+        `${interaction.commandName} is not on cooldown`,
+      );
       this.container.scheduler.addCooldown(interaction.commandName, ms("4h"));
 
       await member.updateOne({
         coins: member.coins + guild.coins.bumpReward,
       });
+
+      this.container.logger.info(
+        `Gave ${guild.coins.bumpReward} coins to member with id ${member.id}`,
+      );
 
       message.reply(
         i18next.t("listeners.messageCreate.bumpRewarded", {
