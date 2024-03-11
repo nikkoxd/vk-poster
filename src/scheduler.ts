@@ -3,14 +3,35 @@ import Member, { IMember } from "./schemas/Member";
 import { client } from ".";
 import { Document } from "mongoose";
 
-export class Scheduler {
-  public bumpCooldowns = new Map<string, number>();
-  public timing = "0 */1 * * *";
+export default class Scheduler {
+  private timing = "0 */1 * * *";
 
   public constructor() {
     if (process.env.NODE_ENV == "development") this.timing = "*/1 * * * *";
 
     schedule(this.timing, this.checkStuff.bind(this));
+  }
+
+  private bumpCooldowns = new Map<string, number>();
+
+  public addCooldown(command: string, cooldown: number) {
+    const currentDate = Date.now();
+
+    this.bumpCooldowns.set(command, currentDate + cooldown);
+  }
+
+  public isOnCooldown(command: string): boolean {
+    const currentDate = Date.now();
+    const cooldownDate = this.bumpCooldowns.get(command);
+
+    if (!cooldownDate) return false;
+
+    if (currentDate >= cooldownDate) {
+      this.bumpCooldowns.delete(command);
+      return false;
+    } else {
+      return true;
+    }
   }
 
   private async checkStuff() {
