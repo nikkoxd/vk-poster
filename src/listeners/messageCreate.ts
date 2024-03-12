@@ -213,6 +213,13 @@ export class messageCreateListener extends Listener {
 
     if (!interaction) return;
     if (
+      interaction.commandName == "like" ||
+      interaction.commandName == "up" ||
+      interaction.commandName == "bump"
+    ) {
+      this.container.logger.info(interaction);
+    }
+    if (
       interaction.commandName != "like" &&
       interaction.commandName != "up"
       // && interaction.commandName != "bump"
