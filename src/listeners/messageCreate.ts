@@ -214,8 +214,8 @@ export class messageCreateListener extends Listener {
     if (!interaction) return;
     if (
       interaction.commandName != "like" &&
-      interaction.commandName != "up" &&
-      interaction.commandName != "bump"
+      interaction.commandName != "up"
+      // && interaction.commandName != "bump"
     )
       return;
 
