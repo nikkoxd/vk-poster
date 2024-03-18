@@ -109,10 +109,10 @@
   resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-2.1.0.tgz#0709e9f4cb252351c609c6e6d8d6779a8d25edff"
   integrity sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==
 
-"@flydotio/dockerfile@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.2.tgz#5f97da9a4e5d6775b1d63b3d6d32e9e0538d5af8"
-  integrity sha512-2IQ32c6Eeag1gUD35wNLfdJw7CK1HanwESQKBkHdVjsT1eakMFgP/9QJ7a88QkfPBmzQFU2yNci/bxQZBpAucw==
+"@flydotio/dockerfile@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.3.tgz#04dfc1a495e76a9778f5790e9413052a148fe5d0"
+  integrity sha512-HvPMYkvgAJm9564M8QB8rxy8kuXV4JbUjvfvaUbO3Ogw4SDWLUphEDGThf2IPB+lI4NN4w7zOHzV+GM0mBZw9g==
   dependencies:
     chalk "^5.3.0"
     diff "^5.1.0"
@@ -784,15 +784,10 @@ detect-indent@^6.1.0:
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-6.1.0.tgz#592485ebbbf6b3b1ab2be175c8393d04ca0d57e6"
   integrity sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==
 
-diff@^5.0.0:
+diff@^5.0.0, diff@^5.1.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-5.2.0.tgz#26ded047cd1179b78b9537d5ef725503ce1ae531"
   integrity sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==
-
-diff@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.npmjs.org/diff/-/diff-5.1.0.tgz"
-  integrity sha512-D+mk+qE8VC/PAUrlAU34N+VfXev0ghe5ywmpqrawphmVZc1bEfn56uo9qpyGp1p4xpzOHkSW4ztBd6L7Xx4ACw==
 
 discord-api-types@0.37.61:
   version "0.37.61"
