@@ -63,7 +63,7 @@ export class SendMessageCommand extends Command {
         if (message.attachments) {
           for (let index = 0; index < message.attachments.length; index++) {
             const fileName = message.attachments[index];
-            const path = `./dist/messages/attachments/${fileName}`;
+            const path = `./dist/attachments/${fileName}`;
             const file = new AttachmentBuilder(path);
             try {
               attachments.push(file);
