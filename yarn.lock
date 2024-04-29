@@ -109,10 +109,10 @@
   resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-2.1.0.tgz#0709e9f4cb252351c609c6e6d8d6779a8d25edff"
   integrity sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==
 
-"@flydotio/dockerfile@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.5.tgz#0625791e0abfe58bff1b5669ba566e920e7cf0ca"
-  integrity sha512-nIabdrDHHZbLD7GkPkEyByE2/qQlXcLhBuq9YGy300uNdGyZhpHrUaMRaarrGauOhNq0kEMEXuSK+smZt8bBYw==
+"@flydotio/dockerfile@^0.5.6":
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.6.tgz#6fec8afa2017eacc9df75c1b5f97518b676ee9a0"
+  integrity sha512-zqoXp1cFh0A+LQLKpGz4kSA0CctPL/Ze4mALrCQkQaU89zIWYy6dePzlVN+ujOcXTKyR+ZU+fzLjdWV6Uwje1A==
   dependencies:
     chalk "^5.3.0"
     diff "^5.1.0"
