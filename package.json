@@ -12,7 +12,7 @@
     "@sapphire/plugin-logger": "^4.0.2",
     "@sapphire/plugin-subcommands": "^6.0.3",
     "discord.js": "14.x",
-    "i18next": "^23.10.1",
+    "i18next": "^23.11.3",
     "i18next-fs-backend": "^2.3.1",
     "mongoose": "^8.3.2",
     "ms": "^2.1.3",
