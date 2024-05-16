@@ -104,10 +104,10 @@
     tslib "^2.6.2"
     ws "^8.16.0"
 
-"@flydotio/dockerfile@^0.5.6":
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.6.tgz#6fec8afa2017eacc9df75c1b5f97518b676ee9a0"
-  integrity sha512-zqoXp1cFh0A+LQLKpGz4kSA0CctPL/Ze4mALrCQkQaU89zIWYy6dePzlVN+ujOcXTKyR+ZU+fzLjdWV6Uwje1A==
+"@flydotio/dockerfile@^0.5.7":
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.7.tgz#64b32ccf9fb08a0548a40b52ac7b75dd5b84ce01"
+  integrity sha512-BVkXM2K/jLLYBFos1gT/bYv0YPJue8L4j0dkIsskJI4JRn6rPA9bZjT4sJzkzhdubZuwRGG9cgxj4Cfgt4lHlw==
   dependencies:
     chalk "^5.3.0"
     diff "^5.1.0"
