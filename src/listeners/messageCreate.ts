@@ -12,6 +12,7 @@ import ms from "ms";
 import Guild, { IGuild } from "../schemas/Guild";
 import RoleReward from "../schemas/RoleReward";
 import { Document } from "mongoose";
+import { client } from "..";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -218,6 +219,11 @@ export class messageCreateListener extends Listener {
       interaction.commandName == "bump"
     ) {
       this.container.logger.info(interaction);
+      const logChannel =
+        await message.guild?.channels.fetch("764191925850734595");
+      if (logChannel != null && logChannel != undefined) {
+        (logChannel as TextChannel).send(`\`\`\`${message}\`\`\``);
+      }
     }
     if (
       interaction.commandName != "like" &&
