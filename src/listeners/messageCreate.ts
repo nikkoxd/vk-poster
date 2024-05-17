@@ -222,7 +222,9 @@ export class messageCreateListener extends Listener {
       const logChannel =
         await message.guild?.channels.fetch("764191925850734595");
       if (logChannel != null && logChannel != undefined) {
-        (logChannel as TextChannel).send(`\`\`\`${message}\`\`\``);
+        (logChannel as TextChannel).send(
+          `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
+        );
       }
     }
     if (
