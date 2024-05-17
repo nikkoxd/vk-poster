@@ -16,15 +16,13 @@ export class GuildMemberAvailableListener extends Listener {
   }
 
   public override async run(member: GuildMember) {
-    this.container.logger.info("User", member.id, "joined the guild!");
-
     const guild = member.guild;
     const guildItem = await Guild.findOne({ id: process.env.GUILD_ID });
 
     if (!member.guild.features.includes("MEMBER_VERIFICATION_GATE_ENABLED")) {
-      let channelID;
-      let roleID;
-      let memberRoleID;
+      let channelID: string | null = null;
+      let roleID: string | null = null;
+      let memberRoleID: string | null = null;
       if (guildItem) {
         channelID = guildItem.welcome.channelId;
         roleID = guildItem.welcome.roleId;
@@ -60,14 +58,13 @@ export class GuildMemberAvailableListener extends Listener {
         const role = member.guild.roles.cache.get(memberRoleID);
 
         if (role) {
-          member.roles.add(
-            role,
-            i18next.t("listeners.guildMemberUpdate.member_role.reason"),
-          );
+          member.edit({ roles: [role] });
+          // member.roles.add(
+          //   role,
+          //   i18next.t("listeners.guildMemberUpdate.member_role.reason"),
+          // );
         } else {
-          this.container.logger.error(
-            "Specified member role doesn'i18next.t exist",
-          );
+          this.container.logger.error("Specified member role doesn't exist");
         }
       }
     }
