@@ -203,6 +203,17 @@ export class messageCreateListener extends Listener {
     // }
   }
 
+  private async logInteraction(message: Message) {
+    const logChannel =
+      await message.guild?.channels.fetch("764191925850734595");
+
+    if (logChannel === null || logChannel === undefined) return;
+
+    (logChannel as TextChannel).send(
+      `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
+    );
+  }
+
   private async processCommands(
     message: Message,
     guild: IGuild,
@@ -211,21 +222,25 @@ export class messageCreateListener extends Listener {
     if (guild.coins.bumpReward == 0) return;
 
     const interaction = message.interaction;
+    let commandName: string = "";
 
-    if (!interaction) return;
-    if (interaction.commandName == "like" || interaction.commandName == "up") {
-      this.container.logger.info(interaction);
-    }
-    if (interaction.commandName != "like" && interaction.commandName != "up")
-      return;
+    if (interaction) {
+      if (interaction.commandName != "like" && interaction.commandName != "up")
+        return;
 
-    this.container.logger.info(`Got a ${interaction.commandName} command`);
+      commandName = interaction.commandName;
+    } else if (
+      message.applicationId == "315926021457051650" &&
+      message.reference
+    ) {
+      commandName = "bump";
+    } else return;
 
-    if (!this.container.scheduler.isOnCooldown(interaction.commandName)) {
-      this.container.logger.info(
-        `${interaction.commandName} is not on cooldown`,
-      );
-      this.container.scheduler.addCooldown(interaction.commandName, ms("4h"));
+    this.container.logger.info(`Got a ${commandName} command`);
+
+    if (!this.container.scheduler.isOnCooldown(commandName)) {
+      this.container.logger.info(`${commandName} is not on cooldown`);
+      this.container.scheduler.addCooldown(commandName, ms("4h"));
 
       await member.updateOne({
         coins: member.coins + guild.coins.bumpReward,
@@ -237,7 +252,7 @@ export class messageCreateListener extends Listener {
 
       message.reply(
         i18next.t("listeners.messageCreate.bumpRewarded", {
-          memberId: interaction.user.id,
+          memberId: message.author.id,
           coins: guild.coins.bumpReward,
         }),
       );
@@ -259,21 +274,8 @@ export class messageCreateListener extends Listener {
       this.processPings(message);
       this.processLinks(message);
     } else {
-      if (message.channelId == "1183016261349801984") {
-        const logChannel =
-          await message.guild?.channels.fetch("764191925850734595");
-
-        if (logChannel === null || logChannel === undefined) return;
-
-        (logChannel as TextChannel).send(
-          `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
-        );
-      }
-
-      if (!message.interaction) return;
-
       const member = await Member.findOne({
-        memberId: message.interaction.user.id,
+        memberId: message.author.id,
       });
       if (!member) return;
 
