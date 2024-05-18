@@ -213,25 +213,10 @@ export class messageCreateListener extends Listener {
     const interaction = message.interaction;
 
     if (!interaction) return;
-    if (
-      interaction.commandName == "like" ||
-      interaction.commandName == "up" ||
-      interaction.commandName == "bump"
-    ) {
+    if (interaction.commandName == "like" || interaction.commandName == "up") {
       this.container.logger.info(interaction);
-      const logChannel =
-        await message.guild?.channels.fetch("764191925850734595");
-      if (logChannel != null && logChannel != undefined) {
-        (logChannel as TextChannel).send(
-          `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
-        );
-      }
     }
-    if (
-      interaction.commandName != "like" &&
-      interaction.commandName != "up"
-      // && interaction.commandName != "bump"
-    )
+    if (interaction.commandName != "like" && interaction.commandName != "up")
       return;
 
     this.container.logger.info(`Got a ${interaction.commandName} command`);
@@ -272,6 +257,17 @@ export class messageCreateListener extends Listener {
       this.processPings(message);
       this.processLinks(message);
     } else {
+      if (message.channelId == "1183016261349801984") {
+        const logChannel =
+          await message.guild?.channels.fetch("764191925850734595");
+
+        if (logChannel === null || logChannel === undefined) return;
+
+        (logChannel as TextChannel).send(
+          `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
+        );
+      }
+
       if (!message.interaction) return;
 
       const member = await Member.findOne({
