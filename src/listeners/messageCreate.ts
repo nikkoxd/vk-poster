@@ -245,6 +245,8 @@ export class messageCreateListener extends Listener {
   }
 
   public override async run(message: Message) {
+    if (message.system) return;
+
     const guild = await Guild.findOne({ id: process.env.GUILD_ID });
     if (!guild) return;
 
