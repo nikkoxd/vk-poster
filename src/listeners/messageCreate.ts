@@ -196,12 +196,14 @@ export class messageCreateListener extends Listener {
     guild: IGuild,
     member: Document<any, any, IMember> & IMember,
   ) {
+    this.container.logger.info("processing a command\n", message);
     if (guild.coins.bumpReward == 0) return;
 
     const interaction = message.interaction;
     let commandName: string = "";
 
     if (interaction) {
+      this.container.logger.info("got an interaction");
       if (interaction.commandName != "like" && interaction.commandName != "up")
         return;
 
@@ -210,6 +212,7 @@ export class messageCreateListener extends Listener {
       message.applicationId == "315926021457051650" &&
       message.reference
     ) {
+      this.container.logger.info("got a bump command");
       commandName = "bump";
     } else return;
 
