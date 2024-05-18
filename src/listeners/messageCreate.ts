@@ -12,7 +12,6 @@ import ms from "ms";
 import Guild, { IGuild } from "../schemas/Guild";
 import RoleReward from "../schemas/RoleReward";
 import { Document } from "mongoose";
-import { client } from "..";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -182,7 +181,6 @@ export class messageCreateListener extends Listener {
   }
 
   private processLinks(message: Message) {
-    // REPLY TO FAILED EMBED LINKS
     if (
       message.content.startsWith("https://tenor.com/") &&
       !message.member
@@ -191,27 +189,6 @@ export class messageCreateListener extends Listener {
     ) {
       message.reply(i18next.t("listeners.messageCreate.cantSendGifs"));
     }
-    // REPLY TO FAILED ATTACHMENTS
-    // if (
-    //   message.attachments &&
-    //   !message.content.startsWith("https://tenor.com") &&
-    //   !message.member
-    //     ?.permissionsIn(message.channel as TextChannel)
-    //     .has("AttachFiles")
-    // ) {
-    //   message.reply(i18next.t("listeners.messageCreate.cantAttachFiles"));
-    // }
-  }
-
-  private async logInteraction(message: Message) {
-    const logChannel =
-      await message.guild?.channels.fetch("764191925850734595");
-
-    if (logChannel === null || logChannel === undefined) return;
-
-    (logChannel as TextChannel).send(
-      `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
-    );
   }
 
   private async processCommands(
