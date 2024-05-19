@@ -213,6 +213,10 @@ export class messageCreateListener extends Listener {
       message.reference
     ) {
       this.container.logger.info("got a bump command");
+      const fetchedMessage = await message.channel.messages.fetch(
+        message.reference.messageId as string,
+      );
+
       commandName = "bump";
     } else return;
 
@@ -232,7 +236,7 @@ export class messageCreateListener extends Listener {
 
       message.reply(
         i18next.t("listeners.messageCreate.bumpRewarded", {
-          memberId: message.author.id,
+          memberId: member.id,
           coins: guild.coins.bumpReward,
         }),
       );
@@ -254,10 +258,20 @@ export class messageCreateListener extends Listener {
       this.processPings(message);
       this.processLinks(message);
     } else {
-      this.container.logger.info("Message author is a bot");
-      const member = await Member.findOne({
-        memberId: message.author.id,
-      });
+      let member: (Document<unknown, {}, IMember> & IMember) | null = null;
+      if (message.interaction) {
+        member = await Member.findOne({
+          memberId: message.interaction.user.id,
+        });
+      } else if (message.reference) {
+        const fetchedMessage = await message.channel.messages.fetch(
+          message.reference.messageId as string,
+        );
+        member = await Member.findOne({
+          memberId: fetchedMessage.author.id,
+        });
+      }
+
       if (!member) return;
 
       await this.processCommands(message, guild, member);
