@@ -254,6 +254,7 @@ export class messageCreateListener extends Listener {
       this.processPings(message);
       this.processLinks(message);
     } else {
+      this.container.logger.info("Message author is a bot");
       const member = await Member.findOne({
         memberId: message.author.id,
       });
