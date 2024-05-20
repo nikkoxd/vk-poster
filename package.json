@@ -26,7 +26,7 @@
     "dotenv": "^16.4.5",
     "prettier": "3.2.5",
     "release-please": "^16.10.2",
-    "rimraf": "^5.0.5",
+    "rimraf": "^5.0.7",
     "typescript": "^5.4.5"
   },
   "scripts": {
