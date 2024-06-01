@@ -194,52 +194,82 @@ export class messageCreateListener extends Listener {
   private async processCommands(
     message: Message,
     guild: IGuild,
-    member: Document<any, any, IMember> & IMember,
+    // member: Document<any, any, IMember> & IMember,
   ) {
-    this.container.logger.info("processing a command\n", message);
-    if (guild.coins.bumpReward == 0) return;
-
+    enum bots {
+      DSMonitoring = "575776004233232386",
+      SDCMonitoring = "464272403766444044",
+      ServerMonitoring = "315926021457051650",
+    }
+    const bot = message.author;
     const interaction = message.interaction;
-    let commandName: string = "";
+    let author, authorRecord;
+    let description, regex;
 
-    if (interaction) {
-      this.container.logger.info("got an interaction");
-      if (interaction.commandName != "like" && interaction.commandName != "up")
-        return;
+    if (bot.id == bots.DSMonitoring && interaction?.commandName == "like") {
+      author = interaction.user;
 
-      commandName = interaction.commandName;
-    } else if (
-      message.applicationId == "315926021457051650" &&
-      message.reference
-    ) {
-      this.container.logger.info("got a bump command");
-      const fetchedMessage = await message.channel.messages.fetch(
-        message.reference.messageId as string,
-      );
+      if (!this.container.scheduler.isOnCooldown("like")) {
+        this.container.scheduler.addCooldown("like", ms("4h"));
 
-      commandName = "bump";
-    } else return;
+        authorRecord = await Member.findOne({ memberId: author.id });
+        await authorRecord?.updateOne({
+          coins: authorRecord.coins + guild.coins.bumpReward,
+        });
 
-    this.container.logger.info(`Got a ${commandName} command`);
+        message.reply(
+          i18next.t("listeners.messageCreate.bumpRewarded", {
+            memberId: author.id,
+            coins: guild.coins.bumpReward,
+          }),
+        );
+      }
+    }
+    if (bot.id == bots.SDCMonitoring && interaction?.commandName == "up") {
+      author = interaction.user;
+      description = message.embeds[0]?.description;
+      regex = new RegExp("/Успешный Up!/");
 
-    if (!this.container.scheduler.isOnCooldown(commandName)) {
-      this.container.logger.info(`${commandName} is not on cooldown`);
-      this.container.scheduler.addCooldown(commandName, ms("4h"));
+      if (description) {
+        if (regex.test(description)) {
+          authorRecord = await Member.findOne({ memberId: author.id });
+          await authorRecord?.updateOne({
+            coins: authorRecord.coins + guild.coins.bumpReward,
+          });
 
-      await member.updateOne({
-        coins: member.coins + guild.coins.bumpReward,
-      });
+          message.reply(
+            i18next.t("listeners.messageCreate.bumpRewarded", {
+              memberId: author.id,
+              coins: guild.coins.bumpReward,
+            }),
+          );
+        }
+      }
+    }
+    if (bot.id == bots.ServerMonitoring) {
+      description = message.embeds[0]?.description;
+      regex = new RegExp("/Server bumped/");
 
-      this.container.logger.info(
-        `Gave ${guild.coins.bumpReward} coins to member with id ${member.id}`,
-      );
+      if (description) {
+        if (regex.test(description)) {
+          const authorId = description.match("/<@(d+)>/");
+          if (authorId) {
+            author = await message.guild?.members.fetch(authorId[1]);
 
-      message.reply(
-        i18next.t("listeners.messageCreate.bumpRewarded", {
-          memberId: member.id,
-          coins: guild.coins.bumpReward,
-        }),
-      );
+            authorRecord = await Member.findOne({ memberId: author?.id });
+            await authorRecord?.updateOne({
+              coins: authorRecord.coins + guild.coins.bumpReward,
+            });
+
+            message.reply(
+              i18next.t("listeners.messageCreate.bumpRewarded", {
+                memberId: author?.id,
+                coins: guild.coins.bumpReward,
+              }),
+            );
+          }
+        }
+      }
     }
   }
 
@@ -258,23 +288,23 @@ export class messageCreateListener extends Listener {
       this.processPings(message);
       this.processLinks(message);
     } else {
-      let member: (Document<unknown, {}, IMember> & IMember) | null = null;
-      if (message.interaction) {
-        member = await Member.findOne({
-          memberId: message.interaction.user.id,
-        });
-      } else if (message.reference) {
-        const fetchedMessage = await message.channel.messages.fetch(
-          message.reference.messageId as string,
-        );
-        member = await Member.findOne({
-          memberId: fetchedMessage.author.id,
-        });
-      }
+      // let member: (Document<unknown, {}, IMember> & IMember) | null = null;
+      // if (message.interaction) {
+      //   member = await Member.findOne({
+      //     memberId: message.interaction.user.id,
+      //   });
+      // } else if (message.reference) {
+      //   const fetchedMessage = await message.channel.messages.fetch(
+      //     message.reference.messageId as string,
+      //   );
+      //   member = await Member.findOne({
+      //     memberId: fetchedMessage.author.id,
+      //   });
+      // }
 
-      if (!member) return;
+      // if (!member) return;
 
-      await this.processCommands(message, guild, member);
+      await this.processCommands(message, guild);
     }
   }
 }
