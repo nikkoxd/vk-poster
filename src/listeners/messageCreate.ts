@@ -11,7 +11,6 @@ import Member, { IMember } from "../schemas/Member";
 import ms from "ms";
 import Guild, { IGuild } from "../schemas/Guild";
 import RoleReward from "../schemas/RoleReward";
-import { Document } from "mongoose";
 
 export class messageCreateListener extends Listener {
   public constructor(
@@ -191,11 +190,7 @@ export class messageCreateListener extends Listener {
     }
   }
 
-  private async processCommands(
-    message: Message,
-    guild: IGuild,
-    // member: Document<any, any, IMember> & IMember,
-  ) {
+  private async processCommands(message: Message, guild: IGuild) {
     enum bots {
       DSMonitoring = "575776004233232386",
       SDCMonitoring = "464272403766444044",
@@ -228,7 +223,7 @@ export class messageCreateListener extends Listener {
     if (bot.id == bots.SDCMonitoring && interaction?.commandName == "up") {
       author = interaction.user;
       description = message.embeds[0]?.description;
-      regex = new RegExp("/Успешный Up!/");
+      regex = new RegExp("Успешный Up!");
 
       if (description) {
         if (regex.test(description)) {
@@ -248,11 +243,11 @@ export class messageCreateListener extends Listener {
     }
     if (bot.id == bots.ServerMonitoring) {
       description = message.embeds[0]?.description;
-      regex = new RegExp("/Server bumped/");
+      regex = new RegExp("Server bumped");
 
       if (description) {
         if (regex.test(description)) {
-          const authorId = description.match("/<@(d+)>/");
+          const authorId = description.match(/<@(d+)>/);
           if (authorId) {
             author = await message.guild?.members.fetch(authorId[1]);
 
@@ -288,22 +283,6 @@ export class messageCreateListener extends Listener {
       this.processPings(message);
       this.processLinks(message);
     } else {
-      // let member: (Document<unknown, {}, IMember> & IMember) | null = null;
-      // if (message.interaction) {
-      //   member = await Member.findOne({
-      //     memberId: message.interaction.user.id,
-      //   });
-      // } else if (message.reference) {
-      //   const fetchedMessage = await message.channel.messages.fetch(
-      //     message.reference.messageId as string,
-      //   );
-      //   member = await Member.findOne({
-      //     memberId: fetchedMessage.author.id,
-      //   });
-      // }
-
-      // if (!member) return;
-
       await this.processCommands(message, guild);
     }
   }
