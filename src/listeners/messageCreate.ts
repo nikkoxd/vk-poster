@@ -1,6 +1,7 @@
 import { Listener } from "@sapphire/framework";
 import {
   Collection,
+  GuildTextBasedChannel,
   Message,
   PermissionFlagsBits,
   TextChannel,
@@ -201,7 +202,13 @@ export class messageCreateListener extends Listener {
     let author, authorRecord;
     let description, regex;
 
+    const logChannel =
+      await message.guild?.channels.fetch("764191925850734595");
+
+    (logChannel as GuildTextBasedChannel).send(`\`\`\`${message.toJSON}\`\`\``);
+
     if (bot.id == bots.DSMonitoring && interaction?.commandName == "like") {
+      (logChannel as GuildTextBasedChannel).send("DSMonitoring");
       author = interaction.user;
 
       if (!this.container.scheduler.isOnCooldown("like")) {
@@ -221,6 +228,7 @@ export class messageCreateListener extends Listener {
       }
     }
     if (bot.id == bots.SDCMonitoring && interaction?.commandName == "up") {
+      (logChannel as GuildTextBasedChannel).send("SDCMonitoring");
       author = interaction.user;
       description = message.embeds[0]?.description;
       regex = new RegExp("Успешный Up!");
@@ -242,6 +250,7 @@ export class messageCreateListener extends Listener {
       }
     }
     if (bot.id == bots.ServerMonitoring) {
+      (logChannel as GuildTextBasedChannel).send("ServerMonitoring");
       description = message.embeds[0]?.description;
       regex = new RegExp("Server bumped");
 
