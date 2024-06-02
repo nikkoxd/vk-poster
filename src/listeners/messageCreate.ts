@@ -202,15 +202,7 @@ export class messageCreateListener extends Listener {
     let author, authorRecord;
     let description, regex;
 
-    const logChannel =
-      await message.guild?.channels.fetch("764191925850734595");
-
-    (logChannel as GuildTextBasedChannel).send(
-      `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
-    );
-
     if (bot.id == bots.DSMonitoring && interaction?.commandName == "like") {
-      (logChannel as GuildTextBasedChannel).send("DSMonitoring");
       author = interaction.user;
 
       if (!this.container.scheduler.isOnCooldown("like")) {
@@ -230,35 +222,27 @@ export class messageCreateListener extends Listener {
       }
     }
     if (bot.id == bots.SDCMonitoring && interaction?.commandName == "up") {
-      (logChannel as GuildTextBasedChannel).send("SDCMonitoring");
       author = interaction.user;
-      description = message.embeds[0]?.description;
-      regex = new RegExp("Успешный Up!");
 
-      if (description) {
-        if (regex.test(description)) {
-          authorRecord = await Member.findOne({ memberId: author.id });
-          await authorRecord?.updateOne({
-            coins: authorRecord.coins + guild.coins.bumpReward,
-          });
+      authorRecord = await Member.findOne({ memberId: author.id });
+      await authorRecord?.updateOne({
+        coins: authorRecord.coins + guild.coins.bumpReward,
+      });
 
-          message.reply(
-            i18next.t("listeners.messageCreate.bumpRewarded", {
-              memberId: author.id,
-              coins: guild.coins.bumpReward,
-            }),
-          );
-        }
-      }
+      message.reply(
+        i18next.t("listeners.messageCreate.bumpRewarded", {
+          memberId: author.id,
+          coins: guild.coins.bumpReward,
+        }),
+      );
     }
     if (bot.id == bots.ServerMonitoring) {
-      (logChannel as GuildTextBasedChannel).send("ServerMonitoring");
       description = message.embeds[0]?.description;
       regex = new RegExp("Server bumped");
 
       if (description) {
         if (regex.test(description)) {
-          const authorId = description.match(/<@(d+)>/);
+          const authorId = description.match(/<@(\d+)>/);
           if (authorId) {
             author = await message.guild?.members.fetch(authorId[1]);
 
