@@ -202,26 +202,13 @@ export class messageCreateListener extends Listener {
     let author, authorRecord;
     let description, regex;
 
-    if (bot.id == bots.DSMonitoring && interaction?.commandName == "like") {
-      author = interaction.user;
+    if (
+      bot.id == bots.DSMonitoring &&
+      interaction?.commandName == "like" &&
+      !this.container.scheduler.isOnCooldown("like")
+    ) {
+      this.container.scheduler.addCooldown("like", ms("4h"));
 
-      if (!this.container.scheduler.isOnCooldown("like")) {
-        this.container.scheduler.addCooldown("like", ms("4h"));
-
-        authorRecord = await Member.findOne({ memberId: author.id });
-        await authorRecord?.updateOne({
-          coins: authorRecord.coins + guild.coins.bumpReward,
-        });
-
-        message.reply(
-          i18next.t("listeners.messageCreate.bumpRewarded", {
-            memberId: author.id,
-            coins: guild.coins.bumpReward,
-          }),
-        );
-      }
-    }
-    if (bot.id == bots.SDCMonitoring && interaction?.commandName == "up") {
       author = interaction.user;
 
       authorRecord = await Member.findOne({ memberId: author.id });
@@ -236,7 +223,31 @@ export class messageCreateListener extends Listener {
         }),
       );
     }
-    if (bot.id == bots.ServerMonitoring) {
+    if (
+      bot.id == bots.SDCMonitoring &&
+      interaction?.commandName == "up" &&
+      !this.container.scheduler.isOnCooldown("up")
+    ) {
+      this.container.scheduler.addCooldown("up", ms("4h"));
+
+      author = interaction.user;
+
+      authorRecord = await Member.findOne({ memberId: author.id });
+      await authorRecord?.updateOne({
+        coins: authorRecord.coins + guild.coins.bumpReward,
+      });
+
+      message.reply(
+        i18next.t("listeners.messageCreate.bumpRewarded", {
+          memberId: author.id,
+          coins: guild.coins.bumpReward,
+        }),
+      );
+    }
+    if (
+      bot.id == bots.ServerMonitoring &&
+      !this.container.scheduler.isOnCooldown("bump")
+    ) {
       description = message.embeds[0]?.description;
       regex = new RegExp("Server bumped");
 
@@ -244,6 +255,8 @@ export class messageCreateListener extends Listener {
         if (regex.test(description)) {
           const authorId = description.match(/<@(\d+)>/);
           if (authorId) {
+            this.container.scheduler.addCooldown("bump", ms("4h"));
+
             author = await message.guild?.members.fetch(authorId[1]);
 
             authorRecord = await Member.findOne({ memberId: author?.id });
