@@ -205,7 +205,9 @@ export class messageCreateListener extends Listener {
     const logChannel =
       await message.guild?.channels.fetch("764191925850734595");
 
-    (logChannel as GuildTextBasedChannel).send(`\`\`\`${message.toJSON}\`\`\``);
+    (logChannel as GuildTextBasedChannel).send(
+      `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
+    );
 
     if (bot.id == bots.DSMonitoring && interaction?.commandName == "like") {
       (logChannel as GuildTextBasedChannel).send("DSMonitoring");
