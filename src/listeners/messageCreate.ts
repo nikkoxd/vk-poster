@@ -202,77 +202,69 @@ export class messageCreateListener extends Listener {
     let author, authorRecord;
     let description, regex;
 
-    if (
-      bot.id == bots.DSMonitoring &&
-      interaction?.commandName == "like" &&
-      !this.container.scheduler.isOnCooldown("like")
-    ) {
-      this.container.scheduler.addCooldown("like", ms("4h"));
-
-      author = interaction.user;
-
-      authorRecord = await Member.findOne({ memberId: author.id });
-      await authorRecord?.updateOne({
-        coins: authorRecord.coins + guild.coins.bumpReward,
-      });
-
-      message.reply(
-        i18next.t("listeners.messageCreate.bumpRewarded", {
-          memberId: author.id,
-          coins: guild.coins.bumpReward,
-        }),
-      );
-    }
-    if (
-      bot.id == bots.SDCMonitoring &&
-      interaction?.commandName == "up" &&
-      !this.container.scheduler.isOnCooldown("up")
-    ) {
-      this.container.scheduler.addCooldown("up", ms("4h"));
-
-      author = interaction.user;
-
-      authorRecord = await Member.findOne({ memberId: author.id });
-      await authorRecord?.updateOne({
-        coins: authorRecord.coins + guild.coins.bumpReward,
-      });
-
-      message.reply(
-        i18next.t("listeners.messageCreate.bumpRewarded", {
-          memberId: author.id,
-          coins: guild.coins.bumpReward,
-        }),
-      );
-    }
-    if (
-      bot.id == bots.ServerMonitoring &&
-      !this.container.scheduler.isOnCooldown("bump")
-    ) {
+    if (bot.id == bots.DSMonitoring && interaction?.commandName == "like") {
       description = message.embeds[0]?.description;
+      if (!description) return;
+
+      regex = new RegExp("Вы успешно лайкнули");
+      if (!regex.test(description)) return;
+
+      author = interaction.user;
+
+      authorRecord = await Member.findOne({ memberId: author.id });
+      await authorRecord?.updateOne({
+        coins: authorRecord.coins + guild.coins.bumpReward,
+      });
+
+      message.reply(
+        i18next.t("listeners.messageCreate.bumpRewarded", {
+          memberId: author.id,
+          coins: guild.coins.bumpReward,
+        }),
+      );
+    }
+
+    if (bot.id == bots.SDCMonitoring && interaction?.commandName == "up") {
+      if (message.embeds.length > 0) return;
+
+      author = interaction.user;
+
+      authorRecord = await Member.findOne({ memberId: author.id });
+      await authorRecord?.updateOne({
+        coins: authorRecord.coins + guild.coins.bumpReward,
+      });
+
+      message.reply(
+        i18next.t("listeners.messageCreate.bumpRewarded", {
+          memberId: author.id,
+          coins: guild.coins.bumpReward,
+        }),
+      );
+    }
+
+    if (bot.id == bots.ServerMonitoring) {
+      description = message.embeds[0]?.description;
+      if (!description) return;
+
       regex = new RegExp("Server bumped");
+      if (!regex.test(description)) return;
 
-      if (description) {
-        if (regex.test(description)) {
-          const authorId = description.match(/<@(\d+)>/);
-          if (authorId) {
-            this.container.scheduler.addCooldown("bump", ms("4h"));
+      const authorId = description.match(/<@(\d+)>/);
+      if (!authorId) return;
 
-            author = await message.guild?.members.fetch(authorId[1]);
+      author = await message.guild?.members.fetch(authorId[1]);
 
-            authorRecord = await Member.findOne({ memberId: author?.id });
-            await authorRecord?.updateOne({
-              coins: authorRecord.coins + guild.coins.bumpReward,
-            });
+      authorRecord = await Member.findOne({ memberId: author?.id });
+      await authorRecord?.updateOne({
+        coins: authorRecord.coins + guild.coins.bumpReward,
+      });
 
-            message.reply(
-              i18next.t("listeners.messageCreate.bumpRewarded", {
-                memberId: author?.id,
-                coins: guild.coins.bumpReward,
-              }),
-            );
-          }
-        }
-      }
+      message.reply(
+        i18next.t("listeners.messageCreate.bumpRewarded", {
+          memberId: author?.id,
+          coins: guild.coins.bumpReward,
+        }),
+      );
     }
   }
 
