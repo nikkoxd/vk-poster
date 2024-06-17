@@ -225,11 +225,7 @@ export class messageCreateListener extends Listener {
     }
 
     if (bot.id == bots.SDCMonitoring && interaction?.commandName == "up") {
-      const logs = await message.guild?.channels.fetch("764191925850734595");
-      (logs as GuildTextBasedChannel).send(
-        `\`\`\`${JSON.stringify(message, null, 2)}\`\`\``,
-      );
-      if (message.embeds.length > 0) return;
+      if (message.embeds.length == 0) return;
 
       author = interaction.user;
 
