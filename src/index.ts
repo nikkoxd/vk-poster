@@ -1,5 +1,5 @@
 import "@sapphire/plugin-logger/register";
-import { SapphireClient, container } from "@sapphire/framework";
+import { SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
 
 import i18next from "i18next";
@@ -10,7 +10,6 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import Guild, { IGuild } from "./schemas/Guild";
 import { error, log } from "./logger";
-import Scheduler from "./scheduler";
 
 const requiredEnvVars = [
   "CLIENT_ID",
@@ -68,8 +67,6 @@ async function init() {
 
     client.error = error;
     client.log = log;
-
-    container.scheduler = new Scheduler();
 
     await client.login(process.env.TOKEN);
     client.logger.info("Successfully connected to Discord API");
