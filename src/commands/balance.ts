@@ -23,23 +23,19 @@ export class balanceCommand extends Command {
   }
 
   public async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-    const customMember = interaction.options.getUser(
+    const inputMember = interaction.options.getUser(
       i18next.t("commands.balance.member.name"),
     );
-    const memberId = customMember ? customMember.id : interaction.user.id;
+    const memberId = inputMember ? inputMember.id : interaction.user.id;
 
-    try {
-      const member = await Member.findOneAndUpdate(
-        { memberId: memberId },
-        { $setOnInsert: { coins: 0 } },
-        { upsert: true, new: true },
-      );
+    const memberEntry = await Member.findOneAndUpdate(
+      { memberId: memberId },
+      { $setOnInsert: { coins: 0 } },
+      { upsert: true, new: true },
+    );
 
-      interaction.reply(
-        `${i18next.t("shop.balance")} ${member.coins} ${i18next.t("shop.coins")}`,
-      );
-    } catch (err: any) {
-      this.container.client.error(err, interaction);
-    }
+    interaction.reply(
+      `${i18next.t("shop.balance")} ${memberEntry.coins} ${i18next.t("shop.coins")}`,
+    );
   }
 }
