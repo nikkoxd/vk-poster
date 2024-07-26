@@ -11,6 +11,12 @@ import "dotenv/config";
 import Guild, { IGuild } from "./schemas/Guild";
 import { error, log } from "./logger";
 
+import express from "express";
+
+export const app = express();
+
+const port = process.env.PORT || 3000;
+
 const requiredEnvVars = [
   "CLIENT_ID",
   "GUILD_ID",
@@ -84,3 +90,7 @@ mongoose
     init();
   })
   .catch((error) => client.logger.error("Error connecting to MongoDB:", error));
+
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`);
+});
