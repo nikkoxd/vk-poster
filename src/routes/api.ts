@@ -44,33 +44,24 @@ module.exports = function(app: Express) {
 
     const attachments = data.attachments;
 
-    try {
-      const guild = await client.guilds.fetch(process.env.GUILD_ID!);
+    const guild = await client.guilds.fetch(process.env.GUILD_ID!);
 
-      if (!guild) {
-        res.send("Guild ID not set in bot's environment variables");
-      }
-
-      const channel = await guild.channels.fetch(channelId);
-
-      if (!channel) {
-        res.send("Channel with given ID not found");
-      }
-
-      if (channel instanceof TextChannel) {
-        try {
-          channel.send({ content: message, embeds: embeds, files: attachments });
-        } catch (err) {
-          res.send(err)
-        }
-      }
-      else {
-        res.send("Given channel is not a text channel");
-      }
-    } catch (err) {
-      res.send(err);
-    } finally {
-      res.send("Message sent!");
+    if (!guild) {
+      res.send("Guild ID not set in bot's environment variables");
     }
+
+    const channel = await guild.channels.fetch(channelId);
+
+    if (!channel) {
+      res.send("Channel with given ID not found");
+    }
+
+    if (channel instanceof TextChannel) {
+      channel.send({ content: message, embeds: embeds, files: attachments });
+    }
+    else {
+      res.send("Given channel is not a text channel");
+    }
+    res.send("Message sent!");
   });
 }
