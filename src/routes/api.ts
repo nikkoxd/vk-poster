@@ -62,7 +62,7 @@ module.exports = function(app: Express) {
       channel.send({ content: message, embeds: embeds, files: attachments });
     }
     else {
-      res.send("Given channel is not a text channel");
+      res.send(`Given channel is not a text channel. Type of channel is ${channel.type}`);
       return;
     }
     res.send("Message sent!");
