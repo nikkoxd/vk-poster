@@ -13,6 +13,7 @@ import { error, log } from "./logger";
 
 import express from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 export const app = express();
 
@@ -92,7 +93,7 @@ mongoose
   })
   .catch((error) => client.logger.error("Error connecting to MongoDB:", error));
 
-app.use(bodyParser.json())
+app.use(bodyParser.json(), cors())
 
 require("./routes/api")(app);
 
