@@ -1,6 +1,6 @@
 import { Express, Request, Response } from "express";
 import Message from "../types/message";
-import { EmbedBuilder, EmbedData, TextChannel } from "discord.js";
+import { ChannelType, EmbedBuilder, EmbedData, TextChannel } from "discord.js";
 import { client } from "..";
 
 module.exports = function(app: Express) {
@@ -58,7 +58,7 @@ module.exports = function(app: Express) {
       return;
     }
 
-    if (channel instanceof TextChannel) {
+    if (channel.type === ChannelType.GuildText) {
       channel.send({ content: message, embeds: embeds, files: attachments });
     }
     else {
