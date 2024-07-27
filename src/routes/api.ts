@@ -71,5 +71,6 @@ module.exports = function(app: Express) {
       res.send(err);
     } finally {
       res.send("Message sent!");
+    }
   });
 }
