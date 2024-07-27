@@ -48,12 +48,14 @@ module.exports = function(app: Express) {
 
     if (!guild) {
       res.send("Guild ID not set in bot's environment variables");
+      return;
     }
 
     const channel = await guild.channels.fetch(channelId);
 
     if (!channel) {
       res.send("Channel with given ID not found");
+      return;
     }
 
     if (channel instanceof TextChannel) {
@@ -61,6 +63,7 @@ module.exports = function(app: Express) {
     }
     else {
       res.send("Given channel is not a text channel");
+      return;
     }
     res.send("Message sent!");
   });
