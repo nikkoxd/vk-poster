@@ -12,6 +12,7 @@ import Guild, { IGuild } from "./schemas/Guild";
 import { error, log } from "./logger";
 
 import express from "express";
+import bodyParser from "body-parser";
 
 export const app = express();
 
@@ -91,6 +92,10 @@ mongoose
   })
   .catch((error) => client.logger.error("Error connecting to MongoDB:", error));
 
+app.use(bodyParser.json())
+
+require("./routes/api")(app);
+
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+  client.logger.info(`App listening on port ${port}`);
 });
