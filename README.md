@@ -20,7 +20,7 @@ First, get the database URL from shuttle CLI:
 ```sh
 $ shuttle resource list --show-secrets
 ```
-Add the connection string to `Secrets.dev.toml` as `CONNECTION_URL`,  
+Add the connection string to `Secrets.dev.toml` as `DATABASE_URL`,  
 then add the same variable to `Secrets.toml` but set it to empty value so that it doesn't crash in deployment.
 
 To run the bot locally, run:

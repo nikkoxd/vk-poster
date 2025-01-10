@@ -3,7 +3,9 @@ use poise::serenity_prelude::{ClientBuilder, GatewayIntents};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 
-struct Data {} // User data, which is stored and accessible in all command invocations
+struct Data {
+    pool: sqlx::PgPool,
+}
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
@@ -11,8 +13,8 @@ mod commands;
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_shared_db::Postgres(
-        local_uri = "{secrets.CONNECTION_URL}",
-)] pool:sqlx::PgPool, #[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
+        local_uri = "{secrets.DATABASE_URL}",
+)] pool: sqlx::PgPool, #[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     sqlx::migrate!()
         .run(&pool)
         .await
@@ -31,6 +33,7 @@ async fn main(#[shuttle_shared_db::Postgres(
                 commands::register::register(),
                 commands::welcome::welcome(),
                 commands::hello::hello(),
+                commands::setup::setup(),
                 commands::ping::ping(),
             ],
             prefix_options: poise::PrefixFrameworkOptions {
@@ -42,7 +45,7 @@ async fn main(#[shuttle_shared_db::Postgres(
         .setup(|_ctx, _ready, _framework| {
             Box::pin(async move {
                 // poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(Data {})
+                Ok(Data{ pool })
             })
         })
         .build();
