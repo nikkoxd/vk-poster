@@ -7,12 +7,7 @@ struct Data {} // User data, which is stored and accessible in all command invoc
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-/// Responds with "world!"
-#[poise::command(slash_command)]
-async fn hello(ctx: Context<'_>) -> Result<(), Error> {
-    ctx.say("world!").await?;
-    Ok(())
-}
+mod commands;
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
@@ -21,20 +16,32 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
         .get("DISCORD_TOKEN")
         .context("'DISCORD_TOKEN' was not found")?;
 
+    let intents = GatewayIntents::non_privileged()
+        | GatewayIntents::MESSAGE_CONTENT;
+
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![hello()],
+            commands: vec![
+                commands::register::register(),
+                commands::welcome::welcome(),
+                commands::hello::hello(),
+                commands::ping::ping(),
+            ],
+            prefix_options: poise::PrefixFrameworkOptions {
+                prefix: Some("!".to_string()),
+                ..Default::default()
+            },
             ..Default::default()
         })
-        .setup(|ctx, _ready, framework| {
+        .setup(|_ctx, _ready, _framework| {
             Box::pin(async move {
-                poise::builtins::register_globally(ctx, &framework.options().commands).await?;
+                // poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 Ok(Data {})
             })
         })
         .build();
 
-    let client = ClientBuilder::new(discord_token, GatewayIntents::non_privileged())
+    let client = ClientBuilder::new(discord_token, intents)
         .framework(framework)
         .await
         .map_err(shuttle_runtime::CustomError::new)?;
