@@ -10,7 +10,9 @@ type Context<'a> = poise::Context<'a, Data, Error>;
 mod commands;
 
 #[shuttle_runtime::main]
-async fn main(#[shuttle_shared_db::Postgres] pool: sqlx::PgPool, #[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
+async fn main(#[shuttle_shared_db::Postgres(
+        local_uri = "{secrets.CONNECTION_URL}",
+)] pool:sqlx::PgPool, #[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     sqlx::migrate!()
         .run(&pool)
         .await
