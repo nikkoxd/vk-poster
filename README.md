@@ -6,13 +6,13 @@
 
 General purpose bot built for https://discord.gg/starrysky
 
-## 📦 Installation
+## 🚀 Deployment
 
-Clone the repo, then run:
+Add your bot token as `DISCORD_TOKEN` to `Secrets.toml`.
+To deploy to shuttle.dev:
 ```sh
-cargo install
+shuttle deploy
 ```
-Then add your bot token as `DISCORD_TOKEN` to `Secrets.toml`.
 
 ## 💻 Development
 
@@ -21,10 +21,3 @@ To run the bot locally, run:
 shuttle run
 ```
 If you want to use a different token locally, you can set it in `Secrets.dev.toml`.
-
-## 🚀 Deployment
-
-To deploy to shuttle.dev:
-```sh
-shuttle deploy
-```
