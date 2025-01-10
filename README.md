@@ -8,7 +8,11 @@ General purpose bot built for https://discord.gg/starrysky
 
 ## 📦 Installation
 
-Clone the repo, then run
+Clone the repo, then run:
 ```sh
 cargo install
+```
+Add your bot token to `Secrets.toml` and run:
+```sh
+cargo run
 ```
