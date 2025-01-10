@@ -10,8 +10,12 @@ type Context<'a> = poise::Context<'a, Data, Error>;
 mod commands;
 
 #[shuttle_runtime::main]
-async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
-    // Get the discord token set in `Secrets.toml`
+async fn main(#[shuttle_shared_db::Postgres] pool: sqlx::PgPool, #[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
+    sqlx::migrate!()
+        .run(&pool)
+        .await
+        .expect("Failed to run migrations");
+
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
         .context("'DISCORD_TOKEN' was not found")?;
