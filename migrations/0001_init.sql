@@ -1,7 +1,11 @@
-create type language if not exists as enum (
-  'en',
-  'ru'
-);
+do $$ begin
+  create type language as enum (
+    'en',
+    'ru'
+  );
+exception
+  when duplicate_object then null;
+end $$;
 
 create table if not exists guilds (
   id varchar(18) primary key,
