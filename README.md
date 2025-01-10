@@ -11,13 +11,20 @@ General purpose bot built for https://discord.gg/starrysky
 Add your bot token as `DISCORD_TOKEN` to `Secrets.toml`.
 To deploy to shuttle.dev:
 ```sh
-shuttle deploy
+$ shuttle deploy
 ```
 
 ## 💻 Development
 
+First, get the database URL from shuttle CLI:
+```sh
+$ shuttle resource list --show-secrets
+```
+Add the connection string to `Secrets.dev.toml` as `CONNECTION_URL`,  
+then add the same variable to `Secrets.toml` but set it to empty value so that it doesn't crash in deployment.
+
 To run the bot locally, run:
 ```sh
-shuttle run
+$ shuttle run
 ```
 If you want to use a different token locally, you can set it in `Secrets.dev.toml`.
