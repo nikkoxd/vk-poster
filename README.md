@@ -12,7 +12,19 @@ Clone the repo, then run:
 ```sh
 cargo install
 ```
-Add your bot token to `Secrets.toml` and run:
+Then add your bot token as `DISCORD_TOKEN` to `Secrets.toml`.
+
+## 💻 Development
+
+To run the bot locally, run:
 ```sh
-cargo run
+shuttle run
+```
+If you want to use a different token locally, you can set it in `Secrets.dev.toml`.
+
+## 🚀 Deployment
+
+To deploy to shuttle.dev:
+```sh
+shuttle deploy
 ```
