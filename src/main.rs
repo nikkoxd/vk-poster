@@ -32,7 +32,6 @@ async fn main(#[shuttle_shared_db::Postgres(
             commands: vec![
                 commands::register::register(),
                 commands::welcome::welcome(),
-                commands::hello::hello(),
                 commands::setup::setup(),
                 commands::ping::ping(),
             ],
