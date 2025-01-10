@@ -8,13 +8,13 @@ exception
 end $$;
 
 create table if not exists guilds (
-  id varchar(18) primary key,
-  language language not null,
-  log_channel_id varchar(18),
+  id bigint primary key,
+  language language not null default 'en',
+  log_channel_id bigint,
   embed_color varchar(6) default '00ff00',
-  member_role_id varchar(18),
-  welcome_channel_id varchar(18),
-  welcome_role_id varchar(18),
+  member_role_id bigint,
+  welcome_channel_id bigint,
+  welcome_role_id bigint,
   econ_cooldown integer,
   econ_min integer,
   econ_max integer,
@@ -25,23 +25,23 @@ create table if not exists guilds (
 );
 
 create table if not exists rewards (
-  id varchar(18) primary key,
+  id bigint primary key,
   level integer not null
 );
 
 create table if not exists shop_items (
-  id varchar(18) primary key,
+  id bigint primary key,
   price integer not null,
   expiry_time timestamp
 );
 
 create table if not exists members (
-  id varchar(18) primary key,
-  guild_id varchar(18) not null references guilds(id),
+  id bigint primary key,
+  guild_id bigint not null references guilds(id),
   exp integer not null default 0,
   level integer not null default 0,
   balance integer not null default 0,
-  role_ids varchar(18)[]
+  role_ids bigint[]
 );
 
 create or replace function check_role_ids()
