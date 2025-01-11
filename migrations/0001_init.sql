@@ -1,15 +1,5 @@
-do $$ begin
-  create type language as enum (
-    'en',
-    'ru'
-  );
-exception
-  when duplicate_object then null;
-end $$;
-
 create table if not exists guilds (
   id bigint primary key,
-  language language not null default 'en',
   log_channel_id bigint,
   embed_color varchar(6) default '00ff00',
   member_role_id bigint,
