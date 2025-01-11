@@ -10,6 +10,7 @@ type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
 mod commands;
+mod event_handler;
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_shared_db::Postgres(
@@ -25,7 +26,8 @@ async fn main(#[shuttle_shared_db::Postgres(
         .context("'DISCORD_TOKEN' was not found")?;
 
     let intents = GatewayIntents::non_privileged()
-        | GatewayIntents::MESSAGE_CONTENT;
+        | GatewayIntents::MESSAGE_CONTENT
+        | GatewayIntents::GUILD_MEMBERS;
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
@@ -38,6 +40,11 @@ async fn main(#[shuttle_shared_db::Postgres(
             prefix_options: poise::PrefixFrameworkOptions {
                 prefix: Some("!".to_string()),
                 ..Default::default()
+            },
+            event_handler: |ctx, event, _framework, data| {
+                Box::pin(async move {
+                    event_handler::event_handler(ctx, event, data).await
+                })
             },
             ..Default::default()
         })
