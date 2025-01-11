@@ -3,14 +3,14 @@ use poise::serenity_prelude::{ClientBuilder, GatewayIntents};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 
+mod commands;
+mod event_handler;
+
 struct Data {
     pool: sqlx::PgPool,
 }
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
-
-mod commands;
-mod event_handler;
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_shared_db::Postgres(
@@ -32,10 +32,10 @@ async fn main(#[shuttle_shared_db::Postgres(
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
             commands: vec![
-                commands::register::register(),
-                commands::welcome::welcome(),
-                commands::setup::setup(),
-                commands::ping::ping(),
+                commands::ping(),
+                commands::register(),
+                commands::setup(),
+                commands::welcome(),
             ],
             prefix_options: poise::PrefixFrameworkOptions {
                 prefix: Some("!".to_string()),
