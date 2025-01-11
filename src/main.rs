@@ -37,6 +37,19 @@ async fn main(#[shuttle_shared_db::Postgres(
                 commands::setup(),
                 commands::welcome(),
             ],
+            pre_command: |ctx| {
+                Box::pin(async move {
+                    let user_name = ctx.author().tag();
+                    let command_name = &ctx.command().name;
+                    tracing::info!("Command triggered by {user_name}: {command_name:?}");
+                })
+            },
+            post_command: |ctx| {
+                Box::pin(async move {
+                    let command_name = &ctx.command().name;
+                    tracing::info!("Command executed: {command_name:?}");
+                })
+            },
             prefix_options: poise::PrefixFrameworkOptions {
                 prefix: Some("!".to_string()),
                 ..Default::default()
