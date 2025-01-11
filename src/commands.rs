@@ -1,19 +1,29 @@
 use crate::{Context, Error};
 use sqlx::Row;
 
-#[poise::command(slash_command)]
+/// Get bot's ping
+#[poise::command(
+    slash_command, 
+    prefix_command,
+)]
 pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
     let ping = ctx.ping().await;
     ctx.say(format!("Pong! Response time: {ping:?}")).await?;
     Ok(())
 }
 
-#[poise::command(prefix_command)]
+
+/// Register/unregister application commands
+#[poise::command(
+    slash_command, 
+    prefix_command
+)]
 pub async fn register(ctx: Context<'_>) -> Result<(), Error> {
     poise::builtins::register_application_commands_buttons(ctx).await?;
     Ok(())
 }
 
+/// Setup guild
 #[poise::command(slash_command)]
 pub async fn setup(ctx: Context<'_>) -> Result<(), Error> {
     let guild_id = ctx.guild_id().ok_or_else(|| anyhow::anyhow!("Not in a guild"))?;
@@ -25,16 +35,21 @@ pub async fn setup(ctx: Context<'_>) -> Result<(), Error> {
         .await?
         .is_some();
 
-    if !guild_exists {
+    if guild_exists {
+        ctx.say("Guild has already been setup").await?;
+    } else {
         sqlx::query("insert into guilds (id) values ($1)")
             .bind(i64::from(guild_id))
             .execute(pool)
             .await?;
+        tracing::info!("Guild created in database: {guild_id:?}");
+        ctx.say("Setup complete!").await?;
     }
 
     Ok(())
 }
 
+/// Test the welcome message
 #[poise::command(slash_command)]
 pub async fn welcome(ctx: Context<'_>) -> Result<(), Error> {
     let user_id = ctx.author().id;
