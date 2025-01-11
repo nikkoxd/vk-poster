@@ -5,6 +5,8 @@ use sqlx::Row;
 #[poise::command(
     slash_command, 
     prefix_command,
+    name_localized("ru", "пинг"),
+    description_localized("ru", "Получить пинг бота"),
 )]
 pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
     let ping = ctx.ping().await;
@@ -16,7 +18,9 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
 /// Register/unregister application commands
 #[poise::command(
     slash_command, 
-    prefix_command
+    prefix_command,
+    name_localized("ru", "регистрация"),
+    description_localized("ru", "Регистрация или удаление приложения команд")
 )]
 pub async fn register(ctx: Context<'_>) -> Result<(), Error> {
     poise::builtins::register_application_commands_buttons(ctx).await?;
@@ -24,7 +28,12 @@ pub async fn register(ctx: Context<'_>) -> Result<(), Error> {
 }
 
 /// Setup guild
-#[poise::command(slash_command)]
+#[poise::command(
+    slash_command,
+    prefix_command,
+    name_localized("ru", "настройка"),
+    description_localized("ru", "Настройка гильдии")
+)]
 pub async fn setup(ctx: Context<'_>) -> Result<(), Error> {
     let guild_id = ctx.guild_id().ok_or_else(|| anyhow::anyhow!("Not in a guild"))?;
     let pool = &ctx.data().pool;
@@ -50,7 +59,12 @@ pub async fn setup(ctx: Context<'_>) -> Result<(), Error> {
 }
 
 /// Test the welcome message
-#[poise::command(slash_command)]
+#[poise::command(
+    slash_command,
+    prefix_command,
+    name_localized("ru", "приветствие"),
+    description_localized("ru", "Приветствие пользователя")
+)]
 pub async fn welcome(ctx: Context<'_>) -> Result<(), Error> {
     let user_id = ctx.author().id;
     let guild_id = ctx.guild_id().ok_or_else(|| anyhow::anyhow!("Not in a guild"))?;
