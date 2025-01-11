@@ -8,8 +8,6 @@ pub async fn event_handler(
     event: &serenity::FullEvent,
     data: &Data,
 ) -> Result<(), Error> {
-    let name = event.snake_case_name();
-    tracing::info!("Event triggered: {name:?}");
     match event {
         serenity::FullEvent::GuildMemberAddition { new_member } => {
             let user_id = new_member.user.id;
