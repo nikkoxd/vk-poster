@@ -1,10 +1,12 @@
 use crate::{Context, Error};
+use poise::samples::HelpConfiguration;
 use sqlx::Row;
 
 /// Get bot's ping
 #[poise::command(
     slash_command, 
     prefix_command,
+    category = "Utility",
     name_localized("ru", "пинг"),
     description_localized("ru", "Получить пинг бота"),
 )]
@@ -17,10 +19,8 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
 
 /// Register/unregister application commands
 #[poise::command(
-    slash_command, 
     prefix_command,
-    name_localized("ru", "регистрация"),
-    description_localized("ru", "Регистрация или удаление приложения команд")
+    category = "Utility",
 )]
 pub async fn register(ctx: Context<'_>) -> Result<(), Error> {
     poise::builtins::register_application_commands_buttons(ctx).await?;
@@ -31,6 +31,7 @@ pub async fn register(ctx: Context<'_>) -> Result<(), Error> {
 #[poise::command(
     slash_command,
     prefix_command,
+    category = "Utility",
     name_localized("ru", "настройка"),
     description_localized("ru", "Настройка гильдии")
 )]
@@ -62,6 +63,7 @@ pub async fn setup(ctx: Context<'_>) -> Result<(), Error> {
 #[poise::command(
     slash_command,
     prefix_command,
+    category = "Utility",
     name_localized("ru", "приветствие"),
     description_localized("ru", "Приветствие пользователя")
 )]
@@ -84,5 +86,38 @@ pub async fn welcome(ctx: Context<'_>) -> Result<(), Error> {
 
     ctx.say(message).await?;
 
+    Ok(())
+}
+
+/// Help message
+#[poise::command(
+    prefix_command, 
+    category = "Utility",
+    name_localized("ru", "помощь"),
+    description_localized("ru", "Помощь по командам")
+)]
+pub async fn help(
+    ctx: Context<'_>,
+    #[description = "Command to get help for"]
+    #[rest]
+    mut command: Option<String>,
+) -> Result<(), Error> {
+    if ctx.invoked_command_name() != "help" {
+        command = match command {
+            Some(c) => Some(format!("{} {}", ctx.invoked_command_name(), c)),
+            None => Some(ctx.invoked_command_name().to_string()),
+        };
+    }
+    let extra_text_at_bottom = "Type `!help command` for more info on a command.\nYou can edit your `?help` message to the bot and the bot will edit its response.";
+
+    let config = HelpConfiguration {
+        show_subcommands: true,
+        show_context_menu_commands: true,
+        ephemeral: true,
+        extra_text_at_bottom,
+
+        ..Default::default()
+    };
+    poise::builtins::help(ctx, command.as_deref(), config).await?;
     Ok(())
 }
