@@ -2,12 +2,17 @@ use anyhow::Context as _;
 use poise::serenity_prelude::{ClientBuilder, GatewayIntents};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
+use poise::serenity_prelude::model::id::UserId;
+use tokio::sync::Mutex;
+use std::collections::HashMap;
 
 mod commands;
 mod event_handler;
 
 struct Data {
     pool: sqlx::PgPool,
+    exp_cooldowns: Mutex<HashMap<UserId, std::time::Instant>>,
+    balance_cooldowns: Mutex<HashMap<UserId, std::time::Instant>>,
 }
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
@@ -65,7 +70,11 @@ async fn main(#[shuttle_shared_db::Postgres(
         .setup(|_ctx, _ready, _framework| {
             Box::pin(async move {
                 // poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(Data{ pool })
+                Ok(Data{
+                    pool,
+                    exp_cooldowns: Mutex::new(HashMap::new()),
+                    balance_cooldowns: Mutex::new(HashMap::new()),
+                })
             })
         })
         .build();

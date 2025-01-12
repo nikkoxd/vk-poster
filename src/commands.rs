@@ -20,7 +20,8 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
 /// Register/unregister application commands
 #[poise::command(
     prefix_command,
-    category = "Utility",
+    hide_in_help,
+    required_permissions = "ADMINISTRATOR",
 )]
 pub async fn register(ctx: Context<'_>) -> Result<(), Error> {
     poise::builtins::register_application_commands_buttons(ctx).await?;
@@ -31,7 +32,8 @@ pub async fn register(ctx: Context<'_>) -> Result<(), Error> {
 #[poise::command(
     slash_command,
     prefix_command,
-    category = "Utility",
+    hide_in_help,
+    required_permissions = "ADMINISTRATOR",
     name_localized("ru", "настройка"),
     description_localized("ru", "Настройка гильдии")
 )]
@@ -63,7 +65,8 @@ pub async fn setup(ctx: Context<'_>) -> Result<(), Error> {
 #[poise::command(
     slash_command,
     prefix_command,
-    category = "Utility",
+    hide_in_help,
+    required_permissions = "MANAGE_MESSAGES",
     name_localized("ru", "приветствие"),
     description_localized("ru", "Приветствие пользователя")
 )]
