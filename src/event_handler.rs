@@ -49,15 +49,53 @@ pub async fn event_handler(
                 channel.expect("Channel not found").say(ctx, message).await?;
             }
         }
+
         serenity::FullEvent::Message { new_message } => {
             let user_id = new_message.author.id;
             let guild_id = new_message.guild_id;
-            let mut cooldown_data = data.exp_cooldowns.lock().await;
-            let cooldown = cooldown_data.get(&user_id);
+            let mut exp_cooldown_data = data.exp_cooldowns.lock().await;
+            let current_exp_cooldown = exp_cooldown_data.get(&user_id);
+            let mut balance_cooldown_data = data.balance_cooldowns.lock().await;
+            let current_balance_cooldown = balance_cooldown_data.get(&user_id);
 
             tracing::info!("User ID: {user_id:?}");
             tracing::info!("Guild ID: {guild_id:?}");
-            tracing::info!("Cooldown: {:?}", cooldown);
+            tracing::info!("Cooldown: {:?}", current_exp_cooldown);
+
+            async fn add_balance(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount: i32) {
+                let row = sqlx::query("select balance from members where id = $1")
+                    .bind(i64::from(user_id))
+                    .fetch_optional(pool)
+                    .await;
+
+                if let Ok(Some(row)) = row {
+                    tracing::info!("Member found");
+
+                    let old_balance: i32 = row.try_get("balance").unwrap();
+                    let new_balance = old_balance + amount;
+
+                    let _ = sqlx::query("update members set balance = $1 where id = $2")
+                        .bind(new_balance)
+                        .bind(i64::from(user_id))
+                        .execute(pool)
+                        .await;
+
+                    tracing::info!("Balance added (old balance: {old_balance:?}, new balance: {new_balance:?})");
+                } else {
+                    tracing::info!("Member not found, creating..");
+
+                    let _ = sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
+                        .bind(i64::from(user_id))
+                        .bind(i64::from(guild_id))
+                        .bind(0)
+                        .bind(0)
+                        .bind(amount)
+                        .execute(pool)
+                        .await;
+
+                    tracing::info!("Member created, balance added (balance: {amount:?})");
+                }
+            }
 
             async fn add_exp(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount: i32) {
                 let row = sqlx::query("select exp from members where id = $1")
@@ -95,7 +133,7 @@ pub async fn event_handler(
             }
 
             if let Some(guild_id) = guild_id {
-                let configuration = sqlx::query("select exp_cooldown, exp_min, exp_max from guilds where id = $1")
+                let configuration = sqlx::query("select econ_cooldown, econ_min, econ_max, exp_cooldown, exp_min, exp_max from guilds where id = $1")
                     .bind(i64::from(guild_id))
                     .fetch_one(&data.pool)
                     .await?;
@@ -104,25 +142,54 @@ pub async fn event_handler(
                 let exp_min: Option<i32> = configuration.try_get("exp_min")?;
                 let exp_max: Option<i32> = configuration.try_get("exp_max")?;
 
+                let econ_cooldown: Option<i32> = configuration.try_get("econ_cooldown")?;
+                let econ_min: Option<i32> = configuration.try_get("econ_min")?;
+                let econ_max: Option<i32> = configuration.try_get("econ_max")?;
+
                 if let (Some(exp_cooldown), Some(exp_min), Some(exp_max)) = (exp_cooldown, exp_min, exp_max) {
                     let mut rng = StdRng::from_entropy();
                     let amount = rng.gen_range(exp_min..exp_max);
 
-                    if let Some(cooldown) = cooldown {
+                    tracing::info!("Trying to add exp");
+
+                    if let Some(cooldown) = current_exp_cooldown {
                         if cooldown.elapsed() < std::time::Duration::from_secs(exp_cooldown.try_into().unwrap()) {
                             tracing::info!("Cooldown is still active");
                         } else {
                             tracing::info!("Cooldown expired");
-                            cooldown_data.insert(user_id, std::time::Instant::now());
+                            exp_cooldown_data.insert(user_id, std::time::Instant::now());
                             add_exp(user_id, guild_id, &data.pool, amount).await;
                         }
                     } else {
                         tracing::info!("Cooldown not found");
-                        cooldown_data.insert(user_id, std::time::Instant::now());
+                        exp_cooldown_data.insert(user_id, std::time::Instant::now());
                         add_exp(user_id, guild_id, &data.pool, amount).await;
                     }
                 } else {
-                    tracing::info!("One or more configuration values missing");
+                    tracing::info!("Can't add exp: One or more configuration values missing");
+                }
+
+                if let (Some(econ_cooldown), Some(econ_min), Some(econ_max)) = (econ_cooldown, econ_min, econ_max) {
+                    let mut rng = StdRng::from_entropy();
+                    let amount = rng.gen_range(econ_min..econ_max);
+
+                    tracing::info!("Trying to add balance");
+
+                    if let Some(cooldown) = current_balance_cooldown {
+                        if cooldown.elapsed() < std::time::Duration::from_secs(econ_cooldown.try_into().unwrap()) {
+                            tracing::info!("Cooldown is still active");
+                        } else {
+                            tracing::info!("Cooldown expired");
+                            balance_cooldown_data.insert(user_id, std::time::Instant::now());
+                            add_balance(user_id, guild_id, &data.pool, amount).await;
+                        }
+                    } else {
+                        tracing::info!("Cooldown not found");
+                        balance_cooldown_data.insert(user_id, std::time::Instant::now());
+                        add_balance(user_id, guild_id, &data.pool, amount).await;
+                    }
+                } else {
+                    tracing::info!("Can't add balance: One or more configuration values missing");
                 }
             }
         }
