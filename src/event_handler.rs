@@ -16,24 +16,26 @@ async fn add_balance(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, am
         let old_balance: i32 = row.try_get("balance").unwrap();
         let new_balance = old_balance + amount;
 
-        let _ = sqlx::query("update members set balance = $1 where id = $2")
+        sqlx::query("update members set balance = $1 where id = $2")
             .bind(new_balance)
             .bind(i64::from(user_id))
             .execute(pool)
-            .await;
+            .await
+            .expect("Failed to update balance");
 
         tracing::info!("Balance added (old balance: {old_balance:?}, new balance: {new_balance:?})");
     } else {
         tracing::info!("Member not found, creating..");
 
-        let _ = sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
+        sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
             .bind(i64::from(user_id))
             .bind(i64::from(guild_id))
             .bind(0)
             .bind(0)
             .bind(amount)
             .execute(pool)
-            .await;
+            .await
+            .expect("Failed to add member");
 
         tracing::info!("Member created, balance added (balance: {amount:?})");
     }
@@ -51,24 +53,26 @@ async fn add_exp(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount
         let old_exp: i32 = row.try_get("exp").unwrap();
         let new_exp = old_exp + amount;
 
-        let _ = sqlx::query("update members set exp = $1 where id = $2")
+        sqlx::query("update members set exp = $1 where id = $2")
             .bind(new_exp)
             .bind(i64::from(user_id))
             .execute(pool)
-            .await;
+            .await
+            .expect("Failed to update exp");
 
         tracing::info!("Exp added (old exp: {old_exp:?}, new exp: {new_exp:?})");
     } else {
         tracing::info!("Member not found, creating..");
 
-        let _ = sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
+        sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
             .bind(i64::from(user_id))
             .bind(i64::from(guild_id))
             .bind(amount)
             .bind(0)
             .bind(0)
             .execute(pool)
-            .await;
+            .await
+            .expect("Failed to add member");
 
         tracing::info!("Member created, exp added (exp: {amount:?})");
     }
