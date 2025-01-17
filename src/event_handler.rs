@@ -4,6 +4,76 @@ use sqlx::Row;
 use serenity::model::id::{ChannelId, UserId, GuildId};
 use rand::{rngs::StdRng, Rng, SeedableRng};
 
+async fn add_balance(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount: i32) {
+    let row = sqlx::query("select balance from members where id = $1")
+        .bind(i64::from(user_id))
+        .fetch_optional(pool)
+        .await;
+
+    if let Ok(Some(row)) = row {
+        tracing::info!("Member found");
+
+        let old_balance: i32 = row.try_get("balance").unwrap();
+        let new_balance = old_balance + amount;
+
+        let _ = sqlx::query("update members set balance = $1 where id = $2")
+            .bind(new_balance)
+            .bind(i64::from(user_id))
+            .execute(pool)
+            .await;
+
+        tracing::info!("Balance added (old balance: {old_balance:?}, new balance: {new_balance:?})");
+    } else {
+        tracing::info!("Member not found, creating..");
+
+        let _ = sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
+            .bind(i64::from(user_id))
+            .bind(i64::from(guild_id))
+            .bind(0)
+            .bind(0)
+            .bind(amount)
+            .execute(pool)
+            .await;
+
+        tracing::info!("Member created, balance added (balance: {amount:?})");
+    }
+}
+
+async fn add_exp(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount: i32) {
+    let row = sqlx::query("select exp from members where id = $1")
+        .bind(i64::from(user_id))
+        .fetch_optional(pool)
+        .await;
+
+    if let Ok(Some(row)) = row {
+        tracing::info!("Member found");
+
+        let old_exp: i32 = row.try_get("exp").unwrap();
+        let new_exp = old_exp + amount;
+
+        let _ = sqlx::query("update members set exp = $1 where id = $2")
+            .bind(new_exp)
+            .bind(i64::from(user_id))
+            .execute(pool)
+            .await;
+
+        tracing::info!("Exp added (old exp: {old_exp:?}, new exp: {new_exp:?})");
+    } else {
+        tracing::info!("Member not found, creating..");
+
+        let _ = sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
+            .bind(i64::from(user_id))
+            .bind(i64::from(guild_id))
+            .bind(amount)
+            .bind(0)
+            .bind(0)
+            .execute(pool)
+            .await;
+
+        tracing::info!("Member created, exp added (exp: {amount:?})");
+    }
+}
+
 pub async fn event_handler(
     ctx: &serenity::Context,
     event: &serenity::FullEvent,
@@ -53,84 +123,15 @@ pub async fn event_handler(
         serenity::FullEvent::Message { new_message } => {
             let user_id = new_message.author.id;
             let guild_id = new_message.guild_id;
+
             let mut exp_cooldown_data = data.exp_cooldowns.lock().await;
             let current_exp_cooldown = exp_cooldown_data.get(&user_id);
+
             let mut balance_cooldown_data = data.balance_cooldowns.lock().await;
             let current_balance_cooldown = balance_cooldown_data.get(&user_id);
 
             tracing::info!("User ID: {user_id:?}");
             tracing::info!("Guild ID: {guild_id:?}");
-            tracing::info!("Cooldown: {:?}", current_exp_cooldown);
-
-            async fn add_balance(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount: i32) {
-                let row = sqlx::query("select balance from members where id = $1")
-                    .bind(i64::from(user_id))
-                    .fetch_optional(pool)
-                    .await;
-
-                if let Ok(Some(row)) = row {
-                    tracing::info!("Member found");
-
-                    let old_balance: i32 = row.try_get("balance").unwrap();
-                    let new_balance = old_balance + amount;
-
-                    let _ = sqlx::query("update members set balance = $1 where id = $2")
-                        .bind(new_balance)
-                        .bind(i64::from(user_id))
-                        .execute(pool)
-                        .await;
-
-                    tracing::info!("Balance added (old balance: {old_balance:?}, new balance: {new_balance:?})");
-                } else {
-                    tracing::info!("Member not found, creating..");
-
-                    let _ = sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
-                        .bind(i64::from(user_id))
-                        .bind(i64::from(guild_id))
-                        .bind(0)
-                        .bind(0)
-                        .bind(amount)
-                        .execute(pool)
-                        .await;
-
-                    tracing::info!("Member created, balance added (balance: {amount:?})");
-                }
-            }
-
-            async fn add_exp(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount: i32) {
-                let row = sqlx::query("select exp from members where id = $1")
-                    .bind(i64::from(user_id))
-                    .fetch_optional(pool)
-                    .await;
-
-                if let Ok(Some(row)) = row {
-                    tracing::info!("Member found");
-
-                    let old_exp: i32 = row.try_get("exp").unwrap();
-                    let new_exp = old_exp + amount;
-
-                    let _ = sqlx::query("update members set exp = $1 where id = $2")
-                        .bind(new_exp)
-                        .bind(i64::from(user_id))
-                        .execute(pool)
-                        .await;
-
-                    tracing::info!("Exp added (old exp: {old_exp:?}, new exp: {new_exp:?})");
-                } else {
-                    tracing::info!("Member not found, creating..");
-
-                    let _ = sqlx::query("insert into members (id, guild_id, exp, level, balance) values ($1, $2, $3, $4, $5)")
-                        .bind(i64::from(user_id))
-                        .bind(i64::from(guild_id))
-                        .bind(amount)
-                        .bind(0)
-                        .bind(0)
-                        .execute(pool)
-                        .await;
-
-                    tracing::info!("Member created, exp added (exp: {amount:?})");
-                }
-            }
 
             if let Some(guild_id) = guild_id {
                 let configuration = sqlx::query("select econ_cooldown, econ_min, econ_max, exp_cooldown, exp_min, exp_max from guilds where id = $1")
