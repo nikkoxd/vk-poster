@@ -1,5 +1,6 @@
-use crate::{Context, Error};
+use crate::{utils, Context, Error};
 use poise::samples::HelpConfiguration;
+use poise::serenity_prelude as serenity;
 use sqlx::Row;
 
 /// Get bot's ping
@@ -122,5 +123,43 @@ pub async fn help(
         ..Default::default()
     };
     poise::builtins::help(ctx, command.as_deref(), config).await?;
+    Ok(())
+}
+
+/// Print current level
+#[poise::command(
+    slash_command,
+    prefix_command,
+    required_permissions = "ADMINISTRATOR",
+    name_localized("ru", "уровень"),
+    description_localized("ru", "Узнать уровень")
+)]
+pub async fn level(
+    ctx: Context<'_>,
+    #[description = "Member to print the level of"]
+    member: Option<serenity::User>
+) -> Result<(), Error> {
+    let mut member_id = ctx.author().id;
+
+    if let Some(member) = member {
+        member_id = member.id;
+    }
+
+    let row = sqlx::query("select exp, level from members where id = $1")
+        .bind(i64::from(member_id))
+        .fetch_optional(&ctx.data().pool)
+        .await;
+
+    let mut required_exp = utils::get_required_exp(1);
+    if let Ok(Some(row)) = row {
+        let exp: i32 = row.try_get("exp").unwrap();
+        let level: i32 = row.try_get("level").unwrap();
+        required_exp = utils::get_required_exp(level + 1);
+
+        ctx.say(format!("**Уровень:** {level:?}\n**Опыт:** {exp:?}/{required_exp:?}")).await?;
+    } else {
+        ctx.say(format!("**Уровень:** 0\n**Опыт:** 0/{required_exp:?}")).await?;
+    }
+
     Ok(())
 }
