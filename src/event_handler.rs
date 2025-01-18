@@ -41,8 +41,12 @@ async fn add_balance(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, am
     }
 }
 
+fn get_required_exp(level: i32) -> i32 {
+    return 100 * level + level.pow(2) * 50; 
+}
+
 async fn add_exp(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount: i32) {
-    let row = sqlx::query("select exp from members where id = $1")
+    let row = sqlx::query("select exp, level from members where id = $1")
         .bind(i64::from(user_id))
         .fetch_optional(pool)
         .await;
@@ -53,8 +57,14 @@ async fn add_exp(user_id: UserId, guild_id: GuildId, pool: &sqlx::PgPool, amount
         let old_exp: i32 = row.try_get("exp").unwrap();
         let new_exp = old_exp + amount;
 
-        sqlx::query("update members set exp = $1 where id = $2")
+        let mut level: i32 = row.try_get("level").unwrap();
+        if new_exp >= get_required_exp(level + 1) {
+            level += 1;
+        }
+
+        sqlx::query("update members set exp = $1, level = $2 where id = $3")
             .bind(new_exp)
+            .bind(level)
             .bind(i64::from(user_id))
             .execute(pool)
             .await
