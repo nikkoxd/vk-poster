@@ -8,6 +8,7 @@ use std::collections::HashMap;
 
 mod commands;
 mod event_handler;
+mod utils;
 
 struct Data {
     pool: sqlx::PgPool,
@@ -42,6 +43,7 @@ async fn main(#[shuttle_shared_db::Postgres(
                 commands::setup(),
                 commands::welcome(),
                 commands::help(),
+                commands::level(),
             ],
             pre_command: |ctx| {
                 Box::pin(async move {
