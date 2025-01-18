@@ -130,7 +130,6 @@ pub async fn help(
 #[poise::command(
     slash_command,
     prefix_command,
-    required_permissions = "ADMINISTRATOR",
     name_localized("ru", "уровень"),
     description_localized("ru", "Узнать уровень")
 )]
