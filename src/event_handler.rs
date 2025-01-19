@@ -18,6 +18,10 @@ pub async fn event_handler(
             let guild_id = new_member.guild_id;
             let pool = &data.pool;
 
+            if new_member.user.bot {
+                return Ok(());
+            }
+
             tracing::info!("New member joined: {user_id:?}");
 
             let row = sqlx::query("select welcome_channel_id from guilds where id = $1")
@@ -53,6 +57,10 @@ pub async fn event_handler(
         serenity::FullEvent::Message { new_message } => {
             let user_id = new_message.author.id;
             let guild_id = new_message.guild_id;
+
+            if new_message.author.bot || new_message.interaction_metadata.is_some() {
+                return Ok(());
+            }
 
             let mut exp_cooldown_data = data.exp_cooldowns.lock().await;
             let current_exp_cooldown = exp_cooldown_data.get(&user_id);
